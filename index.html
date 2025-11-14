@@ -471,6 +471,12 @@
       .summary-grid .value {
         font-weight: 600;
       }
+
+      /* ✅ 탭 내용 숨김용 클래스 */
+      .tab-section-hidden {
+        display: none;
+      }
+
       @media (max-width: 900px) {
         .quadrant-layout {
           flex-direction: column;
@@ -768,10 +774,15 @@
 
       const computeTechAggregates = (scores) => {
         const get = (id) => scores[id] ?? 0;
-        const technical = (get("funcFit") + get("customNeed") + get("legacy")) / 3;
-        const environment = (get("infra") + get("integration") + get("network")) / 3;
+        const technical =
+          (get("funcFit") + get("customNeed") + get("legacy")) / 3;
+        const environment =
+          (get("infra") + get("integration") + get("network")) / 3;
         const compliance =
-          (get("securityReview") + get("regulation") + get("dataSecurity")) / 3;
+          (get("securityReview") +
+            get("regulation") +
+            get("dataSecurity")) /
+          3;
         const human =
           (get("teamReady") + get("supportRes") + get("timelineReal")) / 3;
         return { technical, environment, compliance, human };
@@ -1400,15 +1411,22 @@
               </button>
             </nav>
 
-            {activeTab === "deal" && (
+            {/* ✅ 세 탭을 항상 렌더하고, CSS로만 숨김/표시 */}
+            <div className={activeTab === "deal" ? "" : "tab-section-hidden"}>
               <DealWinTab onResultChange={setDealResult} />
-            )}
-            {activeTab === "tech" && (
+            </div>
+
+            <div className={activeTab === "tech" ? "" : "tab-section-hidden"}>
               <TechnicalFitTab onResultChange={setTechResult} />
-            )}
-            {activeTab === "dashboard" && (
+            </div>
+
+            <div
+              className={
+                activeTab === "dashboard" ? "" : "tab-section-hidden"
+              }
+            >
               <DashboardTab dealResult={dealResult} techResult={techResult} />
-            )}
+            </div>
           </>
         );
       }
