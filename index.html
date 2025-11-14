@@ -528,30 +528,33 @@
         transform: translate(-50%, -50%);
       }
 
-      .marker-dot {
-        width: 20px;
-        height: 20px;
-        border-radius: 999px;
-        background: #111827;
-        border: 3px solid #f9fafb;
-        box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.35);
-      }
+.marker-dot {
+  width: 18px;
+  height: 18px;
+  display: block;              /* ← 길쭉해지는 것 방지 */
+  border-radius: 50%;          /* 완전한 원형 */
+  background: #111827;
+  border: 3px solid #f9fafb;
+  box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.35);
+}
 
-      .axis-title-x {
-        position: absolute;
-        right: 6px;
-        bottom: 4px;
-        font-size: 11px;
-        color: #4b5563;
-      }
+.axis-title-x {
+  position: absolute;
+  right: 0;                    /* 그래프 오른쪽 끝 기준 */
+  bottom: -18px;               /* 그래프 밖(아래)으로 */
+  font-size: 11px;
+  color: #4b5563;
+}
 
-      .axis-title-y {
-        position: absolute;
-        left: 6px;
-        top: 4px;
-        font-size: 11px;
-        color: #4b5563;
-      }
+.axis-title-y {
+  position: absolute;
+  left: -26px;                 /* 그래프 밖(왼쪽)으로 */
+  top: 50%;                    /* 세로 중앙 기준 */
+  transform: translateY(-50%) rotate(-90deg);  /* 세로쓰기 형태 */
+  transform-origin: center;
+  font-size: 11px;
+  color: #4b5563;
+}
 
       .quadrant-caption {
         font-size: 11px;
