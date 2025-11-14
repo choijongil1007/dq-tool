@@ -472,7 +472,7 @@
         font-weight: 600;
       }
 
-      /* ✅ 탭 내용 숨김용 클래스 */
+      /* 탭 내용 숨기기용 */
       .tab-section-hidden {
         display: none;
       }
@@ -883,15 +883,18 @@
         );
       }
 
-      function DealWinTab({ onResultChange }) {
-        const [scores, setScores] = useState({});
-        const [weights, setWeights] = useState(defaultDealWeights);
-        const [hoverId, setHoverId] = useState(null);
-        const [result, setResult] = useState(null);
+      // ▼▼ 여기부터는 상태를 App에 올려서 props로 주고받는 버전 ▼▼
+
+      function DealWinTab({ state, onStateChange }) {
+        const { scores, weights, result } = state;
 
         const handleScoreChange = (id, value) => {
           const num = value ? Number(value) : null;
-          setScores((prev) => ({ ...prev, [id]: num }));
+          onStateChange({ scores: { ...scores, [id]: num } });
+        };
+
+        const handleWeightsChange = (nextWeights) => {
+          onStateChange({ weights: nextWeights });
         };
 
         const handleCalculate = () => {
@@ -925,8 +928,7 @@
             aggregates: aggr,
             riskItems,
           };
-          setResult(res);
-          onResultChange && onResultChange(res);
+          onStateChange({ result: res });
         };
 
         const options = rangeOptions(5, 1);
@@ -976,18 +978,7 @@
                       </td>
                       <td className="col-avg" />
                       <td className="col-info">
-                        <button
-                          type="button"
-                          className="info-btn"
-                          onMouseEnter={() => setHoverId(item.id)}
-                          onMouseLeave={() => setHoverId(null)}
-                          aria-label={`${item.group} Scoring 기준`}
-                        >
-                          i
-                          {hoverId === item.id && (
-                            <div className="info-tooltip">{item.scoring}</div>
-                          )}
-                        </button>
+                        <InfoButton scoring={item.scoring} />
                       </td>
                     </tr>
                   ))}
@@ -996,7 +987,7 @@
 
               <WeightAdjuster
                 weights={weights}
-                onChange={setWeights}
+                onChange={handleWeightsChange}
                 weightOrder={["Budget", "Authority", "Need", "Timeline"]}
               />
 
@@ -1047,15 +1038,16 @@
         );
       }
 
-      function TechnicalFitTab({ onResultChange }) {
-        const [scores, setScores] = useState({});
-        const [weights, setWeights] = useState(defaultTechWeights);
-        const [hoverId, setHoverId] = useState(null);
-        const [result, setResult] = useState(null);
+      function TechnicalFitTab({ state, onStateChange }) {
+        const { scores, weights, result } = state;
 
         const handleScoreChange = (id, value) => {
           const num = value ? Number(value) : null;
-          setScores((prev) => ({ ...prev, [id]: num }));
+          onStateChange({ scores: { ...scores, [id]: num } });
+        };
+
+        const handleWeightsChange = (nextWeights) => {
+          onStateChange({ weights: nextWeights });
         };
 
         const handleCalculate = () => {
@@ -1091,8 +1083,7 @@
             aggregates: aggr,
             riskItems,
           };
-          setResult(res);
-          onResultChange && onResultChange(res);
+          onStateChange({ result: res });
         };
 
         const options = rangeOptions(5, 1);
@@ -1142,18 +1133,7 @@
                       </td>
                       <td className="col-avg" />
                       <td className="col-info">
-                        <button
-                          type="button"
-                          className="info-btn"
-                          onMouseEnter={() => setHoverId(item.id)}
-                          onMouseLeave={() => setHoverId(null)}
-                          aria-label={`${item.group} Scoring 기준`}
-                        >
-                          i
-                          {hoverId === item.id && (
-                            <div className="info-tooltip">{item.scoring}</div>
-                          )}
-                        </button>
+                        <InfoButton scoring={item.scoring} />
                       </td>
                     </tr>
                   ))}
@@ -1162,7 +1142,7 @@
 
               <WeightAdjuster
                 weights={weights}
-                onChange={setWeights}
+                onChange={handleWeightsChange}
                 weightOrder={[
                   "TechnicalFit",
                   "Environment",
@@ -1217,6 +1197,22 @@
               )}
             </section>
           </section>
+        );
+      }
+
+      function InfoButton({ scoring }) {
+        const [hover, setHover] = useState(false);
+        return (
+          <button
+            type="button"
+            className="info-btn"
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+            aria-label="Scoring 기준"
+          >
+            i
+            {hover && <div className="info-tooltip">{scoring}</div>}
+          </button>
         );
       }
 
@@ -1365,8 +1361,24 @@
 
       function App() {
         const [activeTab, setActiveTab] = useState("deal");
-        const [dealResult, setDealResult] = useState(null);
-        const [techResult, setTechResult] = useState(null);
+
+        const [dealState, setDealState] = useState({
+          scores: {},
+          weights: defaultDealWeights,
+          result: null,
+        });
+
+        const [techState, setTechState] = useState({
+          scores: {},
+          weights: defaultTechWeights,
+          result: null,
+        });
+
+        const updateDealState = (partial) =>
+          setDealState((prev) => ({ ...prev, ...partial }));
+
+        const updateTechState = (partial) =>
+          setTechState((prev) => ({ ...prev, ...partial }));
 
         return (
           <>
@@ -1411,13 +1423,18 @@
               </button>
             </nav>
 
-            {/* ✅ 세 탭을 항상 렌더하고, CSS로만 숨김/표시 */}
             <div className={activeTab === "deal" ? "" : "tab-section-hidden"}>
-              <DealWinTab onResultChange={setDealResult} />
+              <DealWinTab
+                state={dealState}
+                onStateChange={updateDealState}
+              />
             </div>
 
             <div className={activeTab === "tech" ? "" : "tab-section-hidden"}>
-              <TechnicalFitTab onResultChange={setTechResult} />
+              <TechnicalFitTab
+                state={techState}
+                onStateChange={updateTechState}
+              />
             </div>
 
             <div
@@ -1425,7 +1442,10 @@
                 activeTab === "dashboard" ? "" : "tab-section-hidden"
               }
             >
-              <DashboardTab dealResult={dealResult} techResult={techResult} />
+              <DashboardTab
+                dealResult={dealState.result}
+                techResult={techState.result}
+              />
             </div>
           </>
         );
