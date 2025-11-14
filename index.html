@@ -110,7 +110,6 @@
 
       /* Buttons */
       .primary {
-        margin-top: 12px;
         border: none;
         border-radius: 999px;
         background: #111827;
@@ -137,6 +136,12 @@
 
       .secondary:hover {
         background: #f3f4f6;
+      }
+
+      .button-row {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 12px;
       }
 
       /* Table */
@@ -167,93 +172,6 @@
         border-radius: 8px;
         border: 1px solid #d1d5db;
         background: #ffffff;
-      }
-
-      /* Weights */
-      .weights-row {
-        margin: 8px 0 4px;
-      }
-
-      .weights-row h4 {
-        margin: 0 0 4px;
-        font-size: 13px;
-      }
-
-      .weights-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 6px 10px;
-      }
-
-      .weights-grid label {
-        font-size: 12px;
-        color: #4b5563;
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-      }
-
-      .weights-grid input {
-        padding: 4px 6px;
-        border-radius: 8px;
-        border: 1px solid #d1d5db;
-        font-size: 12px;
-      }
-
-      .warning-text {
-        margin: 4px 0 0;
-        font-size: 12px;
-        color: #b91c1c;
-      }
-
-      /* Info icon & tooltip */
-      .info-icon {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        margin-left: 4px;
-        width: 16px;
-        height: 16px;
-        border-radius: 999px;
-        border: 1px solid #d1d5db;
-        font-size: 11px;
-        cursor: default;
-        position: relative;
-        color: #6b7280;
-      }
-
-      .info-tooltip {
-        position: absolute;
-        bottom: 120%;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #111827;
-        color: #f9fafb;
-        padding: 6px 8px;
-        border-radius: 6px;
-        font-size: 11px;
-        white-space: normal;
-        width: 260px;
-        line-height: 1.4;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.12s ease-out;
-        z-index: 20;
-      }
-
-      .info-tooltip::after {
-        content: "";
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        border-width: 4px;
-        border-style: solid;
-        border-color: #111827 transparent transparent transparent;
-      }
-
-      .info-icon:hover .info-tooltip {
-        opacity: 1;
       }
 
       /* Result & summary */
@@ -300,6 +218,173 @@
         margin: 6px 0 0;
         padding-left: 18px;
         font-size: 13px;
+      }
+
+      .result-card {
+        margin-top: 4px;
+      }
+
+      /* Info icon & tooltip */
+      .info-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 4px;
+        width: 16px;
+        height: 16px;
+        border-radius: 999px;
+        border: 1px solid #d1d5db;
+        font-size: 11px;
+        cursor: default;
+        position: relative;
+        color: #6b7280;
+      }
+
+      .info-tooltip {
+        position: absolute;
+        bottom: 120%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #111827;
+        color: #f9fafb;
+        padding: 6px 8px;
+        border-radius: 6px;
+        font-size: 11px;
+        white-space: normal;
+        width: 260px;
+        line-height: 1.4;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.12s ease-out;
+        z-index: 20;
+        text-align: left;
+      }
+
+      .info-tooltip::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 4px;
+        border-style: solid;
+        border-color: #111827 transparent transparent transparent;
+      }
+
+      .info-icon:hover .info-tooltip {
+        opacity: 1;
+      }
+
+      .tooltip-line {
+        display: block;
+      }
+
+      /* 가중치 토글 박스 */
+      .weights-container {
+        margin-top: 12px;
+        border-top: 1px dashed #e5e7eb;
+        padding-top: 10px;
+      }
+
+      .weights-toggle {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #f3f4f6;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        padding: 8px 12px;
+        font-size: 12px;
+        color: #374151;
+        cursor: pointer;
+      }
+
+      .weights-toggle-label {
+        font-weight: 500;
+      }
+
+      .weights-chevron {
+        font-size: 10px;
+        transition: transform 0.15s ease;
+      }
+
+      .weights-chevron.open {
+        transform: rotate(180deg);
+      }
+
+      .weights-panel {
+        margin-top: 8px;
+        background: #f9fafb;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        padding: 10px 12px;
+      }
+
+      .weights-help {
+        margin: 0 0 8px;
+        font-size: 12px;
+        color: #6b7280;
+      }
+
+      .weights-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 8px 12px;
+      }
+
+      .warning-text {
+        margin: 6px 0 0;
+        font-size: 12px;
+        color: #b91c1c;
+      }
+
+      /* 가중치 컨트롤 (+/-) */
+      .weight-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 140px;
+      }
+
+      .weight-label {
+        font-size: 12px;
+        color: #4b5563;
+      }
+
+      .weight-control {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #ffffff;
+        border-radius: 999px;
+        border: 1px solid #d1d5db;
+        padding: 4px 8px;
+      }
+
+      .weight-btn {
+        border: none;
+        background: #111827;
+        color: #f9fafb;
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        cursor: pointer;
+      }
+
+      .weight-btn:hover {
+        background: #0f172a;
+      }
+
+      .weight-value {
+        min-width: 44px;
+        text-align: center;
+        font-size: 13px;
+        font-variant-numeric: tabular-nums;
       }
 
       /* Modal */
@@ -350,10 +435,20 @@
         margin-bottom: 8px;
       }
 
-      .quadrant-card .quadrant-wrapper {
+      .quadrant-layout {
         display: flex;
-        flex-direction: column;
-        gap: 8px;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .quadrant-left {
+        flex: 1 1 320px;
+        min-width: 280px;
+      }
+
+      .quadrant-right {
+        flex: 1 1 280px;
+        min-width: 260px;
       }
 
       .quadrant-axes {
@@ -361,7 +456,7 @@
         width: 100%;
         max-width: 420px;
         aspect-ratio: 1 / 1;
-        margin: 0 auto;
+        margin: 0 auto 10px;
         background: #f9fafb;
         border-radius: 12px;
         border: 1px solid #e5e7eb;
@@ -372,19 +467,19 @@
         position: absolute;
         width: 50%;
         height: 50%;
-        font-size: 10px;
-        color: #ffffff;
         display: flex;
         align-items: flex-start;
-        justify-content: flex-start;
-        padding: 4px;
-        font-weight: 600;
+        justify-content: center;
+        padding-top: 6px;
+        font-weight: 700;
+        font-size: 13px;
       }
 
       .quadrant.q1 {
         top: 0;
         left: 50%;
         background: #4caf50;
+        color: #ffffff;
       }
 
       .quadrant.q2 {
@@ -398,18 +493,20 @@
         top: 0;
         left: 0;
         background: #5dade2;
+        color: #ffffff;
       }
 
       .quadrant.q4 {
         top: 50%;
         left: 0;
         background: #c0392b;
+        color: #ffffff;
       }
 
       .quadrant-cross.vertical,
       .quadrant-cross.horizontal {
         position: absolute;
-        background: rgba(15, 23, 42, 0.35);
+        background: rgba(15, 23, 42, 0.5);
       }
 
       .quadrant-cross.vertical {
@@ -432,55 +529,58 @@
       }
 
       .marker-dot {
-        width: 12px;
-        height: 12px;
+        width: 20px;
+        height: 20px;
         border-radius: 999px;
         background: #111827;
-        border: 2px solid #f9fafb;
-        box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.25);
+        border: 3px solid #f9fafb;
+        box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.35);
       }
 
-      .quadrant-label {
+      .axis-title-x {
         position: absolute;
-        font-size: 9px;
-        color: #6b7280;
+        right: 6px;
+        bottom: 4px;
+        font-size: 11px;
+        color: #4b5563;
       }
 
-      .quadrant-label.x-left {
-        bottom: 2px;
-        left: 4px;
-      }
-
-      .quadrant-label.x-right {
-        bottom: 2px;
-        right: 4px;
-      }
-
-      .quadrant-label.y-bottom {
-        left: 4px;
-        bottom: 2px;
-      }
-
-      .quadrant-label.y-top {
-        left: 4px;
-        top: 2px;
+      .axis-title-y {
+        position: absolute;
+        left: 6px;
+        top: 4px;
+        font-size: 11px;
+        color: #4b5563;
       }
 
       .quadrant-caption {
-        display: flex;
-        justify-content: space-between;
         font-size: 11px;
         color: #6b7280;
+        text-align: center;
       }
 
-      .quadrant-title {
+      .summary-title {
+        margin: 0 0 6px;
+        font-size: 15px;
         font-weight: 600;
-        margin-bottom: 4px;
       }
 
-      .action-text {
-        margin-top: 6px;
+      .summary-overview {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+
+      .summary-text,
+      .summary-action {
         font-size: 13px;
+        line-height: 1.5;
+        margin: 0 0 6px;
+        color: #374151;
+      }
+
+      .summary-action strong {
+        font-weight: 600;
       }
 
       @media (max-width: 640px) {
@@ -499,6 +599,14 @@
 
         .value {
           font-size: 16px;
+        }
+
+        .quadrant-layout {
+          flex-direction: column;
+        }
+
+        .quadrant-right {
+          min-width: 100%;
         }
       }
     </style>
@@ -544,11 +652,53 @@
       }
 
       function InfoIcon({ text }) {
+        const lines = text.split("\n");
         return (
           <span className="info-icon" aria-label="설명">
             i
-            <span className="info-tooltip">{text}</span>
+            <span className="info-tooltip">
+              {lines.map((line, idx) => (
+                <span key={idx} className="tooltip-line">
+                  {line}
+                </span>
+              ))}
+            </span>
           </span>
+        );
+      }
+
+      function WeightControl({ label, value, onChange }) {
+        const step = 0.05;
+
+        const handleDelta = (delta) => {
+          let next = value + delta;
+          next = Math.round(next * 100) / 100;
+          if (next < 0) next = 0;
+          if (next > 1) next = 1;
+          onChange(next);
+        };
+
+        return (
+          <div className="weight-item">
+            <span className="weight-label">{label}</span>
+            <div className="weight-control">
+              <button
+                type="button"
+                className="weight-btn"
+                onClick={() => handleDelta(-step)}
+              >
+                -
+              </button>
+              <span className="weight-value">{value.toFixed(2)}</span>
+              <button
+                type="button"
+                className="weight-btn"
+                onClick={() => handleDelta(step)}
+              >
+                +
+              </button>
+            </div>
+          </div>
         );
       }
 
@@ -571,6 +721,7 @@
           timeline: 0.15,
         });
 
+        const [showWeights, setShowWeights] = useState(false);
         const [score, setScore] = useState(null);
         const [winProb, setWinProb] = useState(null);
         const [winLabel, setWinLabel] = useState("");
@@ -579,7 +730,7 @@
 
         const scoringHelp = {
           budgetPreparedness:
-            "Budget · 예산 및 구매 준비도\n1: 예산 없음 / 승인 의사 없음\n2: 예산은 없지만 ‘요청해보겠다’ 수준 / 가능성 낮음\n3: 예산 가능하나 승인 필요, 가격 민감 / 불확실\n4: 예산 라인 존재, 관련 부서 논의 중\n5: 예산 확정, 승인권자 동의, 구매 절차 명확",
+            "Budget · 예산 및 구매 준비도\n1: 예산 없음 / 승인 의사 없음\n2: 예산은 없지만 ‘요청해보겠다’ 수준 / 가능성 낮음\n3: 예산 가능하나 승인 필요 / 가격 민감 / 불확실\n4: 예산 라인 존재 / 관련 부서 논의 중\n5: 예산 확정 / 승인권자 동의 / 구매 절차 명확",
           championPower:
             "Authority · 내부 지지자 파워\n1: 챔피언 없음 / 단순 관심자\n2: 챔피언 후보 있으나 영향력 약함\n3: 실무 리더급 챔피언 / 내부 논의 주도 가능\n4: 중간 관리자급 챔피언 / 의사결정자 연결 가능\n5: 파워 챔피언 / 적극적 지지 / 내부 추진 강함",
           decisionAccess:
@@ -598,9 +749,8 @@
           setInputs((prev) => ({ ...prev, [field]: Number(value) }));
         };
 
-        const handleWeightChange = (field, value) => {
-          const num = Number(value);
-          setWeights((prev) => ({ ...prev, [field]: isNaN(num) ? 0 : num }));
+        const handleWeightChange = (field, newValue) => {
+          setWeights((prev) => ({ ...prev, [field]: newValue }));
         };
 
         const validateWeightSum = () => {
@@ -676,6 +826,8 @@
           });
         };
 
+        const scoreOptions = [5, 4, 3, 2, 1];
+
         return (
           <div className="panel">
             <h2>Deal Win Score</h2>
@@ -690,68 +842,6 @@
                   각 세부 항목에 1~5점을 부여하고, 필요 시 가중치를 조정하세요.
                 </p>
               </header>
-
-              <div className="weights-row">
-                <h4>가중치 설정 (합 = 1)</h4>
-                <div className="weights-grid">
-                  <label>
-                    Budget
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={weights.budget}
-                      onChange={(e) =>
-                        handleWeightChange("budget", e.target.value)
-                      }
-                    />
-                  </label>
-                  <label>
-                    Need
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={weights.need}
-                      onChange={(e) =>
-                        handleWeightChange("need", e.target.value)
-                      }
-                    />
-                  </label>
-                  <label>
-                    Authority
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={weights.authority}
-                      onChange={(e) =>
-                        handleWeightChange("authority", e.target.value)
-                      }
-                    />
-                  </label>
-                  <label>
-                    Timeline
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={weights.timeline}
-                      onChange={(e) =>
-                        handleWeightChange("timeline", e.target.value)
-                      }
-                    />
-                  </label>
-                </div>
-                {!validateWeightSum() && (
-                  <p className="warning-text">
-                    가중치의 합이 1이 아닙니다. (현재 합:{" "}
-                    {(
-                      weights.budget +
-                      weights.need +
-                      weights.authority +
-                      weights.timeline
-                    ).toFixed(2)}
-                    )
-                  </p>
-                )}
-              </div>
 
               <table className="score-table">
                 <thead>
@@ -779,7 +869,7 @@
                           )
                         }
                       >
-                        {[1, 2, 3, 4, 5].map((n) => (
+                        {scoreOptions.map((n) => (
                           <option key={n} value={n}>
                             {n}
                           </option>
@@ -802,7 +892,7 @@
                           handleInputChange("championPower", e.target.value)
                         }
                       >
-                        {[1, 2, 3, 4, 5].map((n) => (
+                        {scoreOptions.map((n) => (
                           <option key={n} value={n}>
                             {n}
                           </option>
@@ -822,7 +912,7 @@
                           handleInputChange("decisionAccess", e.target.value)
                         }
                       >
-                        {[1, 2, 3, 4, 5].map((n) => (
+                        {scoreOptions.map((n) => (
                           <option key={n} value={n}>
                             {n}
                           </option>
@@ -845,7 +935,7 @@
                           handleInputChange("problemFit", e.target.value)
                         }
                       >
-                        {[1, 2, 3, 4, 5].map((n) => (
+                        {scoreOptions.map((n) => (
                           <option key={n} value={n}>
                             {n}
                           </option>
@@ -865,7 +955,7 @@
                           handleInputChange("competition", e.target.value)
                         }
                       >
-                        {[1, 2, 3, 4, 5].map((n) => (
+                        {scoreOptions.map((n) => (
                           <option key={n} value={n}>
                             {n}
                           </option>
@@ -888,7 +978,7 @@
                           handleInputChange("urgency", e.target.value)
                         }
                       >
-                        {[1, 2, 3, 4, 5].map((n) => (
+                        {scoreOptions.map((n) => (
                           <option key={n} value={n}>
                             {n}
                           </option>
@@ -905,10 +995,13 @@
                       <select
                         value={inputs.easeOfAdoption}
                         onChange={(e) =>
-                          handleInputChange("easeOfAdoption", e.target.value)
+                          handleInputChange(
+                            "easeOfAdoption",
+                            e.target.value
+                          )
                         }
                       >
-                        {[1, 2, 3, 4, 5].map((n) => (
+                        {scoreOptions.map((n) => (
                           <option key={n} value={n}>
                             {n}
                           </option>
@@ -919,9 +1012,72 @@
                 </tbody>
               </table>
 
-              <button className="primary" onClick={handleCalculate}>
-                결과 보기
-              </button>
+              {/* 가중치 조정 토글 박스 */}
+              <div className="weights-container">
+                <button
+                  type="button"
+                  className="weights-toggle"
+                  onClick={() => setShowWeights((prev) => !prev)}
+                >
+                  <span className="weights-toggle-label">가중치 조정</span>
+                  <span
+                    className={
+                      "weights-chevron" + (showWeights ? " open" : "")
+                    }
+                  >
+                    ⌃
+                  </span>
+                </button>
+
+                {showWeights && (
+                  <div className="weights-panel">
+                    <p className="weights-help">
+                      Budget / Need / Authority / Timeline 가중치 합이 1이 되도록
+                      조정하세요.
+                    </p>
+                    <div className="weights-grid">
+                      <WeightControl
+                        label="Budget"
+                        value={weights.budget}
+                        onChange={(v) => handleWeightChange("budget", v)}
+                      />
+                      <WeightControl
+                        label="Need"
+                        value={weights.need}
+                        onChange={(v) => handleWeightChange("need", v)}
+                      />
+                      <WeightControl
+                        label="Authority"
+                        value={weights.authority}
+                        onChange={(v) => handleWeightChange("authority", v)}
+                      />
+                      <WeightControl
+                        label="Timeline"
+                        value={weights.timeline}
+                        onChange={(v) => handleWeightChange("timeline", v)}
+                      />
+                    </div>
+                    {!validateWeightSum() && (
+                      <p className="warning-text">
+                        가중치의 합이 1이 아닙니다. (현재 합:{" "}
+                        {(
+                          weights.budget +
+                          weights.need +
+                          weights.authority +
+                          weights.timeline
+                        ).toFixed(2)}
+                        )
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className="button-row">
+                <button className="primary" onClick={handleCalculate}>
+                  결과 보기
+                </button>
+              </div>
             </section>
 
             <section className="card result-card">
@@ -1013,6 +1169,7 @@
           humanExec: 0.2,
         });
 
+        const [showWeights, setShowWeights] = useState(false);
         const [score, setScore] = useState(null);
         const [riskLevel, setRiskLevel] = useState("");
         const [riskLabel, setRiskLabel] = useState("");
@@ -1021,38 +1178,37 @@
 
         const scoringHelp = {
           featureFit:
-            "기능 적합성\n1: 요구 기능 대부분 불일치 / 구현 어려움\n5: 요구사항 완전 일치 / 최적 Fit",
+            "기능 적합성\n1: 요구 기능 대부분 불일치 / 구현 어려움\n2: 핵심 기능 일부 부족 / 커스터마이징 필수\n3: 주요 기능 대부분 충족 / 보통 수준\n4: 필수 기능 충족 / 옵션만 조정 필요\n5: 요구사항 완전 일치 / 최적 Fit",
           customization:
-            "커스터마이징 필요도\n1: 커스터마이징 많음 / 높은 복잡도\n5: 구성만으로 즉시 적용 가능",
+            "커스터마이징 필요도\n1: 커스터마이징 많음 / 높은 복잡도\n2: 개발 필요하나 가능 / 리스크 존재\n3: 일반적 난이도 / 구현 가능\n4: 소규모 구성 정도 / 부담 낮음\n5: 구성만으로 즉시 적용 가능",
           legacyConstraint:
-            "레거시 제약\n1: 레거시 제약 심각 / 연동 불가\n5: 제약 거의 없음 / 최적 환경",
+            "레거시 제약\n1: 레거시 제약 심각 / 연동 불가\n2: 제약 존재 / 우회 가능하나 위험\n3: 일부 제약 있으나 현실적 대안 존재\n4: 제약 적음 / 대부분 호환\n5: 제약 거의 없음 / 최적 환경",
           infraCompatibility:
-            "인프라 호환성\n1: 호환 거의 불가 / 제약 매우 큼\n5: 완전 호환 / 즉시 사용 가능",
+            "인프라 호환성\n1: 호환 거의 불가 / 제약 매우 큼\n2: 호환성 낮음 / 조정 필요\n3: 보통 수준 호환 / 일부 검증 필요\n4: 전반적 호환 양호\n5: 완전 호환 / 즉시 사용 가능",
           integrationSupport:
-            "연동 지원 여부\n1: 연동 불가 혹은 매우 어려움\n5: 즉시 연동 가능 / 장애 요소 없음",
+            "연동 지원 여부\n1: 연동 불가 혹은 매우 어려움\n2: 연동 가능하나 난이도 높음\n3: 일반적 난이도 / 표준 프로토콜 기반\n4: 연동 수월함 / 기존 레퍼런스 존재\n5: 즉시 연동 가능 / 장애 요소 없음",
           envConstraint:
-            "환경/네트워크 제약\n1: 제약 매우 심각\n5: 제약 거의 없음 / 최적 환경",
+            "환경/네트워크 제약\n1: 제약 매우 심각\n2: 제약 존재 / 설정 조정 필요\n3: 일부 제약 있으나 관리 가능\n4: 대부분 문제 없음\n5: 제약 거의 없음 / 최적 환경",
           securityDifficulty:
-            "보안 검토 난이도\n1: 보안 충족 어려움 / 리스크 큼\n5: 문제 없음 / 승인 확실",
+            "보안 검토 난이도\n1: 보안 충족 어려움 / 리스크 큼\n2: 충족 가능하나 불확실성 큼\n3: 보통 난이도 / 일부 검토 필요\n4: 대부분 충족 / 승인 가능성 높음\n5: 문제 없음 / 승인 확실",
           regulation:
-            "규제 준수 가능성\n1: 규제 충족 불가\n5: 완전 충족 / 검증 문제 없음",
+            "규제 준수 가능성\n1: 규제 충족 불가\n2: 충족 가능하나 장애물 많음\n3: 대부분 충족 / 추가 조정 필요\n4: 규제 충족 가능성이 높음\n5: 완전 충족 / 검증 문제 없음",
           dataSecurityFit:
-            "데이터/보안 적합성\n1: 요구 기준과 불일치\n5: 완전 적합 / 요구 충족",
+            "데이터/보안 적합성\n1: 요구 기준과 불일치\n2: 일부 불일치 / 수정 필요\n3: 대부분 충족 / 조정 가능\n4: 전반적 적합 / 리스크 낮음\n5: 완전 적합 / 요구 충족",
           customerTeamReady:
-            "고객 기술팀 준비도\n1: 리소스 없음 / 진행 불가\n5: 매우 적극적 / 전문성 높음",
+            "고객 기술팀 준비도\n1: 리소스 없음 / 진행 불가\n2: 리소스 부족 / 일정 위험\n3: 기본 역량 충분 / 일반적 수행 가능\n4: 역량 충분 / 협업 적극적\n5: 매우 적극적 / 전문성 높음",
           supportResource:
-            "도입 지원 리소스\n1: 지원 리소스 거의 없음\n5: 즉시 투입 가능 / 여유 있음",
+            "도입 지원 리소스\n1: 지원 리소스 거의 없음\n2: 리소스 부족 / 일정 불확실\n3: 일반적 수준 / 일부 조율 필요\n4: 충분한 지원 가능\n5: 즉시 투입 가능 / 여유 있음",
           timelineRealism:
-            "일정/범위 현실성\n1: 일정 불명확 / 실현 어려움\n5: 즉시 착수 가능 / 강한 추진력",
+            "일정/범위 현실성\n1: 일정 불명확 / 실현 어려움\n2: 일정 모호 / 우선순위 낮음\n3: 일정 존재 / 변동 가능성 있음\n4: 일정 명확 / 실행력 있음\n5: 즉시 착수 가능 / 강한 추진력",
         };
 
         const handleInputChange = (field, value) => {
           setInputs((prev) => ({ ...prev, [field]: Number(value) }));
         };
 
-        const handleWeightChange = (field, value) => {
-          const num = Number(value);
-          setWeights((prev) => ({ ...prev, [field]: isNaN(num) ? 0 : num }));
+        const handleWeightChange = (field, newValue) => {
+          setWeights((prev) => ({ ...prev, [field]: newValue }));
         };
 
         const validateWeightSum = () => {
@@ -1145,6 +1301,8 @@
           });
         };
 
+        const scoreOptions = [5, 4, 3, 2, 1];
+
         return (
           <div className="panel">
             <h2>Technical Fit Score</h2>
@@ -1159,68 +1317,6 @@
                   각 세부 항목에 1~5점을 부여하고, 필요 시 가중치를 조정하세요.
                 </p>
               </header>
-
-              <div className="weights-row">
-                <h4>가중치 설정 (합 = 1)</h4>
-                <div className="weights-grid">
-                  <label>
-                    Technical Fit
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={weights.techFit}
-                      onChange={(e) =>
-                        handleWeightChange("techFit", e.target.value)
-                      }
-                    />
-                  </label>
-                  <label>
-                    Environment &amp; Integration
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={weights.envInt}
-                      onChange={(e) =>
-                        handleWeightChange("envInt", e.target.value)
-                      }
-                    />
-                  </label>
-                  <label>
-                    Compliance &amp; Security
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={weights.compSec}
-                      onChange={(e) =>
-                        handleWeightChange("compSec", e.target.value)
-                      }
-                    />
-                  </label>
-                  <label>
-                    Human &amp; Execution
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={weights.humanExec}
-                      onChange={(e) =>
-                        handleWeightChange("humanExec", e.target.value)
-                      }
-                    />
-                  </label>
-                </div>
-                {!validateWeightSum() && (
-                  <p className="warning-text">
-                    가중치의 합이 1이 아닙니다. (현재 합:{" "}
-                    {(
-                      weights.techFit +
-                      weights.envInt +
-                      weights.compSec +
-                      weights.humanExec
-                    ).toFixed(2)}
-                    )
-                  </p>
-                )}
-              </div>
 
               <table className="score-table">
                 <thead>
@@ -1245,7 +1341,7 @@
                           handleInputChange("featureFit", e.target.value)
                         }
                       >
-                        {[1, 2, 3, 4, 5].map((n) => (
+                        {scoreOptions.map((n) => (
                           <option key={n} value={n}>
                             {n}
                           </option>
@@ -1265,7 +1361,7 @@
                           handleInputChange("customization", e.target.value)
                         }
                       >
-                        {[1, 2, 3, 4, 5].map((n) => (
+                        {scoreOptions.map((n) => (
                           <option key={n} value={n}>
                             {n}
                           </option>
@@ -1288,7 +1384,7 @@
                           )
                         }
                       >
-                        {[1, 2, 3, 4, 5].map((n) => (
+                        {scoreOptions.map((n) => (
                           <option key={n} value={n}>
                             {n}
                           </option>
@@ -1314,7 +1410,7 @@
                           )
                         }
                       >
-                        {[1, 2, 3, 4, 5].map((n) => (
+                        {scoreOptions.map((n) => (
                           <option key={n} value={n}>
                             {n}
                           </option>
@@ -1337,7 +1433,7 @@
                           )
                         }
                       >
-                        {[1, 2, 3, 4, 5].map((n) => (
+                        {scoreOptions.map((n) => (
                           <option key={n} value={n}>
                             {n}
                           </option>
@@ -1357,7 +1453,7 @@
                           handleInputChange("envConstraint", e.target.value)
                         }
                       >
-                        {[1, 2, 3, 4, 5].map((n) => (
+                        {scoreOptions.map((n) => (
                           <option key={n} value={n}>
                             {n}
                           </option>
@@ -1383,7 +1479,7 @@
                           )
                         }
                       >
-                        {[1, 2, 3, 4, 5].map((n) => (
+                        {scoreOptions.map((n) => (
                           <option key={n} value={n}>
                             {n}
                           </option>
@@ -1403,7 +1499,7 @@
                           handleInputChange("regulation", e.target.value)
                         }
                       >
-                        {[1, 2, 3, 4, 5].map((n) => (
+                        {scoreOptions.map((n) => (
                           <option key={n} value={n}>
                             {n}
                           </option>
@@ -1420,10 +1516,13 @@
                       <select
                         value={inputs.dataSecurityFit}
                         onChange={(e) =>
-                          handleInputChange("dataSecurityFit", e.target.value)
+                          handleInputChange(
+                            "dataSecurityFit",
+                            e.target.value
+                          )
                         }
                       >
-                        {[1, 2, 3, 4, 5].map((n) => (
+                        {scoreOptions.map((n) => (
                           <option key={n} value={n}>
                             {n}
                           </option>
@@ -1449,7 +1548,7 @@
                           )
                         }
                       >
-                        {[1, 2, 3, 4, 5].map((n) => (
+                        {scoreOptions.map((n) => (
                           <option key={n} value={n}>
                             {n}
                           </option>
@@ -1472,7 +1571,7 @@
                           )
                         }
                       >
-                        {[1, 2, 3, 4, 5].map((n) => (
+                        {scoreOptions.map((n) => (
                           <option key={n} value={n}>
                             {n}
                           </option>
@@ -1495,7 +1594,7 @@
                           )
                         }
                       >
-                        {[1, 2, 3, 4, 5].map((n) => (
+                        {scoreOptions.map((n) => (
                           <option key={n} value={n}>
                             {n}
                           </option>
@@ -1506,9 +1605,73 @@
                 </tbody>
               </table>
 
-              <button className="primary" onClick={handleCalculate}>
-                결과 보기
-              </button>
+              {/* 가중치 조정 토글 박스 */}
+              <div className="weights-container">
+                <button
+                  type="button"
+                  className="weights-toggle"
+                  onClick={() => setShowWeights((prev) => !prev)}
+                >
+                  <span className="weights-toggle-label">가중치 조정</span>
+                  <span
+                    className={
+                      "weights-chevron" + (showWeights ? " open" : "")
+                    }
+                  >
+                    ⌃
+                  </span>
+                </button>
+
+                {showWeights && (
+                  <div className="weights-panel">
+                    <p className="weights-help">
+                      Technical Fit / Environment &amp; Integration / Compliance
+                      &amp; Security / Human &amp; Execution 가중치 합이 1이 되도록
+                      조정하세요.
+                    </p>
+                    <div className="weights-grid">
+                      <WeightControl
+                        label="Technical Fit"
+                        value={weights.techFit}
+                        onChange={(v) => handleWeightChange("techFit", v)}
+                      />
+                      <WeightControl
+                        label="Environment & Integration"
+                        value={weights.envInt}
+                        onChange={(v) => handleWeightChange("envInt", v)}
+                      />
+                      <WeightControl
+                        label="Compliance & Security"
+                        value={weights.compSec}
+                        onChange={(v) => handleWeightChange("compSec", v)}
+                      />
+                      <WeightControl
+                        label="Human & Execution"
+                        value={weights.humanExec}
+                        onChange={(v) => handleWeightChange("humanExec", v)}
+                      />
+                    </div>
+                    {!validateWeightSum() && (
+                      <p className="warning-text">
+                        가중치의 합이 1이 아닙니다. (현재 합:{" "}
+                        {(
+                          weights.techFit +
+                          weights.envInt +
+                          weights.compSec +
+                          weights.humanExec
+                        ).toFixed(2)}
+                        )
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className="button-row">
+                <button className="primary" onClick={handleCalculate}>
+                  결과 보기
+                </button>
+              </div>
             </section>
 
             <section className="card result-card">
@@ -1621,153 +1784,154 @@
               "추가 Discovery로 조건이 크게 바뀔 여지가 있는지 확인하고, 없다면 대응 중단 또는 Low-touch 대응으로 전환하는 것이 좋습니다.";
           }
 
-        return parts;
-      };
+          return parts;
+        };
 
-      const { overview, details, action } = buildSummary();
+        const { overview, details, action } = buildSummary();
 
-      const markerStyle =
-        businessFit != null && technicalFit != null
-          ? {
-              left: businessFit + "%",
-              top: 100 - technicalFit + "%",
-            }
-          : { display: "none" };
+        const markerStyle =
+          businessFit != null && technicalFit != null
+            ? {
+                left: businessFit + "%",
+                top: 100 - technicalFit + "%",
+              }
+            : { display: "none" };
 
-      return (
-        <div className="panel">
-          <h2>Dashboard</h2>
-          <p className="panel-desc">
-            Deal Win Score와 Technical Fit Score를 기반으로 딜 상태를 Quadrant로
-            시각화합니다.
-          </p>
+        return (
+          <div className="panel">
+            <h2>Dashboard</h2>
+            <p className="panel-desc">
+              Deal Win Score와 Technical Fit Score를 기반으로 딜 상태를 Quadrant로
+              시각화합니다.
+            </p>
 
-          <section className="card summary-card">
-            <h3>Score Summary</h3>
-            <div className="summary-grid">
-              <div>
-                <span className="label">Deal Win Score</span>
-                <span className="value">
-                  {businessFit != null ? `${businessFit} / 100` : "-"}
-                </span>
-              </div>
-              <div>
-                <span className="label">Technical Fit Score</span>
-                <span className="value">
-                  {technicalFit != null ? `${technicalFit} / 100` : "-"}
-                </span>
-              </div>
-              <div>
-                <span className="label">Win Probability</span>
-                <span className="value">
-                  {dealResult?.winProbability != null
-                    ? `${dealResult.winProbability}% (${dealResult.winLabel})`
-                    : "-"}
-                </span>
-              </div>
-              <div>
-                <span className="label">Tech Risk Level</span>
-                <span className="value">
-                  {techResult?.riskLevel
-                    ? `${techResult.riskLevel} (${techResult.riskLabel})`
-                    : "-"}
-                </span>
-              </div>
-            </div>
-          </section>
-
-          <section className="card quadrant-card">
-            <h3>Quadrant View</h3>
-            <div className="quadrant-wrapper">
-              <div className="quadrant-axes">
-                <div className="quadrant-label x-left">0</div>
-                <div className="quadrant-label x-right">100</div>
-                <div className="quadrant-label y-bottom">0</div>
-                <div className="quadrant-label y-top">100</div>
-
-                <div className="quadrant q1">GO</div>
-                <div className="quadrant q2">Biz OK but Tech Risk</div>
-                <div className="quadrant q3">Tech OK but Biz Weak</div>
-                <div className="quadrant q4">No-Go</div>
-
-                <div className="quadrant-cross vertical" />
-                <div className="quadrant-cross horizontal" />
-
-                <div className="quadrant-marker" style={markerStyle}>
-                  <span className="marker-dot" />
+            <section className="card summary-card">
+              <h3>Score Summary</h3>
+              <div className="summary-grid">
+                <div>
+                  <span className="label">Deal Win Score</span>
+                  <span className="value">
+                    {businessFit != null ? `${businessFit} / 100` : "-"}
+                  </span>
+                </div>
+                <div>
+                  <span className="label">Technical Fit Score</span>
+                  <span className="value">
+                    {technicalFit != null ? `${technicalFit} / 100` : "-"}
+                  </span>
+                </div>
+                <div>
+                  <span className="label">Win Probability</span>
+                  <span className="value">
+                    {dealResult?.winProbability != null
+                      ? `${dealResult.winProbability}% (${dealResult.winLabel})`
+                      : "-"}
+                  </span>
+                </div>
+                <div>
+                  <span className="label">Tech Risk Level</span>
+                  <span className="value">
+                    {techResult?.riskLevel
+                      ? `${techResult.riskLevel} (${techResult.riskLabel})`
+                      : "-"}
+                  </span>
                 </div>
               </div>
-              <div className="quadrant-caption">
-                <span>Business Fit (Deal Win Score)</span>
-                <span>Technical Fit Score</span>
+            </section>
+
+            <section className="card quadrant-layout">
+              <div className="quadrant-left">
+                <h3>Quadrant View</h3>
+                <div className="quadrant-axes">
+                  {/* 네 개의 Quadrant */}
+                  <div className="quadrant q3">Tech OK but Biz Weak</div>
+                  <div className="quadrant q1">GO</div>
+                  <div className="quadrant q4">No-Go</div>
+                  <div className="quadrant q2">Biz OK but Tech Risk</div>
+
+                  {/* 축 분할선 */}
+                  <div className="quadrant-cross vertical" />
+                  <div className="quadrant-cross horizontal" />
+
+                  {/* 축 제목 */}
+                  <div className="axis-title-x">Business Fit</div>
+                  <div className="axis-title-y">Technical Fit</div>
+
+                  {/* 딜 위치 마커 */}
+                  <div className="quadrant-marker" style={markerStyle}>
+                    <span className="marker-dot" />
+                  </div>
+                </div>
+                <div className="quadrant-caption">
+                  점수에 따라 Deal의 위치가 자동으로 표시됩니다.
+                </div>
               </div>
-            </div>
-          </section>
 
-          <section className="card text-card">
-            <h3>Interpretation &amp; Recommended Actions</h3>
-            {businessFit == null || technicalFit == null ? (
-              <p className="muted">
-                먼저 Deal Win Score와 Technical Fit Score를 계산하면, 여기에서
-                총평과 권장 액션이 표시됩니다.
+              <div className="quadrant-right">
+                <h3 className="summary-title">Deal Summary</h3>
+                {businessFit == null || technicalFit == null ? (
+                  <p className="muted">
+                    먼저 Deal Win Score와 Technical Fit Score를 계산하면, 여기에서
+                    총평과 권장 액션이 표시됩니다.
+                  </p>
+                ) : (
+                  <>
+                    <p className="summary-overview">{overview}</p>
+                    <p className="summary-text">{details}</p>
+                    <p className="summary-action">
+                      <strong>권장 액션: </strong>
+                      {action}
+                    </p>
+                  </>
+                )}
+              </div>
+            </section>
+          </div>
+        );
+      }
+
+      function App() {
+        const [activeTab, setActiveTab] = useState("deal");
+        const [dealResult, setDealResult] = useState(null);
+        const [techResult, setTechResult] = useState(null);
+
+        return (
+          <div className="app">
+            <header className="app-header">
+              <h1>Deal Qualification Tool</h1>
+              <p className="app-subtitle">
+                BANT 기반 Deal Win Score + Technical Fit Score 대시보드
               </p>
-            ) : (
-              <>
-                <p className="quadrant-title">{overview}</p>
-                <p>{details}</p>
-                <p className="action-text">
-                  <strong>권장 액션: </strong>
-                  {action}
-                </p>
-              </>
-            )}
-          </section>
-        </div>
-      );
-    }
+            </header>
 
-    function App() {
-      const [activeTab, setActiveTab] = useState("deal");
-      const [dealResult, setDealResult] = useState(null);
-      const [techResult, setTechResult] = useState(null);
+            <Tabs activeTab={activeTab} onChange={setActiveTab} />
 
-      return (
-        <div className="app">
-          <header className="app-header">
-            <h1>Deal Qualification Tool</h1>
-            <p className="app-subtitle">
-              BANT 기반 Deal Win Score + Technical Fit Score 대시보드
-            </p>
-          </header>
+            <main>
+              {activeTab === "deal" && (
+                <DealWinScoreTab onResult={setDealResult} />
+              )}
+              {activeTab === "tech" && (
+                <TechnicalFitTab onResult={setTechResult} />
+              )}
+              {activeTab === "dashboard" && (
+                <DashboardTab
+                  dealResult={dealResult}
+                  techResult={techResult}
+                />
+              )}
+            </main>
 
-          <Tabs activeTab={activeTab} onChange={setActiveTab} />
+            <footer className="app-footer">
+              <span>
+                © {new Date().getFullYear()} Deal Qualification Tool
+              </span>
+            </footer>
+          </div>
+        );
+      }
 
-          <main>
-            {activeTab === "deal" && (
-              <DealWinScoreTab onResult={setDealResult} />
-            )}
-            {activeTab === "tech" && (
-              <TechnicalFitTab onResult={setTechResult} />
-            )}
-            {activeTab === "dashboard" && (
-              <DashboardTab
-                dealResult={dealResult}
-                techResult={techResult}
-              />
-            )}
-          </main>
-
-          <footer className="app-footer">
-            <span>
-              © {new Date().getFullYear()} Deal Qualification Tool
-            </span>
-          </footer>
-        </div>
-      );
-    }
-
-    const root = ReactDOM.createRoot(document.getElementById("root"));
-    root.render(<App />);
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<App />);
     </script>
   </body>
 </html>
