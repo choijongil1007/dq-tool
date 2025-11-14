@@ -3,467 +3,354 @@
   <head>
     <meta charset="UTF-8" />
     <title>Deal Qualification Tool</title>
-
-    <!-- 외부 styles.css (있으면 로드) -->
-    <link rel="stylesheet" href="styles.css" />
-
-    <!-- 기본 스타일 (styles.css가 비어 있어도 이걸로 돌아가게) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       :root {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          sans-serif;
-        color: #111827;
-        background-color: #f3f4f6;
+        --bg-body: #f5f5f7;
+        --bg-surface: #ffffff;
+        --bg-subtle: #f9fafb;
+        --border-subtle: #e5e7eb;
+        --text-main: #111827;
+        --text-muted: #6b7280;
+        --radius-lg: 12px;
+        --radius-md: 10px;
+        --shadow-soft: 0 10px 25px rgba(15, 23, 42, 0.04);
       }
-
+      * {
+        box-sizing: border-box;
+      }
       body {
         margin: 0;
-        background: #f3f4f6;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: var(--bg-body);
+        color: var(--text-main);
       }
-
-      .app {
-        max-width: 1120px;
-        margin: 0 auto;
-        padding: 24px 16px 40px;
+      .app-root {
+        max-width: 1200px;
+        margin: 24px auto 40px;
+        padding: 0 16px;
       }
-
-      .app-header h1 {
-        margin: 0 0 4px;
+      header.app-header {
+        margin-bottom: 8px;
+      }
+      h1 {
         font-size: 24px;
-        font-weight: 600;
+        font-weight: 700;
+        margin: 0 0 4px;
       }
-
-      .app-subtitle {
-        margin: 0 0 20px;
-        color: #6b7280;
+      .subtitle {
+        margin: 0 0 16px;
+        color: var(--text-muted);
         font-size: 14px;
       }
-
-      .app-footer {
-        margin-top: 24px;
-        border-top: 1px solid #e5e7eb;
-        padding-top: 12px;
-        font-size: 12px;
-        color: #9ca3af;
-      }
-
-      /* Tabs */
       .tabs {
-        display: inline-flex;
+        display: flex;
+        gap: 4px;
+        margin: 16px 0 12px;
+        padding: 2px;
         border-radius: 999px;
-        background: #e5e7eb;
-        padding: 4px;
-        margin-bottom: 16px;
+        background: #e5e7eb80;
+        width: fit-content;
       }
-
-      .tab {
+      .tab-button {
+        padding: 8px 16px;
+        border-radius: 999px;
         border: none;
         background: transparent;
-        padding: 6px 16px;
         font-size: 13px;
-        border-radius: 999px;
+        color: var(--text-muted);
         cursor: pointer;
-        color: #4b5563;
         transition: background 0.15s ease, color 0.15s ease;
       }
-
-      .tab.active {
-        background: #ffffff;
-        color: #111827;
-        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.15);
-      }
-
-      main {
-        margin-top: 8px;
-      }
-
-      /* Panels & cards */
-      .panel {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .panel-desc {
-        font-size: 13px;
-        color: #6b7280;
-      }
-
-      .card {
-        background: #ffffff;
-        border-radius: 12px;
-        padding: 16px 18px;
-        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
-        margin-bottom: 4px;
-      }
-
-      .card-header h3 {
-        margin: 0 0 4px;
-        font-size: 16px;
-      }
-
-      .card-subtitle {
-        margin: 0;
-        font-size: 12px;
-        color: #9ca3af;
-      }
-
-      /* Buttons */
-      .primary {
-        border: none;
-        border-radius: 999px;
-        background: #111827;
-        color: #f9fafb;
-        font-size: 13px;
+      .tab-button.active {
+        background: var(--bg-surface);
+        color: var(--text-main);
         font-weight: 600;
-        padding: 8px 18px;
-        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
       }
-
-      .primary:hover {
-        background: #0f172a;
+      .panel {
+        background: var(--bg-surface);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-subtle);
+        padding: 18px 20px 20px;
+        box-shadow: var(--shadow-soft);
       }
-
-      .secondary {
-        border: 1px solid #d1d5db;
-        border-radius: 999px;
-        background: #ffffff;
-        color: #111827;
+      .panel + .panel {
+        margin-top: 16px;
+      }
+      .panel h2 {
+        margin: 0 0 4px;
+        font-size: 18px;
+      }
+      .panel-desc {
+        margin: 0 0 16px;
         font-size: 13px;
-        padding: 6px 14px;
-        cursor: pointer;
+        color: var(--text-muted);
       }
-
-      .secondary:hover {
-        background: #f3f4f6;
+      .card {
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-subtle);
+        padding: 14px 16px 16px;
+        background: var(--bg-subtle);
       }
-
-      .button-row {
-        display: flex;
-        justify-content: flex-end;
+      .card + .card {
         margin-top: 12px;
       }
-
-      /* Table */
-      .score-table {
+      .card h3 {
+        margin: 0 0 8px;
+        font-size: 15px;
+      }
+      table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 12px;
         font-size: 13px;
       }
-
-      .score-table th,
-      .score-table td {
-        border-bottom: 1px solid #e5e7eb;
-        padding: 6px 8px;
-        text-align: left;
+      th,
+      td {
+        border-bottom: 1px solid var(--border-subtle);
+        padding: 6px 4px;
         vertical-align: middle;
       }
-
-      .score-table th {
-        background: #f9fafb;
-        font-weight: 600;
-        color: #4b5563;
+      th {
+        text-align: left;
+        font-size: 12px;
+        color: var(--text-muted);
       }
-
-      .score-table select {
+      tr:last-child td {
+        border-bottom: none;
+      }
+      .col-label {
+        width: 38%;
+      }
+      .col-score {
+        width: 22%;
+      }
+      .col-avg {
+        width: 14%;
+        text-align: center;
+      }
+      .col-info {
+        width: 26%;
+        text-align: right;
+      }
+      select {
         width: 100%;
         padding: 4px 6px;
         border-radius: 8px;
         border: 1px solid #d1d5db;
-        background: #ffffff;
-      }
-
-      /* Result & summary */
-      .result-row,
-      .summary-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: 8px 16px;
-        margin-top: 8px;
-      }
-
-      .label {
-        display: block;
-        font-size: 12px;
-        color: #6b7280;
-      }
-
-      .value {
-        display: block;
-        font-size: 18px;
-        font-weight: 600;
-      }
-
-      .label-row {
-        margin-top: 6px;
-      }
-
-      .chip {
-        display: inline-flex;
-        align-items: center;
-        border-radius: 999px;
-        padding: 3px 10px;
-        font-size: 11px;
-        background: #e5e7eb;
-        color: #374151;
-      }
-
-      .muted {
-        font-size: 13px;
-        color: #9ca3af;
-      }
-
-      .risk-card ul {
-        margin: 6px 0 0;
-        padding-left: 18px;
+        background: var(--bg-surface);
         font-size: 13px;
       }
-
-      .result-card {
-        margin-top: 4px;
-      }
-
-      /* Info icon & tooltip */
-      .info-icon {
+      .info-btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        margin-left: 4px;
-        width: 16px;
-        height: 16px;
+        width: 22px;
+        height: 22px;
         border-radius: 999px;
         border: 1px solid #d1d5db;
-        font-size: 11px;
-        cursor: default;
-        position: relative;
-        color: #6b7280;
-      }
-
-      .info-tooltip {
-        position: absolute;
-        bottom: 120%;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #111827;
-        color: #f9fafb;
-        padding: 6px 8px;
-        border-radius: 6px;
-        font-size: 11px;
-        white-space: normal;
-        width: 260px;
-        line-height: 1.4;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.12s ease-out;
-        z-index: 20;
-        text-align: left;
-      }
-
-      .info-tooltip::after {
-        content: "";
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        border-width: 4px;
-        border-style: solid;
-        border-color: #111827 transparent transparent transparent;
-      }
-
-      .info-icon:hover .info-tooltip {
-        opacity: 1;
-      }
-
-      .tooltip-line {
-        display: block;
-      }
-
-      /* 가중치 토글 박스 */
-      .weights-container {
-        margin-top: 12px;
-        border-top: 1px dashed #e5e7eb;
-        padding-top: 10px;
-      }
-
-      .weights-toggle {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background: #f3f4f6;
-        border-radius: 8px;
-        border: 1px solid #e5e7eb;
-        padding: 8px 12px;
-        font-size: 12px;
-        color: #374151;
-        cursor: pointer;
-      }
-
-      .weights-toggle-label {
-        font-weight: 500;
-      }
-
-      .weights-chevron {
-        font-size: 10px;
-        transition: transform 0.15s ease;
-      }
-
-      .weights-chevron.open {
-        transform: rotate(180deg);
-      }
-
-      .weights-panel {
-        margin-top: 8px;
-        background: #f9fafb;
-        border-radius: 8px;
-        border: 1px solid #e5e7eb;
-        padding: 10px 12px;
-      }
-
-      .weights-help {
-        margin: 0 0 8px;
-        font-size: 12px;
-        color: #6b7280;
-      }
-
-      .weights-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: 8px 12px;
-      }
-
-      .warning-text {
-        margin: 6px 0 0;
-        font-size: 12px;
-        color: #b91c1c;
-      }
-
-      /* 가중치 컨트롤 (+/-) */
-      .weight-item {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        min-width: 140px;
-      }
-
-      .weight-label {
+        background: var(--bg-subtle);
         font-size: 12px;
         color: #4b5563;
+        cursor: default;
+        position: relative;
       }
-
-      .weight-control {
+      .info-tooltip {
+        position: absolute;
+        top: 28px;
+        right: 0;
+        min-width: 220px;
+        max-width: 320px;
+        padding: 8px 10px;
+        border-radius: 10px;
+        background: #111827;
+        color: #f9fafb;
+        font-size: 11px;
+        line-height: 1.4;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+        white-space: pre-line;
+        z-index: 20;
+      }
+      .info-tooltip::before {
+        content: "";
+        position: absolute;
+        top: -6px;
+        right: 10px;
+        border-width: 0 6px 6px 6px;
+        border-style: solid;
+        border-color: transparent transparent #111827 transparent;
+      }
+      .score-row-label {
+        font-weight: 500;
+      }
+      .score-row-label span.sub {
+        display: block;
+        margin-top: 2px;
+        font-weight: 400;
+        color: var(--text-muted);
+        font-size: 11px;
+      }
+      .btn-primary {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        background: #ffffff;
+        justify-content: center;
+        padding: 7px 14px;
         border-radius: 999px;
-        border: 1px solid #d1d5db;
-        padding: 4px 8px;
-      }
-
-      .weight-btn {
         border: none;
         background: #111827;
         color: #f9fafb;
-        width: 28px;
-        height: 28px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background 0.15s ease, transform 0.05s ease;
+      }
+      .btn-primary:hover {
+        background: #020617;
+      }
+      .btn-primary:active {
+        transform: translateY(1px);
+      }
+      .btn-primary:disabled {
+        background: #9ca3af;
+        cursor: default;
+        transform: none;
+      }
+      .btn-weight {
+        width: 30px;
+        height: 30px;
         border-radius: 999px;
-        display: flex;
+        border: 1px solid #d1d5db;
+        background: var(--bg-surface);
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 18px;
+        font-size: 16px;
         cursor: pointer;
       }
-
-      .weight-btn:hover {
-        background: #0f172a;
+      .btn-weight:hover {
+        background: #e5e7eb;
       }
-
-      .weight-value {
-        min-width: 44px;
-        text-align: center;
-        font-size: 13px;
-        font-variant-numeric: tabular-nums;
-      }
-
-      /* Modal */
-      .modal-backdrop {
-        position: fixed;
-        inset: 0;
-        background: rgba(15, 23, 42, 0.45);
+      .actions-row {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 30;
+        justify-content: flex-end;
+        margin-top: 12px;
       }
-
-      .modal {
-        background: #f9fafb;
-        border-radius: 12px;
-        padding: 16px 18px;
-        width: min(360px, 90vw);
-        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.5);
+      .result-box {
+        margin-top: 14px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: #ecfeff;
+        border: 1px solid #67e8f9;
+        font-size: 13px;
       }
-
-      .modal h3 {
-        margin: 0 0 8px;
-        font-size: 16px;
+      .result-box h4 {
+        margin: 0 0 6px;
+        font-size: 14px;
       }
-
-      .modal-score {
-        margin: 0 0 4px;
-        font-size: 18px;
+      .result-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px 12px;
+        font-size: 13px;
+      }
+      .result-label {
+        color: var(--text-muted);
+      }
+      .result-value {
         font-weight: 600;
       }
-
-      .modal-score span {
-        font-weight: 500;
-        font-size: 14px;
-        margin-left: 4px;
-        color: #6b7280;
-      }
-
-      .modal-desc {
-        margin: 0 0 12px;
+      .risk-box {
+        margin-top: 10px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
         font-size: 13px;
-        color: #6b7280;
       }
-
-      /* Dashboard / Quadrant */
-      .summary-card {
-        margin-bottom: 8px;
+      .risk-title {
+        margin: 0 0 4px;
+        font-weight: 600;
+        font-size: 13px;
       }
-
+      .risk-item {
+        margin: 2px 0;
+      }
+      .muted {
+        color: #9ca3af;
+        font-size: 13px;
+      }
+      .weight-toggle {
+        margin-top: 12px;
+      }
+      .weight-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+      }
+      .weight-header span {
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .weight-body {
+        margin-top: 8px;
+        border-radius: 10px;
+        background: #f3f4f6;
+        padding: 8px 10px;
+      }
+      .weight-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 6px;
+      }
+      .weight-row:last-child {
+        margin-bottom: 0;
+      }
+      .weight-label {
+        font-size: 13px;
+      }
+      .weight-controls {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .weight-value {
+        min-width: 46px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .weight-error {
+        margin-top: 6px;
+        font-size: 11px;
+        color: #b91c1c;
+      }
+      .weight-total {
+        margin-top: 4px;
+        font-size: 11px;
+        color: var(--text-muted);
+      }
       .quadrant-layout {
         display: flex;
         gap: 16px;
-        flex-wrap: wrap;
+        margin-top: 14px;
       }
-
-      .quadrant-left {
-        flex: 1 1 320px;
-        min-width: 280px;
-      }
-
+      .quadrant-left,
       .quadrant-right {
-        flex: 1 1 280px;
-        min-width: 260px;
+        flex: 1;
       }
-
-.quadrant-axes {
-  position: relative;
-  width: 100%;
-  max-width: 420px;
-  aspect-ratio: 1 / 1;
-  margin: 0 auto 24px;   /* 아래 라벨 공간 조금 여유 */
-  background: #f9fafb;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  overflow: visible;     /* ← 이게 핵심! */
-}
-
-
+      .quadrant-axes {
+        position: relative;
+        width: 100%;
+        max-width: 420px;
+        aspect-ratio: 1 / 1;
+        margin: 0 auto 28px;
+        background: var(--bg-subtle);
+        border-radius: 12px;
+        border: 1px solid var(--border-subtle);
+        overflow: visible;
+      }
       .quadrant {
         position: absolute;
         width: 50%;
@@ -471,176 +358,128 @@
         display: flex;
         align-items: flex-start;
         justify-content: center;
-        padding-top: 6px;
-        font-weight: 700;
+        padding-top: 8px;
         font-size: 13px;
+        font-weight: 600;
+        color: var(--text-main);
       }
-
       .quadrant.q1 {
         top: 0;
         left: 50%;
-        background: #4caf50;
-        color: #ffffff;
+        background: #ecfdf3;
+        color: #166534;
       }
-
       .quadrant.q2 {
-        top: 50%;
+        bottom: 0;
         left: 50%;
-        background: #f4c542;
-        color: #111827;
+        background: #fef9c3;
+        color: #92400e;
       }
-
       .quadrant.q3 {
         top: 0;
         left: 0;
-        background: #5dade2;
-        color: #ffffff;
+        background: #e0f2fe;
+        color: #075985;
       }
-
       .quadrant.q4 {
-        top: 50%;
+        bottom: 0;
         left: 0;
-        background: #c0392b;
-        color: #ffffff;
+        background: #fee2e2;
+        color: #b91c1c;
       }
-
-      .quadrant-cross.vertical,
-      .quadrant-cross.horizontal {
+      .quadrant-cross {
         position: absolute;
-        background: rgba(15, 23, 42, 0.5);
+        background: #9ca3af;
+        opacity: 0.9;
       }
-
       .quadrant-cross.vertical {
         width: 1px;
         height: 100%;
         left: 50%;
         top: 0;
       }
-
       .quadrant-cross.horizontal {
         height: 1px;
         width: 100%;
         top: 50%;
         left: 0;
       }
-
       .quadrant-marker {
         position: absolute;
         transform: translate(-50%, -50%);
+        pointer-events: none;
       }
-
-.marker-dot {
-  width: 18px;
-  height: 18px;
-  display: block;              /* ← 길쭉해지는 것 방지 */
-  border-radius: 50%;          /* 완전한 원형 */
-  background: #111827;
-  border: 3px solid #f9fafb;
-  box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.35);
-}
-
-.axis-title-x {
-  position: absolute;
-  bottom: -22px;               /* 그래프 아래로 살짝 */
-  left: 50%;                   /* 가운데 정렬 */
-  transform: translateX(-50%);
-  font-size: 12px;
-  color: #374151;
-  font-weight: 500;
-}
-
-.axis-title-y {
-  position: absolute;
-  left: -28px;
-  top: 50%;
-  transform: translateY(-50%) rotate(-90deg);
-  transform-origin: center;
-  font-size: 12px;
-  color: #374151;
-  font-weight: 500;
-}
-
-.summary-title {
-  margin: 0 0 8px;
-  font-size: 18px;        /* 제목 더 크게 */
-  font-weight: 600;
-}
-
-.summary-overview {
-  font-size: 16px;        /* 첫 줄(분면 요약) 크게 */
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #111827;
-}
-
-.summary-text,
-.summary-action {
-  font-size: 15px;        /* 본문/권장 액션 통일해서 키움 */
-  line-height: 1.6;
-  margin: 0 0 8px;
-  color: #1f2937;
-}
-  
+      .marker-dot {
+        width: 18px;
+        height: 18px;
+        display: block;
+        border-radius: 50%;
+        background: #111827;
+        border: 3px solid var(--bg-subtle);
+        box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.35);
+      }
+      .axis-title-x,
+      .axis-title-y {
+        position: absolute;
+        font-size: 12px;
+        color: #374151;
+        font-weight: 500;
+      }
+      .axis-title-x {
+        bottom: -24px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .axis-title-y {
+        left: -40px;
+        top: 50%;
+        transform: translateY(-50%) rotate(-90deg);
+        transform-origin: center;
+      }
+      .summary-title {
+        margin: 0 0 8px;
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .summary-overview {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--text-main);
+      }
+      .summary-text,
+      .summary-action {
+        font-size: 15px;
+        line-height: 1.6;
+        margin: 0 0 8px;
+        color: #1f2937;
+      }
       .summary-action strong {
         font-weight: 600;
       }
-
-      @media (max-width: 640px) {
-        .app {
-          padding: 16px 10px 24px;
-        }
-
-        .card {
-          padding: 12px 12px;
-        }
-
-        .score-table th,
-        .score-table td {
-          font-size: 12px;
-        }
-
-        .value {
-          font-size: 16px;
-        }
-
+      .summary-card .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px 12px;
+        font-size: 13px;
+      }
+      .summary-grid .label {
+        display: block;
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+      .summary-grid .value {
+        font-weight: 600;
+      }
+      @media (max-width: 900px) {
         .quadrant-layout {
           flex-direction: column;
         }
-
         .quadrant-right {
-          min-width: 100%;
+          margin-top: 8px;
         }
       }
-
-      .quadrant-axes {
-  position: relative !important;
-  overflow: visible !important;
-}
-
-.axis-title-y {
-  position: absolute !important;
-  left: -70px !important;
-  top: 50% !important;
-  transform: translateY(-50%) rotate(-90deg) !important;
-  transform-origin: center !important;
-  font-size: 12px !important;
-  color: #374151 !important;
-  font-weight: 500 !important;
-}
-
-.axis-title-x {
-  position: absolute !important;
-  bottom: -24px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  font-size: 12px !important;
-  color: #374151 !important;
-  font-weight: 500 !important;
-}
-
     </style>
-
-    <!-- React & ReactDOM CDN -->
     <script
       src="https://unpkg.com/react@18/umd/react.development.js"
       crossorigin
@@ -649,1126 +488,727 @@
       src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
       crossorigin
     ></script>
-    <!-- 브라우저에서 JSX를 사용하기 위한 Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   </head>
-
   <body>
-    <div id="root"></div>
+    <main id="root" class="app-root"></main>
 
     <script type="text/babel">
       const { useState } = React;
 
-      function Tabs({ activeTab, onChange }) {
-        const tabs = [
-          { id: "deal", label: "Deal Win Score" },
-          { id: "tech", label: "Technical Fit Score" },
-          { id: "dashboard", label: "Dashboard" },
-        ];
-        return (
-          <div className="tabs">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                className={"tab" + (activeTab === tab.id ? " active" : "")}
-                onClick={() => onChange(tab.id)}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+      const rangeOptions = (from, to) => {
+        const arr = [];
+        for (let v = from; v >= to; v--) {
+          arr.push(v);
+        }
+        return arr;
+      };
+
+      const dealDetailItems = [
+        {
+          id: "budget",
+          group: "Budget",
+          label: "예산 및 구매 준비도",
+          scoring: `1: 예산 없음 / 승인 의사 없음
+2: 예산은 없지만 “요청해보겠다” 수준 / 가능성 낮음
+3: 예산 가능하나 승인 필요 / 가격 민감 / 불확실
+4: 예산 라인 존재 / 관련 부서 논의 중
+5: 예산 확정 / 승인권자 동의 / 구매 절차 명확`,
+        },
+        {
+          id: "champion",
+          group: "Authority",
+          label: "내부 지지자 파워",
+          scoring: `1: 챔피언 없음 / 단순 관심자
+2: 챔피언 후보 있으나 영향력 약함
+3: 실무 리더급 챔피언 / 내부 논의 주도 가능
+4: 중간 관리자급 챔피언 / 의사결정자 연결 가능
+5: 파워 챔피언 / 적극적 지지 / 내부 추진 강함`,
+        },
+        {
+          id: "ebAccess",
+          group: "Authority",
+          label: "의사결정권자 접근성",
+          scoring: `1: EB를 모름 / 접근 불가
+2: EB는 알지만 접촉 불가 / 간접 정보만 있음
+3: 의사결정 구조 파악 / EB 접촉 가능성 존재
+4: 영향력 있는 관리자 접촉 / EB 경로 확보
+5: EB와 직접 대화 / 니즈·우선순위 확인됨`,
+        },
+        {
+          id: "problemFit",
+          group: "Need",
+          label: "문제 적합성",
+          scoring: `1: 문제 모호 / 솔루션과 연결 약함
+2: 문제는 있으나 Fit 낮음 / 고객도 확신 없음
+3: 문제 명확 / 솔루션으로 해결 가능
+4: 문제 해결 의지 강함 / Fit 높음
+5: 핵심 Pain / 우리 솔루션이 가장 적합`,
+        },
+        {
+          id: "competition",
+          group: "Need",
+          label: "경쟁 구도",
+          scoring: `1: 경쟁사 우위 / 고객 선호도 낮음
+2: 경쟁 우세 / 우리 쪽 약함
+3: 비슷비슷 / 비교 초기
+4: 여러 면에서 우리가 우위
+5: 사실상 우리 선택 / PoC 시 확정 수준`,
+        },
+        {
+          id: "urgency",
+          group: "Timeline",
+          label: "시급성/타이밍",
+          scoring: `1: 급하지 않음 / 계획 없음
+2: 관심은 있으나 일정 불확실
+3: 분기 내 검토 필요 / 일정 일부 존재
+4: 프로젝트 일정과 연결 / 조만간 결정 필요
+5: 즉시 필요 / 계약·규제 등 긴급 사유`,
+        },
+        {
+          id: "ease",
+          group: "Timeline",
+          label: "도입 용이성",
+          scoring: `1: 기술적 장애 큼 / 통합 어려움
+2: 장벽 있지만 가능 / 리스크 존재
+3: 일반적 난이도 / 보통 수준
+4: 도입 쉬움 / 통합 간단
+5: 즉시 사용 가능 / 리스크 거의 없음`,
+        },
+      ];
+
+      const defaultDealWeights = {
+        Budget: 0.3,
+        Authority: 0.25,
+        Need: 0.3,
+        Timeline: 0.15,
+      };
+
+      const dealRiskMessages = {
+        Budget: "예산 리스크: 구매 가능성 낮음",
+        Authority: "권한/지지 리스크: 챔피언 또는 EB 접근이 약함",
+        Need: "문제 적합성 리스크: 우리 솔루션의 비즈니스 명분이 약함",
+        Timeline: "타이밍/도입 리스크: 우선순위 또는 도입 여건이 불리함",
+      };
+
+      const computeDealAggregates = (scores) => {
+        const get = (id) => scores[id] ?? 0;
+        const budget = get("budget");
+        const authority = (get("champion") + get("ebAccess")) / 2;
+        const need = (get("problemFit") + get("competition")) / 2;
+        const timeline = (get("urgency") + get("ease")) / 2;
+        return { budget, authority, need, timeline };
+      };
+
+      const computeDealScore = (aggregates, weights) => {
+        const { budget, authority, need, timeline } = aggregates;
+        const wBudget = weights.Budget ?? 0;
+        const wAuth = weights.Authority ?? 0;
+        const wNeed = weights.Need ?? 0;
+        const wTime = weights.Timeline ?? 0;
+        const raw =
+          (wBudget * budget +
+            wAuth * authority +
+            wNeed * need +
+            wTime * timeline) /
+          5;
+        return Math.round(raw * 100);
+      };
+
+      const mapDealScoreToWin = (score) => {
+        if (score == null || Number.isNaN(score))
+          return { probability: null, label: "-" };
+        if (score <= 20) return { probability: 10, label: "매우 낮음" };
+        if (score <= 40) return { probability: 30, label: "낮음" };
+        if (score <= 60) return { probability: 50, label: "중간" };
+        if (score <= 80) return { probability: 70, label: "높음" };
+        return { probability: 90, label: "매우 높음" };
+      };
+
+      const techDetailItems = [
+        {
+          id: "funcFit",
+          group: "Technical Fit",
+          label: "기능 적합성",
+          scoring: `1: 요구 기능 대부분 불일치 / 구현 어려움
+2: 핵심 기능 일부 부족 / 커스터마이징 필수
+3: 주요 기능 대부분 충족 / 보통 수준
+4: 필수 기능 충족 / 옵션만 조정 필요
+5: 요구사항 완전 일치 / 최적 Fit`,
+        },
+        {
+          id: "customNeed",
+          group: "Technical Fit",
+          label: "커스터마이징 필요도",
+          scoring: `1: 커스터마이징 많음 / 높은 복잡도
+2: 개발 필요하나 가능 / 리스크 존재
+3: 일반적 난이도 / 구현 가능
+4: 소규모 구성 정도 / 부담 낮음
+5: 구성만으로 즉시 적용 가능`,
+        },
+        {
+          id: "legacy",
+          group: "Technical Fit",
+          label: "레거시 제약",
+          scoring: `1: 레거시 제약 심각 / 연동 불가
+2: 제약 존재 / 우회 가능하나 위험
+3: 일부 제약 있으나 현실적 대안 존재
+4: 제약 적음 / 대부분 호환
+5: 제약 거의 없음 / 최적 환경`,
+        },
+        {
+          id: "infra",
+          group: "Environment",
+          label: "인프라 호환성",
+          scoring: `1: 호환 거의 불가 / 제약 매우 큼
+2: 호환성 낮음 / 조정 필요
+3: 보통 수준 호환 / 일부 검증 필요
+4: 전반적 호환 양호
+5: 완전 호환 / 즉시 사용 가능`,
+        },
+        {
+          id: "integration",
+          group: "Environment",
+          label: "연동 지원 여부",
+          scoring: `1: 연동 불가 혹은 매우 어려움
+2: 연동 가능하나 난이도 높음
+3: 일반적 난이도 / 표준 프로토콜 기반
+4: 연동 수월함 / 기존 레퍼런스 존재
+5: 즉시 연동 가능 / 장애 요소 없음`,
+        },
+        {
+          id: "network",
+          group: "Environment",
+          label: "환경/네트워크 제약",
+          scoring: `1: 환경·네트워크 제약 매우 심각
+2: 제약 존재 / 설정 조정 필요
+3: 일부 제약 있으나 관리 가능
+4: 대부분 문제 없음
+5: 제약 거의 없음 / 최적 환경`,
+        },
+        {
+          id: "securityReview",
+          group: "Compliance",
+          label: "보안 검토 난이도",
+          scoring: `1: 보안 충족 어려움 / 리스크 큼
+2: 충족 가능하나 불확실성 큼
+3: 보통 난이도 / 일부 검토 필요
+4: 대부분 충족 / 승인 가능성 높음
+5: 문제 없음 / 승인 확실`,
+        },
+        {
+          id: "regulation",
+          group: "Compliance",
+          label: "규제 준수 가능성",
+          scoring: `1: 규제 충족 불가
+2: 충족 가능하나 장애물 많음
+3: 대부분 충족 / 추가 조정 필요
+4: 규제 충족 가능성이 높음
+5: 완전 충족 / 검증 문제 없음`,
+        },
+        {
+          id: "dataSecurity",
+          group: "Compliance",
+          label: "데이터/보안 적합성",
+          scoring: `1: 요구 기준과 불일치
+2: 일부 불일치 / 수정 필요
+3: 대부분 충족 / 조정 가능
+4: 전반적 적합 / 리스크 낮음
+5: 완전 적합 / 요구 충족`,
+        },
+        {
+          id: "teamReady",
+          group: "Human",
+          label: "고객 기술팀 준비도",
+          scoring: `1: 리소스 없음 / 진행 불가
+2: 리소스 부족 / 일정 위험
+3: 기본 역량 충분 / 일반적 수행 가능
+4: 역량 충분 / 협업 적극적
+5: 매우 적극적 / 전문성 높음`,
+        },
+        {
+          id: "supportRes",
+          group: "Human",
+          label: "도입 지원 리소스",
+          scoring: `1: 지원 리소스 거의 없음
+2: 리소스 부족 / 일정 불확실
+3: 일반적 수준 / 일부 조율 필요
+4: 충분한 지원 가능
+5: 즉시 투입 가능 / 여유 있음`,
+        },
+        {
+          id: "timelineReal",
+          group: "Human",
+          label: "일정/범위 현실성",
+          scoring: `1: 일정 불명확 / 실현 어려움
+2: 일정 모호 / 우선순위 낮음
+3: 일정 존재 / 변동 가능성 있음
+4: 일정 명확 / 실행력 있음
+5: 즉시 착수 가능 / 강한 추진력`,
+        },
+      ];
+
+      const defaultTechWeights = {
+        TechnicalFit: 0.35,
+        Environment: 0.25,
+        Compliance: 0.2,
+        Human: 0.2,
+      };
+
+      const techRiskMessages = {
+        TechnicalFit:
+          "기능/레거시 적합성 리스크: 기능 Fit 또는 레거시 제약이 큼",
+        Environment:
+          "환경/연동 리스크: 인프라·네트워크·연동 제약 존재",
+        Compliance:
+          "보안/규제 리스크: 보안 승인 또는 규제 충족에 리스크",
+        Human:
+          "실행 준비도 리스크: 고객/우리 쪽 리소스·일정 여건이 불리함",
+      };
+
+      const computeTechAggregates = (scores) => {
+        const get = (id) => scores[id] ?? 0;
+        const technical = (get("funcFit") + get("customNeed") + get("legacy")) / 3;
+        const environment = (get("infra") + get("integration") + get("network")) / 3;
+        const compliance =
+          (get("securityReview") + get("regulation") + get("dataSecurity")) / 3;
+        const human =
+          (get("teamReady") + get("supportRes") + get("timelineReal")) / 3;
+        return { technical, environment, compliance, human };
+      };
+
+      const computeTechScore = (aggregates, weights) => {
+        const { technical, environment, compliance, human } = aggregates;
+        const wTech = weights.TechnicalFit ?? 0;
+        const wEnv = weights.Environment ?? 0;
+        const wComp = weights.Compliance ?? 0;
+        const wHuman = weights.Human ?? 0;
+        const raw =
+          (wTech * technical +
+            wEnv * environment +
+            wComp * compliance +
+            wHuman * human) /
+          5;
+        return Math.round(raw * 100);
+      };
+
+      const mapTechScoreToRisk = (score) => {
+        if (score == null || Number.isNaN(score))
+          return { level: null, label: "-" };
+        if (score <= 20) return { level: "매우 높음", label: "기술적 불가" };
+        if (score <= 40) return { level: "높음", label: "중단 고려" };
+        if (score <= 60) return { level: "중간", label: "주의 필요" };
+        if (score <= 80) return { level: "낮음", label: "적합함" };
+        return { level: "매우 낮음", label: "매우 적합" };
+      };
+
+      function WeightAdjuster({ weights, onChange, weightOrder }) {
+        const [open, setOpen] = useState(false);
+
+        const total = weightOrder.reduce(
+          (sum, key) => sum + (weights[key] ?? 0),
+          0
         );
-      }
+        const roundedTotal = Math.round(total * 100) / 100;
+        const hasError = Math.abs(total - 1) > 0.001;
 
-      function InfoIcon({ text }) {
-        const lines = text.split("\n");
-        return (
-          <span className="info-icon" aria-label="설명">
-            i
-            <span className="info-tooltip">
-              {lines.map((line, idx) => (
-                <span key={idx} className="tooltip-line">
-                  {line}
-                </span>
-              ))}
-            </span>
-          </span>
-        );
-      }
-
-      function WeightControl({ label, value, onChange }) {
-        const step = 0.05;
-
-        const handleDelta = (delta) => {
-          let next = value + delta;
-          next = Math.round(next * 100) / 100;
+        const adjust = (key, delta) => {
+          const current = weights[key] ?? 0;
+          let next = current + delta;
           if (next < 0) next = 0;
           if (next > 1) next = 1;
-          onChange(next);
+          onChange({ ...weights, [key]: Math.round(next * 100) / 100 });
         };
 
         return (
-          <div className="weight-item">
-            <span className="weight-label">{label}</span>
-            <div className="weight-control">
-              <button
-                type="button"
-                className="weight-btn"
-                onClick={() => handleDelta(-step)}
-              >
-                -
-              </button>
-              <span className="weight-value">{value.toFixed(2)}</span>
-              <button
-                type="button"
-                className="weight-btn"
-                onClick={() => handleDelta(step)}
-              >
-                +
-              </button>
+          <div className="weight-toggle">
+            <div
+              className="weight-header"
+              onClick={() => setOpen((v) => !v)}
+              aria-expanded={open}
+            >
+              <span>가중치 조정</span>
+              <span className="muted">{open ? "접기" : "펼치기"}</span>
             </div>
+            {open && (
+              <div className="weight-body">
+                {weightOrder.map((key) => (
+                  <div className="weight-row" key={key}>
+                    <div className="weight-label">{key}</div>
+                    <div className="weight-controls">
+                      <button
+                        type="button"
+                        className="btn-weight"
+                        onClick={() => adjust(key, -0.05)}
+                        aria-label={`${key} 가중치 감소`}
+                      >
+                        -
+                      </button>
+                      <div className="weight-value">
+                        {(weights[key] ?? 0).toFixed(2)}
+                      </div>
+                      <button
+                        type="button"
+                        className="btn-weight"
+                        onClick={() => adjust(key, 0.05)}
+                        aria-label={`${key} 가중치 증가`}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                <div className="weight-total">
+                  합계: {roundedTotal.toFixed(2)}
+                </div>
+                {hasError && (
+                  <div className="weight-error">
+                    가중치 합이 1이 되도록 조정해 주세요.
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         );
       }
 
-      /* Deal Win Score 탭 */
-      function DealWinScoreTab({ onResult }) {
-        const [inputs, setInputs] = useState({
-          budgetPreparedness: 3,
-          championPower: 3,
-          decisionAccess: 3,
-          problemFit: 3,
-          competition: 3,
-          urgency: 3,
-          easeOfAdoption: 3,
-        });
+      function DealWinTab({ onResultChange }) {
+        const [scores, setScores] = useState({});
+        const [weights, setWeights] = useState(defaultDealWeights);
+        const [hoverId, setHoverId] = useState(null);
+        const [result, setResult] = useState(null);
 
-        const [weights, setWeights] = useState({
-          budget: 0.3,
-          need: 0.3,
-          authority: 0.25,
-          timeline: 0.15,
-        });
-
-        const [showWeights, setShowWeights] = useState(false);
-        const [score, setScore] = useState(null);
-        const [winProb, setWinProb] = useState(null);
-        const [winLabel, setWinLabel] = useState("");
-        const [modalOpen, setModalOpen] = useState(false);
-        const [riskSummary, setRiskSummary] = useState([]);
-
-        const scoringHelp = {
-          budgetPreparedness:
-            "Budget · 예산 및 구매 준비도\n1: 예산 없음 / 승인 의사 없음\n2: 예산은 없지만 ‘요청해보겠다’ 수준 / 가능성 낮음\n3: 예산 가능하나 승인 필요 / 가격 민감 / 불확실\n4: 예산 라인 존재 / 관련 부서 논의 중\n5: 예산 확정 / 승인권자 동의 / 구매 절차 명확",
-          championPower:
-            "Authority · 내부 지지자 파워\n1: 챔피언 없음 / 단순 관심자\n2: 챔피언 후보 있으나 영향력 약함\n3: 실무 리더급 챔피언 / 내부 논의 주도 가능\n4: 중간 관리자급 챔피언 / 의사결정자 연결 가능\n5: 파워 챔피언 / 적극적 지지 / 내부 추진 강함",
-          decisionAccess:
-            "Authority · 의사결정권자 접근성\n1: EB(경제적 구매자)를 모름 / 접근 불가\n2: EB는 알지만 접촉 불가 / 간접 정보만 있음\n3: 의사결정 구조 파악 / EB 접촉 가능성 존재\n4: 영향력 있는 관리자 접촉 / EB 경로 확보\n5: EB와 직접 대화 / 니즈·우선순위 확인됨",
-          problemFit:
-            "Need · 문제 적합성\n1: 문제 모호 / 솔루션과 연결 약함\n2: 문제는 있으나 Fit 낮음 / 고객도 확신 없음\n3: 문제 명확 / 솔루션으로 해결 가능\n4: 문제 해결 의지 강함 / Fit 높음\n5: 핵심 Pain / 우리 솔루션이 가장 적합",
-          competition:
-            "Need · 경쟁 구도\n1: 경쟁사 우위 / 고객 선호도 낮음\n2: 경쟁 우세 / 우리 쪽 약함\n3: 비슷비슷 / 비교 초기\n4: 여러 면에서 우리가 우위\n5: 사실상 우리 선택 / PoC 시 확정 수준",
-          urgency:
-            "Timeline · 시급성/타이밍\n1: 급하지 않음 / 계획 없음\n2: 관심은 있으나 일정 불확실\n3: 분기 내 검토 필요 / 일정 일부 존재\n4: 프로젝트 일정과 연결 / 조만간 결정 필요\n5: 즉시 필요 / 계약·규제 등 긴급 사유",
-          easeOfAdoption:
-            "Timeline · 도입 용이성\n1: 기술적 장애 큼 / 통합 어려움\n2: 장벽 있지만 가능 / 리스크 존재\n3: 일반적 난이도 / 보통 수준\n4: 도입 쉬움 / 통합 간단\n5: 즉시 사용 가능 / 리스크 거의 없음",
-        };
-
-        const handleInputChange = (field, value) => {
-          setInputs((prev) => ({ ...prev, [field]: Number(value) }));
-        };
-
-        const handleWeightChange = (field, newValue) => {
-          setWeights((prev) => ({ ...prev, [field]: newValue }));
-        };
-
-        const validateWeightSum = () => {
-          const sum =
-            weights.budget + weights.need + weights.authority + weights.timeline;
-          return Math.abs(sum - 1) < 0.001;
-        };
-
-        const getWinProbability = (dealScore) => {
-          if (dealScore <= 20) return { prob: 10, label: "매우 낮음" };
-          if (dealScore <= 40) return { prob: 30, label: "낮음" };
-          if (dealScore <= 60) return { prob: 50, label: "중간" };
-          if (dealScore <= 80) return { prob: 70, label: "높음" };
-          return { prob: 90, label: "매우 높음" };
-        };
-
-        const buildRiskSummary = (aggregates) => {
-          const items = [];
-          if (aggregates.budget <= 2) {
-            items.push("예산 리스크: 예산/승인 의지가 약해 구매 가능성이 낮습니다.");
-          }
-          if (aggregates.authority <= 2) {
-            items.push(
-              "Authority 리스크: 내부 챔피언 또는 Economic Buyer 접근성이 낮습니다."
-            );
-          }
-          if (aggregates.need <= 2) {
-            items.push(
-              "Need 리스크: 문제-솔루션 적합성이 낮고 경쟁 구도에서도 불리합니다."
-            );
-          }
-          if (aggregates.timeline <= 2) {
-            items.push(
-              "타이밍 리스크: 시급성이 낮거나 도입 난이도가 높아 우선순위에서 밀릴 수 있습니다."
-            );
-          }
-          return items;
+        const handleScoreChange = (id, value) => {
+          const num = value ? Number(value) : null;
+          setScores((prev) => ({ ...prev, [id]: num }));
         };
 
         const handleCalculate = () => {
-          if (!validateWeightSum()) {
-            alert("Deal Win Score 가중치 합이 1이 아닙니다. 값을 조정해주세요.");
+          const totalW =
+            (weights.Budget ?? 0) +
+            (weights.Authority ?? 0) +
+            (weights.Need ?? 0) +
+            (weights.Timeline ?? 0);
+          if (Math.abs(totalW - 1) > 0.001) {
+            alert("Deal Win Score 가중치 합이 1이 되도록 조정해 주세요.");
             return;
           }
+          const aggr = computeDealAggregates(scores);
+          const score = computeDealScore(aggr, weights);
+          const { probability, label } = mapDealScoreToWin(score);
 
-          const budget = inputs.budgetPreparedness;
-          const authority = (inputs.championPower + inputs.decisionAccess) / 2;
-          const need = (inputs.problemFit + inputs.competition) / 2;
-          const timeline = (inputs.urgency + inputs.easeOfAdoption) / 2;
+          const riskItems = [];
+          if (aggr.budget > 0 && aggr.budget <= 2)
+            riskItems.push(dealRiskMessages.Budget);
+          if (aggr.authority > 0 && aggr.authority <= 2)
+            riskItems.push(dealRiskMessages.Authority);
+          if (aggr.need > 0 && aggr.need <= 2)
+            riskItems.push(dealRiskMessages.Need);
+          if (aggr.timeline > 0 && aggr.timeline <= 2)
+            riskItems.push(dealRiskMessages.Timeline);
 
-          const raw =
-            weights.budget * budget +
-            weights.authority * authority +
-            weights.need * need +
-            weights.timeline * timeline;
-
-          const dealScore = Math.round((raw / 5) * 100);
-          const { prob, label } = getWinProbability(dealScore);
-          const aggregates = { budget, authority, need, timeline };
-          const risks = buildRiskSummary(aggregates);
-
-          setScore(dealScore);
-          setWinProb(prob);
-          setWinLabel(label);
-          setRiskSummary(risks);
-          setModalOpen(true);
-
-          onResult({
-            score: dealScore,
-            winProbability: prob,
+          const res = {
+            score,
+            winProbability: probability,
             winLabel: label,
-            aggregates,
-          });
+            aggregates: aggr,
+            riskItems,
+          };
+          setResult(res);
+          onResultChange && onResultChange(res);
         };
 
-        const scoreOptions = [5, 4, 3, 2, 1];
+        const options = rangeOptions(5, 1);
 
         return (
-          <div className="panel">
-            <h2>Deal Win Score</h2>
+          <section className="panel" aria-label="Deal Win Score">
+            <h2>Deal Win Score (BANT)</h2>
             <p className="panel-desc">
               BANT 기반으로 Deal Score와 Win Probability를 계산합니다.
             </p>
 
             <section className="card">
-              <header className="card-header">
-                <h3>Deal 항목</h3>
-                <p className="card-subtitle">
-                  각 세부 항목에 1~5점을 부여하고, 필요 시 가중치를 조정하세요.
-                </p>
-              </header>
-
-              <table className="score-table">
+              <h3>Deal 항목</h3>
+              <table>
                 <thead>
                   <tr>
-                    <th>Deal 항목</th>
-                    <th>세부 항목</th>
-                    <th>점수 (1~5)</th>
+                    <th className="col-label">세부 항목</th>
+                    <th className="col-score">점수 (5~1)</th>
+                    <th className="col-avg">합산</th>
+                    <th className="col-info">Scoring 기준</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {/* Budget */}
-                  <tr>
-                    <td rowSpan="1">Budget</td>
-                    <td>
-                      예산 및 구매 준비도{" "}
-                      <InfoIcon text={scoringHelp.budgetPreparedness} />
-                    </td>
-                    <td>
-                      <select
-                        value={inputs.budgetPreparedness}
-                        onChange={(e) =>
-                          handleInputChange(
-                            "budgetPreparedness",
-                            e.target.value
-                          )
-                        }
-                      >
-                        {scoreOptions.map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-
-                  {/* Authority */}
-                  <tr>
-                    <td rowSpan="2">Authority</td>
-                    <td>
-                      내부 지지자 파워{" "}
-                      <InfoIcon text={scoringHelp.championPower} />
-                    </td>
-                    <td>
-                      <select
-                        value={inputs.championPower}
-                        onChange={(e) =>
-                          handleInputChange("championPower", e.target.value)
-                        }
-                      >
-                        {scoreOptions.map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      의사결정권자 접근성{" "}
-                      <InfoIcon text={scoringHelp.decisionAccess} />
-                    </td>
-                    <td>
-                      <select
-                        value={inputs.decisionAccess}
-                        onChange={(e) =>
-                          handleInputChange("decisionAccess", e.target.value)
-                        }
-                      >
-                        {scoreOptions.map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-
-                  {/* Need */}
-                  <tr>
-                    <td rowSpan="2">Need</td>
-                    <td>
-                      문제 적합성{" "}
-                      <InfoIcon text={scoringHelp.problemFit} />
-                    </td>
-                    <td>
-                      <select
-                        value={inputs.problemFit}
-                        onChange={(e) =>
-                          handleInputChange("problemFit", e.target.value)
-                        }
-                      >
-                        {scoreOptions.map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      경쟁 구도{" "}
-                      <InfoIcon text={scoringHelp.competition} />
-                    </td>
-                    <td>
-                      <select
-                        value={inputs.competition}
-                        onChange={(e) =>
-                          handleInputChange("competition", e.target.value)
-                        }
-                      >
-                        {scoreOptions.map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-
-                  {/* Timeline */}
-                  <tr>
-                    <td rowSpan="2">Timeline</td>
-                    <td>
-                      시급성/타이밍{" "}
-                      <InfoIcon text={scoringHelp.urgency} />
-                    </td>
-                    <td>
-                      <select
-                        value={inputs.urgency}
-                        onChange={(e) =>
-                          handleInputChange("urgency", e.target.value)
-                        }
-                      >
-                        {scoreOptions.map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      도입 용이성{" "}
-                      <InfoIcon text={scoringHelp.easeOfAdoption} />
-                    </td>
-                    <td>
-                      <select
-                        value={inputs.easeOfAdoption}
-                        onChange={(e) =>
-                          handleInputChange(
-                            "easeOfAdoption",
-                            e.target.value
-                          )
-                        }
-                      >
-                        {scoreOptions.map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
+                  {dealDetailItems.map((item) => (
+                    <tr key={item.id}>
+                      <td className="col-label">
+                        <div className="score-row-label">
+                          {item.group}
+                          <span className="sub">{item.label}</span>
+                        </div>
+                      </td>
+                      <td className="col-score">
+                        <select
+                          value={scores[item.id] ?? ""}
+                          onChange={(e) =>
+                            handleScoreChange(item.id, e.target.value)
+                          }
+                          aria-label={`${item.group} - ${item.label} 점수`}
+                        >
+                          <option value="">-</option>
+                          {options.map((v) => (
+                            <option key={v} value={v}>
+                              {v}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="col-avg" />
+                      <td className="col-info">
+                        <button
+                          type="button"
+                          className="info-btn"
+                          onMouseEnter={() => setHoverId(item.id)}
+                          onMouseLeave={() => setHoverId(null)}
+                          aria-label={`${item.group} Scoring 기준`}
+                        >
+                          i
+                          {hoverId === item.id && (
+                            <div className="info-tooltip">{item.scoring}</div>
+                          )}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
 
-              {/* 가중치 조정 토글 박스 */}
-              <div className="weights-container">
+              <WeightAdjuster
+                weights={weights}
+                onChange={setWeights}
+                weightOrder={["Budget", "Authority", "Need", "Timeline"]}
+              />
+
+              <div className="actions-row">
                 <button
+                  className="btn-primary"
                   type="button"
-                  className="weights-toggle"
-                  onClick={() => setShowWeights((prev) => !prev)}
+                  onClick={handleCalculate}
                 >
-                  <span className="weights-toggle-label">가중치 조정</span>
-                  <span
-                    className={
-                      "weights-chevron" + (showWeights ? " open" : "")
-                    }
-                  >
-                    ⌃
-                  </span>
-                </button>
-
-                {showWeights && (
-                  <div className="weights-panel">
-                    <p className="weights-help">
-                      Budget / Need / Authority / Timeline 가중치 합이 1이 되도록
-                      조정하세요.
-                    </p>
-                    <div className="weights-grid">
-                      <WeightControl
-                        label="Budget"
-                        value={weights.budget}
-                        onChange={(v) => handleWeightChange("budget", v)}
-                      />
-                      <WeightControl
-                        label="Need"
-                        value={weights.need}
-                        onChange={(v) => handleWeightChange("need", v)}
-                      />
-                      <WeightControl
-                        label="Authority"
-                        value={weights.authority}
-                        onChange={(v) => handleWeightChange("authority", v)}
-                      />
-                      <WeightControl
-                        label="Timeline"
-                        value={weights.timeline}
-                        onChange={(v) => handleWeightChange("timeline", v)}
-                      />
-                    </div>
-                    {!validateWeightSum() && (
-                      <p className="warning-text">
-                        가중치의 합이 1이 아닙니다. (현재 합:{" "}
-                        {(
-                          weights.budget +
-                          weights.need +
-                          weights.authority +
-                          weights.timeline
-                        ).toFixed(2)}
-                        )
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <div className="button-row">
-                <button className="primary" onClick={handleCalculate}>
                   결과 보기
                 </button>
               </div>
-            </section>
 
-            <section className="card result-card">
-              <h3>Deal 결과</h3>
-              <div className="result-row">
-                <div>
-                  <span className="label">Deal Score</span>
-                  <span className="value">
-                    {score !== null ? `${score} / 100` : "-"}
-                  </span>
-                </div>
-                <div>
-                  <span className="label">Win Probability</span>
-                  <span className="value">
-                    {winProb !== null ? `${winProb}%` : "-"}
-                  </span>
-                </div>
-              </div>
-              <div className="label-row">
-                {winLabel && <span className="chip">{winLabel}</span>}
-              </div>
-            </section>
+              {result && (
+                <>
+                  <div className="result-box">
+                    <h4>결과</h4>
+                    <div className="result-grid">
+                      <div>
+                        <span className="result-label">Deal Score</span>
+                      </div>
+                      <div className="result-value">
+                        {result.score} / 100
+                      </div>
+                      <div>
+                        <span className="result-label">Win Probability</span>
+                      </div>
+                      <div className="result-value">
+                        {result.winProbability}% ({result.winLabel})
+                      </div>
+                    </div>
+                  </div>
 
-            <section className="card risk-card">
-              <h3>Risk Summary</h3>
-              {riskSummary.length === 0 ? (
-                <p className="muted">현재까지 감지된 주요 리스크가 없습니다.</p>
-              ) : (
-                <ul>
-                  {riskSummary.map((r, idx) => (
-                    <li key={idx}>{r}</li>
-                  ))}
-                </ul>
+                  {result.riskItems.length > 0 && (
+                    <div className="risk-box">
+                      <div className="risk-title">Risk Summary</div>
+                      {result.riskItems.map((r, idx) => (
+                        <div key={idx} className="risk-item">
+                          - {r}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
               )}
             </section>
-
-            {modalOpen && (
-              <div
-                className="modal-backdrop"
-                onClick={() => setModalOpen(false)}
-              >
-                <div
-                  className="modal"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                >
-                  <h3>Win Probability</h3>
-                  <p className="modal-score">
-                    {winProb}% · <span>{winLabel}</span>
-                  </p>
-                  <p className="modal-desc">
-                    Deal Score를 기반으로 산출된 수주 가능성입니다.
-                  </p>
-                  <button
-                    className="secondary"
-                    onClick={() => setModalOpen(false)}
-                  >
-                    닫기
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+          </section>
         );
       }
 
-      /* Technical Fit Score 탭 */
-      function TechnicalFitTab({ onResult }) {
-        const [inputs, setInputs] = useState({
-          featureFit: 3,
-          customization: 3,
-          legacyConstraint: 3,
-          infraCompatibility: 3,
-          integrationSupport: 3,
-          envConstraint: 3,
-          securityDifficulty: 3,
-          regulation: 3,
-          dataSecurityFit: 3,
-          customerTeamReady: 3,
-          supportResource: 3,
-          timelineRealism: 3,
-        });
+      function TechnicalFitTab({ onResultChange }) {
+        const [scores, setScores] = useState({});
+        const [weights, setWeights] = useState(defaultTechWeights);
+        const [hoverId, setHoverId] = useState(null);
+        const [result, setResult] = useState(null);
 
-        const [weights, setWeights] = useState({
-          techFit: 0.35,
-          envInt: 0.25,
-          compSec: 0.2,
-          humanExec: 0.2,
-        });
-
-        const [showWeights, setShowWeights] = useState(false);
-        const [score, setScore] = useState(null);
-        const [riskLevel, setRiskLevel] = useState("");
-        const [riskLabel, setRiskLabel] = useState("");
-        const [modalOpen, setModalOpen] = useState(false);
-        const [riskSummary, setRiskSummary] = useState([]);
-
-        const scoringHelp = {
-          featureFit:
-            "기능 적합성\n1: 요구 기능 대부분 불일치 / 구현 어려움\n2: 핵심 기능 일부 부족 / 커스터마이징 필수\n3: 주요 기능 대부분 충족 / 보통 수준\n4: 필수 기능 충족 / 옵션만 조정 필요\n5: 요구사항 완전 일치 / 최적 Fit",
-          customization:
-            "커스터마이징 필요도\n1: 커스터마이징 많음 / 높은 복잡도\n2: 개발 필요하나 가능 / 리스크 존재\n3: 일반적 난이도 / 구현 가능\n4: 소규모 구성 정도 / 부담 낮음\n5: 구성만으로 즉시 적용 가능",
-          legacyConstraint:
-            "레거시 제약\n1: 레거시 제약 심각 / 연동 불가\n2: 제약 존재 / 우회 가능하나 위험\n3: 일부 제약 있으나 현실적 대안 존재\n4: 제약 적음 / 대부분 호환\n5: 제약 거의 없음 / 최적 환경",
-          infraCompatibility:
-            "인프라 호환성\n1: 호환 거의 불가 / 제약 매우 큼\n2: 호환성 낮음 / 조정 필요\n3: 보통 수준 호환 / 일부 검증 필요\n4: 전반적 호환 양호\n5: 완전 호환 / 즉시 사용 가능",
-          integrationSupport:
-            "연동 지원 여부\n1: 연동 불가 혹은 매우 어려움\n2: 연동 가능하나 난이도 높음\n3: 일반적 난이도 / 표준 프로토콜 기반\n4: 연동 수월함 / 기존 레퍼런스 존재\n5: 즉시 연동 가능 / 장애 요소 없음",
-          envConstraint:
-            "환경/네트워크 제약\n1: 제약 매우 심각\n2: 제약 존재 / 설정 조정 필요\n3: 일부 제약 있으나 관리 가능\n4: 대부분 문제 없음\n5: 제약 거의 없음 / 최적 환경",
-          securityDifficulty:
-            "보안 검토 난이도\n1: 보안 충족 어려움 / 리스크 큼\n2: 충족 가능하나 불확실성 큼\n3: 보통 난이도 / 일부 검토 필요\n4: 대부분 충족 / 승인 가능성 높음\n5: 문제 없음 / 승인 확실",
-          regulation:
-            "규제 준수 가능성\n1: 규제 충족 불가\n2: 충족 가능하나 장애물 많음\n3: 대부분 충족 / 추가 조정 필요\n4: 규제 충족 가능성이 높음\n5: 완전 충족 / 검증 문제 없음",
-          dataSecurityFit:
-            "데이터/보안 적합성\n1: 요구 기준과 불일치\n2: 일부 불일치 / 수정 필요\n3: 대부분 충족 / 조정 가능\n4: 전반적 적합 / 리스크 낮음\n5: 완전 적합 / 요구 충족",
-          customerTeamReady:
-            "고객 기술팀 준비도\n1: 리소스 없음 / 진행 불가\n2: 리소스 부족 / 일정 위험\n3: 기본 역량 충분 / 일반적 수행 가능\n4: 역량 충분 / 협업 적극적\n5: 매우 적극적 / 전문성 높음",
-          supportResource:
-            "도입 지원 리소스\n1: 지원 리소스 거의 없음\n2: 리소스 부족 / 일정 불확실\n3: 일반적 수준 / 일부 조율 필요\n4: 충분한 지원 가능\n5: 즉시 투입 가능 / 여유 있음",
-          timelineRealism:
-            "일정/범위 현실성\n1: 일정 불명확 / 실현 어려움\n2: 일정 모호 / 우선순위 낮음\n3: 일정 존재 / 변동 가능성 있음\n4: 일정 명확 / 실행력 있음\n5: 즉시 착수 가능 / 강한 추진력",
-        };
-
-        const handleInputChange = (field, value) => {
-          setInputs((prev) => ({ ...prev, [field]: Number(value) }));
-        };
-
-        const handleWeightChange = (field, newValue) => {
-          setWeights((prev) => ({ ...prev, [field]: newValue }));
-        };
-
-        const validateWeightSum = () => {
-          const sum =
-            weights.techFit + weights.envInt + weights.compSec + weights.humanExec;
-          return Math.abs(sum - 1) < 0.001;
-        };
-
-        const getRiskFromScore = (s) => {
-          if (s <= 20) return { level: "매우 높음", label: "기술적 불가" };
-          if (s <= 40) return { level: "높음", label: "중단 고려" };
-          if (s <= 60) return { level: "중간", label: "주의 필요" };
-          if (s <= 80) return { level: "낮음", label: "적합함" };
-          return { level: "매우 낮음", label: "매우 적합" };
-        };
-
-        const buildRiskSummary = (aggregates) => {
-          const items = [];
-          if (aggregates.techFit <= 2) {
-            items.push(
-              "기능/레거시 리스크: Technical Fit 합산이 낮아 구현 난이도가 높을 수 있습니다."
-            );
-          }
-          if (aggregates.envInt <= 2) {
-            items.push(
-              "환경/연동 리스크: 인프라/연동/네트워크 제약이 커서 도입 리스크가 큽니다."
-            );
-          }
-          if (aggregates.compSec <= 2) {
-            items.push(
-              "규제/보안 리스크: Compliance & Security 측면의 승인/규제 리스크가 큽니다."
-            );
-          }
-          if (aggregates.humanExec <= 2) {
-            items.push(
-              "실행 리스크: 고객 기술팀 준비도, 도입 지원 리소스, 일정 현실성이 부족합니다."
-            );
-          }
-          return items;
+        const handleScoreChange = (id, value) => {
+          const num = value ? Number(value) : null;
+          setScores((prev) => ({ ...prev, [id]: num }));
         };
 
         const handleCalculate = () => {
-          if (!validateWeightSum()) {
+          const totalW =
+            (weights.TechnicalFit ?? 0) +
+            (weights.Environment ?? 0) +
+            (weights.Compliance ?? 0) +
+            (weights.Human ?? 0);
+          if (Math.abs(totalW - 1) > 0.001) {
             alert(
-              "Technical Fit Score 가중치 합이 1이 아닙니다. 값을 조정해주세요."
+              "Technical Fit Score 가중치 합이 1이 되도록 조정해 주세요."
             );
             return;
           }
+          const aggr = computeTechAggregates(scores);
+          const score = computeTechScore(aggr, weights);
+          const { level, label } = mapTechScoreToRisk(score);
 
-          const techFit =
-            (inputs.featureFit + inputs.customization + inputs.legacyConstraint) / 3;
-          const envInt =
-            (inputs.infraCompatibility +
-              inputs.integrationSupport +
-              inputs.envConstraint) /
-            3;
-          const compSec =
-            (inputs.securityDifficulty +
-              inputs.regulation +
-              inputs.dataSecurityFit) /
-            3;
-          const humanExec =
-            (inputs.customerTeamReady +
-              inputs.supportResource +
-              inputs.timelineRealism) /
-            3;
+          const riskItems = [];
+          if (aggr.technical > 0 && aggr.technical <= 2)
+            riskItems.push(techRiskMessages.TechnicalFit);
+          if (aggr.environment > 0 && aggr.environment <= 2)
+            riskItems.push(techRiskMessages.Environment);
+          if (aggr.compliance > 0 && aggr.compliance <= 2)
+            riskItems.push(techRiskMessages.Compliance);
+          if (aggr.human > 0 && aggr.human <= 2)
+            riskItems.push(techRiskMessages.Human);
 
-          const raw =
-            weights.techFit * techFit +
-            weights.envInt * envInt +
-            weights.compSec * compSec +
-            weights.humanExec * humanExec;
-
-          const finalScore = Math.round((raw / 5) * 100);
-          const { level, label } = getRiskFromScore(finalScore);
-          const aggregates = { techFit, envInt, compSec, humanExec };
-          const risks = buildRiskSummary(aggregates);
-
-          setScore(finalScore);
-          setRiskLevel(level);
-          setRiskLabel(label);
-          setRiskSummary(risks);
-          setModalOpen(true);
-
-          onResult({
-            score: finalScore,
+          const res = {
+            score,
             riskLevel: level,
             riskLabel: label,
-            aggregates,
-          });
+            aggregates: aggr,
+            riskItems,
+          };
+          setResult(res);
+          onResultChange && onResultChange(res);
         };
 
-        const scoreOptions = [5, 4, 3, 2, 1];
+        const options = rangeOptions(5, 1);
 
         return (
-          <div className="panel">
+          <section className="panel" aria-label="Technical Fit Score">
             <h2>Technical Fit Score</h2>
             <p className="panel-desc">
-              기술 적합성 관점에서 이 Deal의 기술 리스크 수준을 평가합니다.
+              기술적 적합성을 정량화하고 기술 리스크 수준을 평가합니다.
             </p>
 
             <section className="card">
-              <header className="card-header">
-                <h3>적합성 항목</h3>
-                <p className="card-subtitle">
-                  각 세부 항목에 1~5점을 부여하고, 필요 시 가중치를 조정하세요.
-                </p>
-              </header>
-
-              <table className="score-table">
+              <h3>적합성 항목</h3>
+              <table>
                 <thead>
                   <tr>
-                    <th>적합성 항목</th>
-                    <th>세부 항목</th>
-                    <th>점수 (1~5)</th>
+                    <th className="col-label">세부 항목</th>
+                    <th className="col-score">점수 (5~1)</th>
+                    <th className="col-avg">합산</th>
+                    <th className="col-info">Scoring 기준</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {/* Technical Fit */}
-                  <tr>
-                    <td rowSpan="3">Technical Fit</td>
-                    <td>
-                      기능 적합성{" "}
-                      <InfoIcon text={scoringHelp.featureFit} />
-                    </td>
-                    <td>
-                      <select
-                        value={inputs.featureFit}
-                        onChange={(e) =>
-                          handleInputChange("featureFit", e.target.value)
-                        }
-                      >
-                        {scoreOptions.map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      커스터마이징 필요도{" "}
-                      <InfoIcon text={scoringHelp.customization} />
-                    </td>
-                    <td>
-                      <select
-                        value={inputs.customization}
-                        onChange={(e) =>
-                          handleInputChange("customization", e.target.value)
-                        }
-                      >
-                        {scoreOptions.map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      레거시 제약{" "}
-                      <InfoIcon text={scoringHelp.legacyConstraint} />
-                    </td>
-                    <td>
-                      <select
-                        value={inputs.legacyConstraint}
-                        onChange={(e) =>
-                          handleInputChange(
-                            "legacyConstraint",
-                            e.target.value
-                          )
-                        }
-                      >
-                        {scoreOptions.map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-
-                  {/* Environment & Integration */}
-                  <tr>
-                    <td rowSpan="3">Environment &amp; Integration</td>
-                    <td>
-                      인프라 호환성{" "}
-                      <InfoIcon text={scoringHelp.infraCompatibility} />
-                    </td>
-                    <td>
-                      <select
-                        value={inputs.infraCompatibility}
-                        onChange={(e) =>
-                          handleInputChange(
-                            "infraCompatibility",
-                            e.target.value
-                          )
-                        }
-                      >
-                        {scoreOptions.map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      연동 지원 여부{" "}
-                      <InfoIcon text={scoringHelp.integrationSupport} />
-                    </td>
-                    <td>
-                      <select
-                        value={inputs.integrationSupport}
-                        onChange={(e) =>
-                          handleInputChange(
-                            "integrationSupport",
-                            e.target.value
-                          )
-                        }
-                      >
-                        {scoreOptions.map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      환경/네트워크 제약{" "}
-                      <InfoIcon text={scoringHelp.envConstraint} />
-                    </td>
-                    <td>
-                      <select
-                        value={inputs.envConstraint}
-                        onChange={(e) =>
-                          handleInputChange("envConstraint", e.target.value)
-                        }
-                      >
-                        {scoreOptions.map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-
-                  {/* Compliance & Security */}
-                  <tr>
-                    <td rowSpan="3">Compliance &amp; Security</td>
-                    <td>
-                      보안 검토 난이도{" "}
-                      <InfoIcon text={scoringHelp.securityDifficulty} />
-                    </td>
-                    <td>
-                      <select
-                        value={inputs.securityDifficulty}
-                        onChange={(e) =>
-                          handleInputChange(
-                            "securityDifficulty",
-                            e.target.value
-                          )
-                        }
-                      >
-                        {scoreOptions.map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      규제 준수 가능성{" "}
-                      <InfoIcon text={scoringHelp.regulation} />
-                    </td>
-                    <td>
-                      <select
-                        value={inputs.regulation}
-                        onChange={(e) =>
-                          handleInputChange("regulation", e.target.value)
-                        }
-                      >
-                        {scoreOptions.map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      데이터/보안 적합성{" "}
-                      <InfoIcon text={scoringHelp.dataSecurityFit} />
-                    </td>
-                    <td>
-                      <select
-                        value={inputs.dataSecurityFit}
-                        onChange={(e) =>
-                          handleInputChange(
-                            "dataSecurityFit",
-                            e.target.value
-                          )
-                        }
-                      >
-                        {scoreOptions.map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-
-                  {/* Human & Execution Readiness */}
-                  <tr>
-                    <td rowSpan="3">Human &amp; Execution Readiness</td>
-                    <td>
-                      고객 기술팀 준비도{" "}
-                      <InfoIcon text={scoringHelp.customerTeamReady} />
-                    </td>
-                    <td>
-                      <select
-                        value={inputs.customerTeamReady}
-                        onChange={(e) =>
-                          handleInputChange(
-                            "customerTeamReady",
-                            e.target.value
-                          )
-                        }
-                      >
-                        {scoreOptions.map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      도입 지원 리소스{" "}
-                      <InfoIcon text={scoringHelp.supportResource} />
-                    </td>
-                    <td>
-                      <select
-                        value={inputs.supportResource}
-                        onChange={(e) =>
-                          handleInputChange(
-                            "supportResource",
-                            e.target.value
-                          )
-                        }
-                      >
-                        {scoreOptions.map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      일정/범위 현실성{" "}
-                      <InfoIcon text={scoringHelp.timelineRealism} />
-                    </td>
-                    <td>
-                      <select
-                        value={inputs.timelineRealism}
-                        onChange={(e) =>
-                          handleInputChange(
-                            "timelineRealism",
-                            e.target.value
-                          )
-                        }
-                      >
-                        {scoreOptions.map((n) => (
-                          <option key={n} value={n}>
-                            {n}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
+                  {techDetailItems.map((item) => (
+                    <tr key={item.id}>
+                      <td className="col-label">
+                        <div className="score-row-label">
+                          {item.group}
+                          <span className="sub">{item.label}</span>
+                        </div>
+                      </td>
+                      <td className="col-score">
+                        <select
+                          value={scores[item.id] ?? ""}
+                          onChange={(e) =>
+                            handleScoreChange(item.id, e.target.value)
+                          }
+                          aria-label={`${item.group} - ${item.label} 점수`}
+                        >
+                          <option value="">-</option>
+                          {options.map((v) => (
+                            <option key={v} value={v}>
+                              {v}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+                      <td className="col-avg" />
+                      <td className="col-info">
+                        <button
+                          type="button"
+                          className="info-btn"
+                          onMouseEnter={() => setHoverId(item.id)}
+                          onMouseLeave={() => setHoverId(null)}
+                          aria-label={`${item.group} Scoring 기준`}
+                        >
+                          i
+                          {hoverId === item.id && (
+                            <div className="info-tooltip">{item.scoring}</div>
+                          )}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
 
-              {/* 가중치 조정 토글 박스 */}
-              <div className="weights-container">
+              <WeightAdjuster
+                weights={weights}
+                onChange={setWeights}
+                weightOrder={[
+                  "TechnicalFit",
+                  "Environment",
+                  "Compliance",
+                  "Human",
+                ]}
+              />
+
+              <div className="actions-row">
                 <button
+                  className="btn-primary"
                   type="button"
-                  className="weights-toggle"
-                  onClick={() => setShowWeights((prev) => !prev)}
+                  onClick={handleCalculate}
                 >
-                  <span className="weights-toggle-label">가중치 조정</span>
-                  <span
-                    className={
-                      "weights-chevron" + (showWeights ? " open" : "")
-                    }
-                  >
-                    ⌃
-                  </span>
-                </button>
-
-                {showWeights && (
-                  <div className="weights-panel">
-                    <p className="weights-help">
-                      Technical Fit / Environment &amp; Integration / Compliance
-                      &amp; Security / Human &amp; Execution 가중치 합이 1이 되도록
-                      조정하세요.
-                    </p>
-                    <div className="weights-grid">
-                      <WeightControl
-                        label="Technical Fit"
-                        value={weights.techFit}
-                        onChange={(v) => handleWeightChange("techFit", v)}
-                      />
-                      <WeightControl
-                        label="Environment & Integration"
-                        value={weights.envInt}
-                        onChange={(v) => handleWeightChange("envInt", v)}
-                      />
-                      <WeightControl
-                        label="Compliance & Security"
-                        value={weights.compSec}
-                        onChange={(v) => handleWeightChange("compSec", v)}
-                      />
-                      <WeightControl
-                        label="Human & Execution"
-                        value={weights.humanExec}
-                        onChange={(v) => handleWeightChange("humanExec", v)}
-                      />
-                    </div>
-                    {!validateWeightSum() && (
-                      <p className="warning-text">
-                        가중치의 합이 1이 아닙니다. (현재 합:{" "}
-                        {(
-                          weights.techFit +
-                          weights.envInt +
-                          weights.compSec +
-                          weights.humanExec
-                        ).toFixed(2)}
-                        )
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <div className="button-row">
-                <button className="primary" onClick={handleCalculate}>
                   결과 보기
                 </button>
               </div>
-            </section>
 
-            <section className="card result-card">
-              <h3>Technical Fit 결과</h3>
-              <div className="result-row">
-                <div>
-                  <span className="label">Technical Fit Score</span>
-                  <span className="value">
-                    {score !== null ? `${score} / 100` : "-"}
-                  </span>
-                </div>
-                <div>
-                  <span className="label">Risk Level</span>
-                  <span className="value">{riskLevel || "-"}</span>
-                </div>
-              </div>
-              <div className="label-row">
-                {riskLabel && <span className="chip">{riskLabel}</span>}
-              </div>
-            </section>
+              {result && (
+                <>
+                  <div className="result-box">
+                    <h4>결과</h4>
+                    <div className="result-grid">
+                      <div>
+                        <span className="result-label">
+                          Technical Fit Score
+                        </span>
+                      </div>
+                      <div className="result-value">
+                        {result.score} / 100
+                      </div>
+                      <div>
+                        <span className="result-label">기술 리스크</span>
+                      </div>
+                      <div className="result-value">
+                        {result.riskLevel} ({result.riskLabel})
+                      </div>
+                    </div>
+                  </div>
 
-            <section className="card risk-card">
-              <h3>Risk Summary</h3>
-              {riskSummary.length === 0 ? (
-                <p className="muted">
-                  현재까지 감지된 주요 기술 리스크가 없습니다.
-                </p>
-              ) : (
-                <ul>
-                  {riskSummary.map((r, idx) => (
-                    <li key={idx}>{r}</li>
-                  ))}
-                </ul>
+                  {result.riskItems.length > 0 && (
+                    <div className="risk-box">
+                      <div className="risk-title">Risk Summary</div>
+                      {result.riskItems.map((r, idx) => (
+                        <div key={idx} className="risk-item">
+                          - {r}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
               )}
             </section>
-
-            {modalOpen && (
-              <div
-                className="modal-backdrop"
-                onClick={() => setModalOpen(false)}
-              >
-                <div
-                  className="modal"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                >
-                  <h3>Technical Fit Risk Level</h3>
-                  <p className="modal-score">
-                    {score}% · <span>{riskLabel}</span>
-                  </p>
-                  <p className="modal-desc">
-                    기술 적합성 점수를 기반으로 산출된 리스크 레벨입니다.
-                  </p>
-                  <button
-                    className="secondary"
-                    onClick={() => setModalOpen(false)}
-                  >
-                    닫기
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+          </section>
         );
       }
 
-      /* Dashboard 탭 */
       function DashboardTab({ dealResult, techResult }) {
         const businessFit = dealResult?.score ?? null;
         const technicalFit = techResult?.score ?? null;
@@ -1821,17 +1261,17 @@
         const markerStyle =
           businessFit != null && technicalFit != null
             ? {
-                left: businessFit + "%",
-                top: 100 - technicalFit + "%",
+                left: `${businessFit}%`,
+                top: `${100 - technicalFit}%`,
               }
             : { display: "none" };
 
         return (
-          <div className="panel">
+          <section className="panel" aria-label="Dashboard">
             <h2>Dashboard</h2>
             <p className="panel-desc">
-              Deal Win Score와 Technical Fit Score를 기반으로 딜 상태를 Quadrant로
-              시각화합니다.
+              Deal Win Score와 Technical Fit Score를 기반으로 딜 상태를
+              Quadrant로 시각화합니다.
             </p>
 
             <section className="card summary-card">
@@ -1872,21 +1312,17 @@
               <div className="quadrant-left">
                 <h3>Quadrant View</h3>
                 <div className="quadrant-axes">
-                  {/* 네 개의 Quadrant */}
                   <div className="quadrant q3">Tech OK but Biz Weak</div>
-                  <div className="quadrant q1">Go</div>
+                  <div className="quadrant q1">GO</div>
                   <div className="quadrant q4">No-Go</div>
                   <div className="quadrant q2">Biz OK but Tech Risk</div>
 
-                  {/* 축 분할선 */}
                   <div className="quadrant-cross vertical" />
                   <div className="quadrant-cross horizontal" />
 
-                  {/* 축 제목 */}
                   <div className="axis-title-x">Business Fit</div>
                   <div className="axis-title-y">Technical Fit</div>
 
-                  {/* 딜 위치 마커 */}
                   <div className="quadrant-marker" style={markerStyle}>
                     <span className="marker-dot" />
                   </div>
@@ -1897,8 +1333,8 @@
                 <h3 className="summary-title">Deal Summary</h3>
                 {businessFit == null || technicalFit == null ? (
                   <p className="muted">
-                    먼저 Deal Win Score와 Technical Fit Score를 계산하면, 여기에서
-                    총평과 권장 액션이 표시됩니다.
+                    먼저 Deal Win Score와 Technical Fit Score를 계산하면,
+                    여기에서 총평과 권장 액션이 표시됩니다.
                   </p>
                 ) : (
                   <>
@@ -1912,7 +1348,7 @@
                 )}
               </div>
             </section>
-          </div>
+          </section>
         );
       }
 
@@ -1922,37 +1358,58 @@
         const [techResult, setTechResult] = useState(null);
 
         return (
-          <div className="app">
+          <>
             <header className="app-header">
               <h1>Deal Qualification Tool</h1>
-              <p className="app-subtitle">
-                BANT 기반 Deal Win Score + Technical Fit Score 대시보드
+              <p className="subtitle">
+                BANT 기반 Deal Win Score와 Technical Fit Score를 활용해 영업
+                기회를 정량적으로 평가합니다.
               </p>
             </header>
 
-            <Tabs activeTab={activeTab} onChange={setActiveTab} />
+            <nav
+              className="tabs"
+              role="tablist"
+              aria-label="DQ Tool 탭 네비게이션"
+            >
+              <button
+                className={`tab-button ${activeTab === "deal" ? "active" : ""}`}
+                role="tab"
+                aria-selected={activeTab === "deal"}
+                onClick={() => setActiveTab("deal")}
+              >
+                Deal Win Score
+              </button>
+              <button
+                className={`tab-button ${activeTab === "tech" ? "active" : ""}`}
+                role="tab"
+                aria-selected={activeTab === "tech"}
+                onClick={() => setActiveTab("tech")}
+              >
+                Technical Fit Score
+              </button>
+              <button
+                className={`tab-button ${
+                  activeTab === "dashboard" ? "active" : ""
+                }`}
+                role="tab"
+                aria-selected={activeTab === "dashboard"}
+                onClick={() => setActiveTab("dashboard")}
+              >
+                Dashboard
+              </button>
+            </nav>
 
-            <main>
-              {activeTab === "deal" && (
-                <DealWinScoreTab onResult={setDealResult} />
-              )}
-              {activeTab === "tech" && (
-                <TechnicalFitTab onResult={setTechResult} />
-              )}
-              {activeTab === "dashboard" && (
-                <DashboardTab
-                  dealResult={dealResult}
-                  techResult={techResult}
-                />
-              )}
-            </main>
-
-            <footer className="app-footer">
-              <span>
-                © {new Date().getFullYear()} Deal Qualification Tool
-              </span>
-            </footer>
-          </div>
+            {activeTab === "deal" && (
+              <DealWinTab onResultChange={setDealResult} />
+            )}
+            {activeTab === "tech" && (
+              <TechnicalFitTab onResultChange={setTechResult} />
+            )}
+            {activeTab === "dashboard" && (
+              <DashboardTab dealResult={dealResult} techResult={techResult} />
+            )}
+          </>
         );
       }
 
