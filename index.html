@@ -1815,3 +1815,1014 @@
                   <span class="pill-muted">Quadrant View</span>
                 </div>
                 <div class="section-subtitle">
+                  Business Fit (Deal Win Score)와 Technical Fit을 2×2 Quadrant로 시각화합니다.
+                </div>
+              </div>
+            </div>
+            <div class="section-body">
+              <div class="metrics-row">
+                <div class="metric-card">
+                  <div class="metric-label">Deal Win Score</div>
+                  <div class="metric-value" id="metricDealScore">-</div>
+                  <div class="metric-sub" id="metricWinProb">-</div>
+                </div>
+                <div class="metric-card">
+                  <div class="metric-label">Technical Fit Score</div>
+                  <div class="metric-value" id="metricTechScore">-</div>
+                  <div class="metric-sub" id="metricTechRisk">-</div>
+                </div>
+              </div>
+              <div class="dashboard-grid">
+                <div class="quadrant-card">
+                  <div class="quadrant-header">
+                    <span>Business vs Technical Fit</span>
+                    <span class="pill-muted">점수가 높을수록 오른쪽·위쪽</span>
+                  </div>
+                  <canvas id="quadrantCanvas"></canvas>
+                </div>
+                <div class="summary-card">
+                  <div class="summary-zone" id="summaryZone">-</div>
+                  <div class="summary-body" id="summaryBody">
+                    Deal 점수에 기반한 총평이 여기에 표시됩니다.
+                  </div>
+                  <div class="summary-actions" id="summaryActions">
+                    권장 액션이 여기에 표시됩니다.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Admin Tab -->
+        <section class="section" id="tab-admin" style="display:none;">
+          <div class="section-card">
+            <div class="section-header">
+              <div>
+                <div class="section-title">
+                  <span>Admin</span>
+                  <span class="pill-muted">Saved Deals</span>
+                </div>
+                <div class="section-subtitle">
+                  Dashboard까지 평가를 완료한 Deal 목록입니다. 클릭하여 다시 불러오거나 삭제할 수 있습니다.
+                </div>
+              </div>
+            </div>
+            <div class="section-body">
+              <div id="adminList" class="admin-list">
+                <div class="admin-empty">저장된 Deal이 없습니다.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle"></div>
+        <button class="btn-ghost" id="modalCloseButton">✕</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-sub" id="modalSub"></div>
+    </div>
+  </div>
+
+  <script>
+    // --- State ---
+    let currentDeal = null; // will hold meta + scores + dashboard
+
+    function createEmptyDeal() {
+      return {
+        id: Date.now().toString(),
+        createdAt: new Date().toISOString(),
+        meta: {
+          name: "",
+          description: ""
+        },
+        dealWin: null,
+        techFit: null,
+        dashboard: null
+      };
+    }
+
+    // --- Utility ---
+    function $(selector) {
+      return document.querySelector(selector);
+    }
+
+    function $all(selector) {
+      return Array.from(document.querySelectorAll(selector));
+    }
+
+    function showElement(el) {
+      if (el) el.style.display = "";
+    }
+
+    function hideElement(el) {
+      if (el) el.style.display = "none";
+    }
+
+    function toNumber(val) {
+      const n = parseFloat(val);
+      return isNaN(n) ? 0 : n;
+    }
+
+    function round(val, digits = 0) {
+      const factor = Math.pow(10, digits);
+      return Math.round(val * factor) / factor;
+    }
+
+    // --- Tabs ---
+    function initTabs() {
+      const tabButtons = $all(".tab-button");
+      tabButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const tab = btn.dataset.tab;
+          tabButtons.forEach(b => {
+            b.classList.toggle("active", b === btn);
+            b.setAttribute("aria-selected", b === btn ? "true" : "false");
+          });
+          if (tab === "qualification") {
+            showElement($("#tab-qualification"));
+            hideElement($("#tab-admin"));
+          } else {
+            hideElement($("#tab-qualification"));
+            showElement($("#tab-admin"));
+            renderAdminList();
+          }
+        });
+      });
+    }
+
+    // --- Start / Deal Info ---
+    function initDealInfo() {
+      $("#startDealButton").addEventListener("click", () => {
+        if (!currentDeal) {
+          currentDeal = createEmptyDeal();
+        }
+        showElement($("#dealInfoSection"));
+        $("#dealNameInput").focus();
+      });
+
+      $("#dealInfoCompleteButton").addEventListener("click", () => {
+        const nameInput = $("#dealNameInput");
+        const descInput = $("#dealDescriptionInput");
+        const errorEl = $("#dealNameError");
+        const name = nameInput.value.trim();
+        if (!name) {
+          errorEl.style.display = "block";
+          return;
+        }
+        errorEl.style.display = "none";
+
+        if (!currentDeal) {
+          currentDeal = createEmptyDeal();
+        }
+        currentDeal.meta.name = name;
+        currentDeal.meta.description = descInput.value.trim();
+
+        // Show Deal Win section
+        showElement($("#dealWinSection"));
+        $("#dealWinSection").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      $("#dealNameInput").addEventListener("input", () => {
+        $("#dealNameError").style.display = "none";
+      });
+    }
+
+    // --- Tooltip ---
+    function initTooltips() {
+      $all(".info-icon").forEach(icon => {
+        const tooltipId = icon.dataset.tooltipId;
+        const tooltip = $("#" + tooltipId);
+        if (!tooltip) return;
+
+        function show() {
+          tooltip.classList.add("visible");
+        }
+        function hide() {
+          tooltip.classList.remove("visible");
+        }
+
+        icon.addEventListener("mouseenter", show);
+        icon.addEventListener("mouseleave", hide);
+        icon.addEventListener("click", () => {
+          tooltip.classList.toggle("visible");
+        });
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".info-icon")) {
+          $all(".tooltip.visible").forEach(t => t.classList.remove("visible"));
+        }
+      });
+    }
+
+    // --- Weights ---
+    function updateWeightSum(type) {
+      if (type === "dw") {
+        const wB = toNumber($("#dwWeightBudget").value);
+        const wN = toNumber($("#dwWeightNeed").value);
+        const wA = toNumber($("#dwWeightAuthority").value);
+        const wT = toNumber($("#dwWeightTimeline").value);
+        const sum = wB + wN + wA + wT;
+        const textEl = $("#dwWeightSumText");
+        textEl.textContent = "합계: " + sum.toFixed(2);
+        if (Math.abs(sum - 1) > 0.001) {
+          textEl.classList.add("error");
+          $("#dealWinResultButton").disabled = true;
+        } else {
+          textEl.classList.remove("error");
+          $("#dealWinResultButton").disabled = false;
+        }
+      } else if (type === "tf") {
+        const wt = toNumber($("#tfWeightTechnicalFit").value);
+        const we = toNumber($("#tfWeightEnvironment").value);
+        const wc = toNumber($("#tfWeightCompliance").value);
+        const wh = toNumber($("#tfWeightHuman").value);
+        const sum = wt + we + wc + wh;
+        const textEl = $("#tfWeightSumText");
+        textEl.textContent = "합계: " + sum.toFixed(2);
+        if (Math.abs(sum - 1) > 0.001) {
+          textEl.classList.add("error");
+          $("#techFitResultButton").disabled = true;
+        } else {
+          textEl.classList.remove("error");
+          $("#techFitResultButton").disabled = false;
+        }
+      }
+    }
+
+    function initWeightInputs() {
+      ["#dwWeightBudget", "#dwWeightNeed", "#dwWeightAuthority", "#dwWeightTimeline"]
+        .forEach(id => {
+          $(id).addEventListener("input", () => updateWeightSum("dw"));
+        });
+
+      ["#tfWeightTechnicalFit", "#tfWeightEnvironment", "#tfWeightCompliance", "#tfWeightHuman"]
+        .forEach(id => {
+          $(id).addEventListener("input", () => updateWeightSum("tf"));
+        });
+
+      updateWeightSum("dw");
+      updateWeightSum("tf");
+    }
+
+    // --- Modal ---
+    function showModal(title, body, sub = "") {
+      $("#modalTitle").textContent = title;
+      $("#modalBody").textContent = body;
+      $("#modalSub").textContent = sub;
+      $("#modalBackdrop").classList.add("visible");
+    }
+
+    function hideModal() {
+      $("#modalBackdrop").classList.remove("visible");
+    }
+
+    function initModal() {
+      $("#modalCloseButton").addEventListener("click", hideModal);
+      $("#modalBackdrop").addEventListener("click", (e) => {
+        if (e.target === $("#modalBackdrop")) {
+          hideModal();
+        }
+      });
+    }
+
+    // --- Collapse toggles ---
+    function initCollapse() {
+      $all(".collapse-toggle").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const targetId = btn.dataset.target;
+          const body = $("#" + targetId);
+          if (!body) return;
+          const collapsed = body.classList.toggle("collapsed");
+          btn.innerHTML = collapsed ? '<span>펼치기</span> ▼' : '<span>접기</span> ▲';
+        });
+      });
+    }
+
+    // --- Deal Win Score calculation ---
+    function calculateDealWin() {
+      const selects = $all("[data-dw-score]");
+      const scores = {};
+      for (const sel of selects) {
+        const key = sel.dataset.dwScore;
+        const val = sel.value;
+        if (!val) {
+          alert("Deal Win Score의 모든 점수를 입력해 주세요.");
+          return null;
+        }
+        scores[key] = parseInt(val, 10);
+      }
+
+      const wB = toNumber($("#dwWeightBudget").value);
+      const wN = toNumber($("#dwWeightNeed").value);
+      const wA = toNumber($("#dwWeightAuthority").value);
+      const wT = toNumber($("#dwWeightTimeline").value);
+      const sumW = wB + wN + wA + wT;
+      if (Math.abs(sumW - 1) > 0.001) {
+        alert("Deal Win 가중치 합이 1이 되도록 조정해 주세요.");
+        return null;
+      }
+
+      const budgetSum = scores.budgetReadiness;
+      const authoritySum = (scores.authorityChampion + scores.authorityAccess) / 2;
+      const needSum = (scores.needFit + scores.needCompetition) / 2;
+      const timelineSum = (scores.timelineUrgency + scores.timelineEase) / 2;
+
+      const raw =
+        (wB * budgetSum) +
+        (wA * authoritySum) +
+        (wN * needSum) +
+        (wT * timelineSum);
+
+      const dealScore = Math.max(0, Math.min(100, (raw / 5) * 100));
+
+      let winProb = 10;
+      let label = "매우 낮음";
+      if (dealScore >= 81) {
+        winProb = 90; label = "매우 높음";
+      } else if (dealScore >= 61) {
+        winProb = 70; label = "높음";
+      } else if (dealScore >= 41) {
+        winProb = 50; label = "중간";
+      } else if (dealScore >= 21) {
+        winProb = 30; label = "낮음";
+      }
+
+      const riskMessages = [];
+      if (budgetSum <= 2) {
+        riskMessages.push("예산 리스크: 구매 가능성 낮음 (Budget 합산 ≤ 2)");
+      }
+      if (authoritySum <= 2) {
+        riskMessages.push("Authority 리스크: 챔피언·의사결정자 영향력 부족 (Authority 합산 ≤ 2)");
+      }
+      if (needSum <= 2) {
+        riskMessages.push("Need 리스크: Problem-Solution Fit 약함 혹은 경쟁 열위 (Need 합산 ≤ 2)");
+      }
+      if (timelineSum <= 2) {
+        riskMessages.push("타이밍 리스크: 시급성/도입 용이성 낮음 (Timeline 합산 ≤ 2)");
+      }
+
+      return {
+        scores,
+        weights: { wB, wN, wA, wT },
+        sums: {
+          budget: budgetSum,
+          authority: authoritySum,
+          need: needSum,
+          timeline: timelineSum
+        },
+        dealScore,
+        winProb,
+        winLabel: label,
+        risks: riskMessages
+      };
+    }
+
+    function renderDealWinResult(dw) {
+      $("#dealScoreValue").textContent = dw.dealScore.toFixed(1) + " %";
+      $("#winProbValue").textContent = dw.winProb + " % (" + dw.winLabel + ")";
+      const list = $("#dealWinRiskList");
+      list.innerHTML = "";
+      if (dw.risks.length === 0) {
+        const li = document.createElement("li");
+        li.textContent = "특별한 리스크 없음 (모든 합산 점수 > 2)";
+        list.appendChild(li);
+      } else {
+        dw.risks.forEach(msg => {
+          const li = document.createElement("li");
+          li.textContent = msg;
+          list.appendChild(li);
+        });
+      }
+      showElement($("#dealWinResultArea"));
+
+      // Summary bar text
+      $("#dealWinSummaryText").textContent =
+        dw.dealScore.toFixed(1) + "% · Win Prob " +
+        dw.winProb + "% (" + dw.winLabel + ")";
+      showElement($("#dealWinSummaryBar"));
+
+      // Collapse section when moving on
+      const body = $("#dealWinSectionBody");
+      if (!body.classList.contains("collapsed")) {
+        body.classList.add("collapsed");
+      }
+    }
+
+    function initDealWin() {
+      $("#dealWinResultButton").addEventListener("click", () => {
+        if (!currentDeal) {
+          alert("먼저 Deal 정보를 입력해 주세요.");
+          return;
+        }
+        const dw = calculateDealWin();
+        if (!dw) return;
+
+        // Save to state
+        currentDeal.dealWin = dw;
+        renderDealWinResult(dw);
+
+        // Modal
+        showModal(
+          "Win Probability",
+          `이 Deal의 Win Probability는 ${dw.winProb}% (${dw.winLabel})로 평가되었습니다.`,
+          "Deal Score와 가중치 기반 자동 계산 결과입니다."
+        );
+
+        // Show Technical Fit section if not visible
+        showElement($("#techFitSection"));
+        $("#techFitSection").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+
+    // --- Technical Fit calculation ---
+    function calculateTechFit() {
+      const selects = $all("[data-tf-score]");
+      const scores = {};
+      for (const sel of selects) {
+        const key = sel.dataset.tfScore;
+        const val = sel.value;
+        if (!val) {
+          alert("Technical Fit Score의 모든 점수를 입력해 주세요.");
+          return null;
+        }
+        scores[key] = parseInt(val, 10);
+      }
+
+      const wt = toNumber($("#tfWeightTechnicalFit").value);
+      const we = toNumber($("#tfWeightEnvironment").value);
+      const wc = toNumber($("#tfWeightCompliance").value);
+      const wh = toNumber($("#tfWeightHuman").value);
+      const sumW = wt + we + wc + wh;
+      if (Math.abs(sumW - 1) > 0.001) {
+        alert("Technical Fit 가중치 합이 1이 되도록 조정해 주세요.");
+        return null;
+      }
+
+      const techSum = (scores.tfFunctional + scores.tfCustomization + scores.tfLegacy) / 3;
+      const envSum = (scores.envInfra + scores.envIntegration + scores.envNetwork) / 3;
+      const compSum = (scores.compSecurity + scores.compRegulatory + scores.compData) / 3;
+      const humanSum = (scores.humanTeam + scores.humanSupport + scores.humanTimeline) / 3;
+
+      const raw =
+        (wt * techSum) +
+        (we * envSum) +
+        (wc * compSum) +
+        (wh * humanSum);
+
+      const techScore = Math.max(0, Math.min(100, (raw / 5) * 100));
+
+      let riskLevel = "매우 높음";
+      let riskLabel = "기술적 불가";
+      if (techScore >= 81) {
+        riskLevel = "매우 낮음"; riskLabel = "매우 적합";
+      } else if (techScore >= 61) {
+        riskLevel = "낮음"; riskLabel = "적합함";
+      } else if (techScore >= 41) {
+        riskLevel = "중간"; riskLabel = "주의 필요";
+      } else if (techScore >= 21) {
+        riskLevel = "높음"; riskLabel = "중단 고려";
+      }
+
+      const riskMessages = [];
+      if (techSum <= 2) {
+        riskMessages.push("Technical Fit 리스크: 기능·커스터마이징·레거시 제약 큼 (합산 ≤ 2)");
+      }
+      if (envSum <= 2) {
+        riskMessages.push("환경/연동 리스크: 인프라·연동·네트워크 제약 큼 (합산 ≤ 2)");
+      }
+      if (compSum <= 2) {
+        riskMessages.push("규제/보안 리스크: 승인 난이도 매우 높음 (합산 ≤ 2)");
+      }
+      if (humanSum <= 2) {
+        riskMessages.push("실행 리스크: 고객 리소스·일정 준비 부족 (합산 ≤ 2)");
+      }
+
+      return {
+        scores,
+        weights: { wt, we, wc, wh },
+        sums: {
+          tech: techSum,
+          env: envSum,
+          comp: compSum,
+          human: humanSum
+        },
+        techScore,
+        riskLevel,
+        riskLabel,
+        risks: riskMessages
+      };
+    }
+
+    function renderTechFitResult(tf) {
+      $("#techScoreValue").textContent = tf.techScore.toFixed(1) + " %";
+      $("#techRiskValue").textContent = tf.riskLevel + " (" + tf.riskLabel + ")";
+      const list = $("#techFitRiskList");
+      list.innerHTML = "";
+      if (tf.risks.length === 0) {
+        const li = document.createElement("li");
+        li.textContent = "특별한 리스크 없음 (모든 합산 점수 > 2)";
+        list.appendChild(li);
+      } else {
+        tf.risks.forEach(msg => {
+          const li = document.createElement("li");
+          li.textContent = msg;
+          list.appendChild(li);
+        });
+      }
+      showElement($("#techFitResultArea"));
+
+      // Summary bar
+      $("#techFitSummaryText").textContent =
+        tf.techScore.toFixed(1) + "% · Risk " +
+        tf.riskLevel + " (" + tf.riskLabel + ")";
+      showElement($("#techFitSummaryBar"));
+
+      // Collapse body
+      const body = $("#techFitSectionBody");
+      if (!body.classList.contains("collapsed")) {
+        body.classList.add("collapsed");
+      }
+    }
+
+    function initTechFit() {
+      $("#techFitResultButton").addEventListener("click", () => {
+        if (!currentDeal || !currentDeal.dealWin) {
+          alert("먼저 Deal Win Score를 계산해 주세요.");
+          return;
+        }
+        const tf = calculateTechFit();
+        if (!tf) return;
+
+        currentDeal.techFit = tf;
+        renderTechFitResult(tf);
+
+        showModal(
+          "Technical Fit Level",
+          `이 Deal의 Technical Fit Score는 ${tf.techScore.toFixed(1)}%이며, 리스크 레벨은 ${tf.riskLevel} (${tf.riskLabel})입니다.`,
+          "기술·환경·규제·실행 관점의 적합성을 종합한 결과입니다."
+        );
+
+        // Show Dashboard
+        renderDashboard();
+        showElement($("#dashboardSection"));
+        $("#dashboardSection").scrollIntoView({ behavior: "smooth", block: "start" });
+
+        // Save deal
+        saveDealToStorage(currentDeal);
+        renderAdminList();
+      });
+    }
+
+    // --- Dashboard / Quadrant ---
+    function computeZone(business, tech) {
+      if (business >= 50 && tech >= 50) return "strong";
+      if (business >= 50 && tech < 50) return "bizOkTechRisk";
+      if (business < 50 && tech >= 50) return "techOkBizWeak";
+      return "noGo";
+    }
+
+    function generateDashboardText(dw, tf) {
+      const business = dw.dealScore;
+      const tech = tf.techScore;
+      const zoneKey = computeZone(business, tech);
+
+      let zoneTitle = "";
+      let body = "";
+      const actions = [];
+
+      const auth = dw.sums.authority;
+      const budget = dw.sums.budget;
+      const need = dw.sums.need;
+      const timeline = dw.sums.timeline;
+
+      if (zoneKey === "strong") {
+        zoneTitle = "Strong Opportunity (우상분면 · Go)";
+        body =
+          `이 딜은 Business Fit ${business.toFixed(1)}%, Technical Fit ${tech.toFixed(1)}%로 전반적으로 강한 기회입니다. ` +
+          `핵심 리스크를 관리한다면 빠른 진행과 경쟁사 차단이 가능해 보입니다.`;
+        actions.push("EB/챔피언과 조기 정렬 및 PoC/파일럿 범위 확정");
+        actions.push("경쟁 메시지 강화 및 성공 레퍼런스 공유");
+      } else if (zoneKey === "bizOkTechRisk") {
+        zoneTitle = "Biz OK but Tech Risk (우하분면)";
+        body =
+          `Business Fit는 ${business.toFixed(1)}%로 구매 의지는 높지만, Technical Fit는 ${tech.toFixed(1)}%로 기술 리스크가 존재합니다. ` +
+          `기술적 제약과 구현 리스크를 투명하게 관리하지 않으면 PoC 실패나 일정 지연 가능성이 큽니다.`;
+        actions.push("기술 리스크를 즉시 공유하고, 현실적인 아키텍처/우회 방안 제시");
+        actions.push("검증 가능한 성공 기준(Exit Criteria)을 명확히 정의");
+      } else if (zoneKey === "techOkBizWeak") {
+        zoneTitle = "Tech OK but Biz Weak (좌상분면)";
+        body =
+          `Technical Fit는 ${tech.toFixed(1)}%로 높은 편이지만, Business Fit는 ${business.toFixed(1)}%로 상대적으로 약합니다. ` +
+          `기술적으로는 문제 없지만 예산·우선순위·챔피언 확보 측면에서 추가 설득이 필요합니다.`;
+        actions.push("EB/재무 관점의 비즈니스 임팩트(ROI, 리스크 절감)를 재정의");
+        actions.push("내부 챔피언을 발굴하고, 경쟁·대안 대비 차별 메시지 강화");
+      } else {
+        zoneTitle = "No-Go Zone (좌하분면)";
+        body =
+          `Business Fit ${business.toFixed(1)}%, Technical Fit ${tech.toFixed(1)}% 모두 낮은 편입니다. ` +
+          `현재 상태에서는 수주 가능성이 매우 낮으며, 무리한 추진은 리소스 낭비로 이어질 수 있습니다.`;
+        actions.push("Go/No-Go 재검토: 핵심 전제(예산, 타이밍, Use Case) 재설정 여부 판단");
+        actions.push("중·장기 관점의 관계 유지/인사이트 공유 정도로 스코프 축소 고려");
+      }
+
+      // 추가로 특정 요소가 2 이하면 한 줄씩 body 뒤에 녹여도 됨
+      if (auth <= 2) {
+        body += " Authority 합산이 낮아 내부 챔피언 및 의사결정자 접근 전략 보완이 필요합니다.";
+      }
+      if (budget <= 2) {
+        body += " Budget 측면에서 예산 확보 가능성을 현실적으로 재점검해야 합니다.";
+      }
+      if (timeline <= 2) {
+        body += " Timeline 합산이 낮아 도입 시기·우선순위에 대한 조율이 중요합니다.";
+      }
+
+      return { zoneKey, zoneTitle, body, actions };
+    }
+
+    function drawQuadrant(business, tech) {
+      const canvas = $("#quadrantCanvas");
+      const ctx = canvas.getContext("2d");
+      const width = canvas.width = canvas.clientWidth;
+      const height = canvas.height = canvas.clientHeight;
+
+      ctx.clearRect(0, 0, width, height);
+
+      const padding = 30;
+      const plotX0 = padding;
+      const plotY0 = padding;
+      const plotX1 = width - padding;
+      const plotY1 = height - padding;
+
+      const plotW = plotX1 - plotX0;
+      const plotH = plotY1 - plotY0;
+
+      function xFromScore(score) {
+        return plotX0 + (score / 100) * plotW;
+      }
+      function yFromScore(score) {
+        // 0 at bottom -> plotY1
+        return plotY1 - (score / 100) * plotH;
+      }
+
+      const midX = xFromScore(50);
+      const midY = yFromScore(50);
+
+      // Quadrants
+      // 좌하: No-Go (빨강)
+      ctx.fillStyle = "#C0392B";
+      ctx.fillRect(plotX0, midY, midX - plotX0, plotY1 - midY);
+
+      // 우하: Biz OK but Tech Risk (노랑)
+      ctx.fillStyle = "#F4C542";
+      ctx.fillRect(midX, midY, plotX1 - midX, plotY1 - midY);
+
+      // 좌상: Tech OK but Biz Weak (파랑)
+      ctx.fillStyle = "#5DADE2";
+      ctx.fillRect(plotX0, plotY0, midX - plotX0, midY - plotY0);
+
+      // 우상: Go (초록)
+      ctx.fillStyle = "#4CAF50";
+      ctx.fillRect(midX, plotY0, plotX1 - midX, midY - plotY0);
+
+      // Grid lines
+      ctx.strokeStyle = "#9ca3af";
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      // vertical mid
+      ctx.beginPath();
+      ctx.moveTo(midX, plotY0);
+      ctx.lineTo(midX, plotY1);
+      ctx.stroke();
+      // horizontal mid
+      ctx.beginPath();
+      ctx.moveTo(plotX0, midY);
+      ctx.lineTo(plotX1, midY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Axes
+      ctx.strokeStyle = "#111827";
+      ctx.lineWidth = 1.2;
+      // X axis
+      ctx.beginPath();
+      ctx.moveTo(plotX0, plotY1);
+      ctx.lineTo(plotX1, plotY1);
+      ctx.stroke();
+      // Y axis
+      ctx.beginPath();
+      ctx.moveTo(plotX0, plotY1);
+      ctx.lineTo(plotX0, plotY0);
+      ctx.stroke();
+
+      // Labels
+      ctx.fillStyle = "#111827";
+      ctx.font = "11px system-ui";
+      ctx.textAlign = "center";
+      ctx.fillText("Business Fit (0 → 100)", (plotX0 + plotX1) / 2, height - 6);
+      ctx.save();
+      ctx.translate(8, (plotY0 + plotY1) / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText("Technical Fit (0 → 100)", 0, 0);
+      ctx.restore();
+
+      // Quadrant labels (centered)
+      ctx.font = "12px system-ui";
+      ctx.fillStyle = "#111827";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      ctx.fillText("No-Go", (plotX0 + midX) / 2, (midY + plotY1) / 2);
+      ctx.fillText("Biz OK but Tech Risk", (midX + plotX1) / 2, (midY + plotY1) / 2);
+      ctx.fillText("Tech OK but Biz Weak", (plotX0 + midX) / 2, (plotY0 + midY) / 2);
+      ctx.fillText("Go", (midX + plotX1) / 2, (plotY0 + midY) / 2); // ← Go (대문자 G만)
+
+      // Point
+      const px = xFromScore(business);
+      const py = yFromScore(tech);
+
+      ctx.beginPath();
+      ctx.arc(px, py, 6, 0, Math.PI * 2);
+      ctx.fillStyle = "#111827";
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "#f9fafb";
+      ctx.stroke();
+
+      // Label for point
+      ctx.fillStyle = "#111827";
+      ctx.font = "11px system-ui";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "bottom";
+      ctx.fillText(`Deal (${business.toFixed(0)}, ${tech.toFixed(0)})`, px + 8, py - 4);
+    }
+
+    function renderDashboard() {
+      const dw = currentDeal.dealWin;
+      const tf = currentDeal.techFit;
+      if (!dw || !tf) return;
+
+      const business = dw.dealScore;
+      const tech = tf.techScore;
+
+      $("#metricDealScore").textContent = business.toFixed(1) + " %";
+      $("#metricWinProb").textContent =
+        "Win Probability " + dw.winProb + "% (" + dw.winLabel + ")";
+
+      $("#metricTechScore").textContent = tech.toFixed(1) + " %";
+      $("#metricTechRisk").textContent =
+        "Risk " + tf.riskLevel + " (" + tf.riskLabel + ")";
+
+      const dashText = generateDashboardText(dw, tf);
+      $("#summaryZone").textContent = dashText.zoneTitle;
+      $("#summaryBody").textContent = dashText.body;
+      $("#summaryActions").textContent =
+        "권장 액션: " + dashText.actions.join(" · ");
+
+      currentDeal.dashboard = {
+        businessFit: business,
+        technicalFit: tech,
+        zoneKey: dashText.zoneKey,
+        zoneTitle: dashText.zoneTitle,
+        summary: dashText.body,
+        actions: dashText.actions
+      };
+
+      drawQuadrant(business, tech);
+    }
+
+    // --- LocalStorage ---
+    function loadDealsFromStorage() {
+      try {
+        const raw = localStorage.getItem("dqDeals");
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) return [];
+        return parsed;
+      } catch (e) {
+        console.error("Failed to load deals:", e);
+        return [];
+      }
+    }
+
+    function saveDealsToStorage(deals) {
+      localStorage.setItem("dqDeals", JSON.stringify(deals));
+    }
+
+    function saveDealToStorage(deal) {
+      const deals = loadDealsFromStorage();
+      const idx = deals.findIndex(d => d.id === deal.id);
+      const payload = {
+        id: deal.id,
+        createdAt: deal.createdAt,
+        meta: deal.meta,
+        dealWin: deal.dealWin,
+        techFit: deal.techFit,
+        dashboard: deal.dashboard
+      };
+      if (idx >= 0) {
+        deals[idx] = payload;
+      } else {
+        deals.push(payload);
+      }
+      saveDealsToStorage(deals);
+    }
+
+    function deleteDealFromStorage(id) {
+      const deals = loadDealsFromStorage();
+      const filtered = deals.filter(d => d.id !== id);
+      saveDealsToStorage(filtered);
+    }
+
+    // --- Admin ---
+    function renderAdminList() {
+      const container = $("#adminList");
+      const deals = loadDealsFromStorage();
+      container.innerHTML = "";
+      if (deals.length === 0) {
+        const div = document.createElement("div");
+        div.className = "admin-empty";
+        div.textContent = "저장된 Deal이 없습니다.";
+        container.appendChild(div);
+        return;
+      }
+
+      deals
+        .sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""))
+        .forEach(deal => {
+          const row = document.createElement("div");
+          row.className = "admin-row";
+
+          const main = document.createElement("div");
+          main.className = "admin-main";
+          const nameEl = document.createElement("div");
+          nameEl.className = "admin-name";
+          nameEl.textContent = deal.meta?.name || "(이름 없음)";
+          const descEl = document.createElement("div");
+          descEl.className = "admin-desc";
+          descEl.textContent = deal.meta?.description || "(설명 없음)";
+          main.appendChild(nameEl);
+          main.appendChild(descEl);
+
+          const dateEl = document.createElement("div");
+          dateEl.className = "admin-date";
+          const dt = deal.createdAt ? new Date(deal.createdAt) : null;
+          dateEl.textContent = dt ? dt.toLocaleString() : "-";
+
+          const actions = document.createElement("div");
+          actions.className = "admin-actions";
+
+          const loadBtn = document.createElement("button");
+          loadBtn.className = "btn-secondary";
+          loadBtn.textContent = "불러오기";
+          loadBtn.addEventListener("click", () => {
+            loadDealIntoUI(deal);
+            // switch tab to qualification
+            const tabButtons = $all(".tab-button");
+            tabButtons.forEach(b => {
+              const isQual = b.dataset.tab === "qualification";
+              b.classList.toggle("active", isQual);
+              b.setAttribute("aria-selected", isQual ? "true" : "false");
+            });
+            showElement($("#tab-qualification"));
+            hideElement($("#tab-admin"));
+          });
+
+          const delBtn = document.createElement("button");
+          delBtn.className = "btn-danger";
+          delBtn.textContent = "삭제";
+          delBtn.addEventListener("click", () => {
+            if (confirm("이 Deal을 삭제하시겠습니까?")) {
+              deleteDealFromStorage(deal.id);
+              // If currently loaded deal is this one, reset
+              if (currentDeal && currentDeal.id === deal.id) {
+                currentDeal = null;
+                resetUIForNewDeal();
+              }
+              renderAdminList();
+            }
+          });
+
+          actions.appendChild(loadBtn);
+          actions.appendChild(delBtn);
+
+          row.appendChild(main);
+          row.appendChild(dateEl);
+          row.appendChild(actions);
+
+          container.appendChild(row);
+        });
+    }
+
+    function resetUIForNewDeal() {
+      $("#dealNameInput").value = "";
+      $("#dealDescriptionInput").value = "";
+      hideElement($("#dealWinSection"));
+      hideElement($("#techFitSection"));
+      hideElement($("#dashboardSection"));
+      hideElement($("#dealWinSummaryBar"));
+      hideElement($("#techFitSummaryBar"));
+      hideElement($("#dealWinResultArea"));
+      hideElement($("#techFitResultArea"));
+
+      // reset selects
+      $all("select[data-dw-score], select[data-tf-score]").forEach(sel => {
+        sel.value = "";
+      });
+
+      // reset results
+      $("#dealScoreValue").textContent = "-";
+      $("#winProbValue").textContent = "-";
+      $("#dealWinRiskList").innerHTML = "";
+      $("#techScoreValue").textContent = "-";
+      $("#techRiskValue").textContent = "-";
+      $("#techFitRiskList").innerHTML = "";
+      $("#metricDealScore").textContent = "-";
+      $("#metricWinProb").textContent = "-";
+      $("#metricTechScore").textContent = "-";
+      $("#metricTechRisk").textContent = "-";
+      $("#summaryZone").textContent = "-";
+      $("#summaryBody").textContent = "Deal 점수에 기반한 총평이 여기에 표시됩니다.";
+      $("#summaryActions").textContent = "권장 액션이 여기에 표시됩니다.";
+    }
+
+    function loadDealIntoUI(deal) {
+      currentDeal = JSON.parse(JSON.stringify(deal)); // deep-ish copy
+
+      resetUIForNewDeal();
+
+      // Deal info
+      $("#dealNameInput").value = currentDeal.meta?.name || "";
+      $("#dealDescriptionInput").value = currentDeal.meta?.description || "";
+      showElement($("#dealInfoSection"));
+      showElement($("#dealWinSection"));
+      showElement($("#techFitSection"));
+      showElement($("#dashboardSection"));
+
+      // Deal Win
+      if (currentDeal.dealWin) {
+        const dw = currentDeal.dealWin;
+        // scores
+        const s = dw.scores || {};
+        Object.entries(s).forEach(([key, val]) => {
+          const sel = document.querySelector(`[data-dw-score="${key}"]`);
+          if (sel) sel.value = String(val);
+        });
+        // weights
+        if (dw.weights) {
+          $("#dwWeightBudget").value = dw.weights.wB;
+          $("#dwWeightNeed").value = dw.weights.wN;
+          $("#dwWeightAuthority").value = dw.weights.wA;
+          $("#dwWeightTimeline").value = dw.weights.wT;
+          updateWeightSum("dw");
+        }
+        renderDealWinResult(dw);
+      }
+
+      // Tech Fit
+      if (currentDeal.techFit) {
+        const tf = currentDeal.techFit;
+        const s = tf.scores || {};
+        Object.entries(s).forEach(([key, val]) => {
+          const sel = document.querySelector(`[data-tf-score="${key}"]`);
+          if (sel) sel.value = String(val);
+        });
+        if (tf.weights) {
+          $("#tfWeightTechnicalFit").value = tf.weights.wt;
+          $("#tfWeightEnvironment").value = tf.weights.we;
+          $("#tfWeightCompliance").value = tf.weights.wc;
+          $("#tfWeightHuman").value = tf.weights.wh;
+          updateWeightSum("tf");
+        }
+        renderTechFitResult(tf);
+      }
+
+      // Dashboard
+      renderDashboard();
+    }
+
+    // --- Init ---
+    document.addEventListener("DOMContentLoaded", () => {
+      initTabs();
+      initDealInfo();
+      initTooltips();
+      initWeightInputs();
+      initModal();
+      initCollapse();
+      initDealWin();
+      initTechFit();
+      renderAdminList();
+
+      // Start 상태에서 바로 Deal Info 열도록 할 수도 있음
+    });
+  </script>
+</body>
+</html>
