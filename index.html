@@ -285,37 +285,8 @@
       color: var(--text-muted);
     }
 
-    .collapse-toggle {
-      border-radius: 999px;
-      border: none;
-      background: transparent;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      color: var(--text-muted);
-      cursor: pointer;
-      padding: 3px 8px;
-    }
-
-    .collapse-toggle:hover {
-      background: rgba(15, 23, 42, 0.06);
-    }
-
     .section-body {
       margin-top: 8px;
-    }
-
-    .section-body.collapsed {
-      display: none;
-    }
-
-    /* Deal info form */
-    .deal-info-grid {
-      display: grid;
-      grid-template-columns: 1.2fr 2fr;
-      gap: 12px;
-      align-items: flex-start;
     }
 
     .form-field {
@@ -379,6 +350,13 @@
       font-size: 11px;
       color: var(--danger);
       margin-top: 4px;
+    }
+
+    .deal-info-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 2fr;
+      gap: 12px;
+      align-items: flex-start;
     }
 
     /* Tables */
@@ -525,6 +503,30 @@
       color: #374151;
     }
 
+    .weight-controls {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .weight-btn {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      background: #ffffff;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .weight-btn:hover {
+      background: #f3f4f6;
+    }
+
     .weight-input {
       width: 64px;
       text-align: right;
@@ -547,30 +549,6 @@
       color: var(--text-muted);
       margin-top: 2px;
     }
-
-    .weight-controls {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.weight-btn {
-  width: 22px;
-  height: 22px;
-  border-radius: 999px;
-  border: 1px solid var(--border-subtle);
-  background: #ffffff;
-  font-size: 12px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-}
-
-.weight-btn:hover {
-  background: #f3f4f6;
-}
 
     /* Results & summaries */
     .section-footer {
@@ -645,14 +623,14 @@
       margin-bottom: 2px;
     }
 
-    /* Summary bars (used only inside dashboard) */
+    /* Summary bar */
     .summary-bar {
       padding: 6px 10px;
       border-radius: 999px;
       background: #eef2ff;
       color: #111827;
       font-size: 12px;
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: space-between;
       gap: 6px;
@@ -663,12 +641,29 @@
       font-weight: 500;
     }
 
+    .summary-toggle-btn {
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #4b5563;
+      cursor: pointer;
+      padding: 3px 8px;
+    }
+
+    .summary-toggle-btn:hover {
+      background: rgba(15, 23, 42, 0.06);
+    }
+
     .summary-bar small {
       color: #4b5563;
       font-size: 11px;
     }
 
-    /* Modal (reserved, currently unused visually) */
+    /* Modal */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -777,6 +772,7 @@
       border-radius: 12px;
       background: #f9fafb;
       border: 1px solid #e5e7eb;
+      display: block;
     }
 
     .summary-card {
@@ -811,6 +807,18 @@
       border-radius: 12px;
       border: 1px solid var(--border-subtle);
       overflow: hidden;
+    }
+
+    .admin-header-row {
+      padding: 6px 10px;
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) 1.1fr auto;
+      gap: 8px;
+      align-items: center;
+      font-size: 11px;
+      background: #f3f4f6;
+      color: #4b5563;
+      font-weight: 500;
     }
 
     .admin-row {
@@ -893,6 +901,10 @@
         height: 220px;
       }
 
+      .admin-header-row {
+        display: none;
+      }
+
       .admin-row {
         grid-template-columns: minmax(0, 1.5fr) 1.1fr;
         grid-template-rows: auto auto;
@@ -929,13 +941,11 @@
     <main class="main-card">
       <div class="tab-bar-row">
         <div class="tabs" role="tablist">
-          <button class="tab-button active" data-tab="qualification" role="tab"
-            aria-selected="true">
+          <button class="tab-button active" data-tab="qualification" role="tab" aria-selected="true">
             <span class="icon">📊</span>
             Deal Qualification
           </button>
-          <button class="tab-button" data-tab="admin" role="tab"
-            aria-selected="false">
+          <button class="tab-button" data-tab="admin" role="tab" aria-selected="false">
             <span class="icon">🗂️</span>
             Admin
           </button>
@@ -952,7 +962,7 @@
         <!-- Deal Qualification Tab -->
         <section class="section" id="tab-qualification">
           <!-- Deal Info -->
-          <div class="section-card" id="dealInfoSection">
+          <div class="section-card" id="dealInfoSection" style="display:none;">
             <div class="section-header">
               <div>
                 <div class="section-title">
@@ -974,8 +984,7 @@
                     </div>
                     <input type="text" id="dealNameInput"
                       placeholder="예: ABC은행 차세대 데이터 플랫폼" />
-                    <div class="error-text" id="dealNameError"
-                      style="display:none;">
+                    <div class="error-text" id="dealNameError" style="display:none;">
                       Deal Name은 필수입니다.
                     </div>
                   </div>
@@ -991,8 +1000,7 @@
                 <div>
                   <div class="helper-text">
                     이 정보는 Dashboard와 Admin 리스트에서 Deal을 식별하는 데 사용됩니다.
-                    <br />입력 후 <b>Start</b>를 누르면 Deal Win Score 평가로
-                    진행됩니다.
+                    <br />입력 후 <b>Start</b>를 누르면 BANT 기반 Deal Win Score 평가로 진행됩니다.
                   </div>
                 </div>
               </div>
@@ -1004,22 +1012,29 @@
             </div>
           </div>
 
+          <!-- Collapsed Deal Win summary bar -->
+          <div id="dealWinSummaryBar" class="summary-bar">
+            <div>
+              <span class="label">Deal Win Score</span>
+              <small id="dealWinSummaryText">-</small>
+            </div>
+            <button class="summary-toggle-btn" data-target="dealWinSection">
+              <span>펼치기/접기</span> ▼
+            </button>
+          </div>
+
           <!-- Deal Win Score Section -->
           <div class="section-card" id="dealWinSection" style="display:none;">
             <div class="section-header">
               <div>
                 <div class="section-title">
-                  <span>Deal Win Score</span>
+                  <span>BANT 기반 Deal Win Score</span>
                   <span class="pill-muted">Business Fit</span>
                 </div>
                 <div class="section-subtitle">
-                  Budget / Authority / Need / Timeline 관점에서 수주 가능성을
-                  정량화합니다.
+                  Budget / Authority / Need / Timeline 관점에서 수주 가능성을 정량화합니다.
                 </div>
               </div>
-              <button class="collapse-toggle" data-target="dealWinSectionBody">
-                <span>접기</span> ▲
-              </button>
             </div>
             <div class="section-body" id="dealWinSectionBody">
               <div class="grid-two">
@@ -1033,7 +1048,7 @@
                         <th style="width:40%;">Deal 항목</th>
                         <th style="width:40%;">세부 항목</th>
                         <th style="width:10%;">점수</th>
-                        <th style="width:10%;text-align:center;">i</th>
+                        <th style="width:10%;">i</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1054,18 +1069,15 @@
                             <option value="1">1</option>
                           </select>
                         </td>
-                        <td style="text-align:center;">
-                          <div class="info-icon"
-                            data-tooltip-id="tt-budget-readiness">i
+                        <td>
+                          <div class="info-icon" data-tooltip-id="tt-budget-readiness">i
                             <div class="tooltip" id="tt-budget-readiness">
-                              <div class="tooltip-title">Budget · 예산 및 구매
-                                준비도</div>
-                              <div class="tooltip-line"><span>5점</span> · 예산 확정
-                                / 승인권자 동의 / 구매 절차 명확</div>
-                              <div class="tooltip-line"><span>3점</span> · 예산
-                                가능하나 승인 필요 / 가격 민감 / 불확실</div>
-                              <div class="tooltip-line"><span>1점</span> · 예산 없음
-                                / 승인 의사 없음</div>
+                              <div class="tooltip-title">Budget · 예산 및 구매 준비도</div>
+                              <div class="tooltip-line"><span>5점</span> · 예산 확정 / 승인권자 동의 / 구매 절차 명확</div>
+                              <div class="tooltip-line"><span>4점</span> · 예산 거의 확정, 내부 승인 절차만 남은 상태</div>
+                              <div class="tooltip-line"><span>3점</span> · 예산 가능하나 승인 필요 / 가격 민감 / 불확실</div>
+                              <div class="tooltip-line"><span>2점</span> · 예산 후보 수준 / 우선순위 낮음 / 축소 가능성 있음</div>
+                              <div class="tooltip-line"><span>1점</span> · 예산 없음 / 승인 의사 없음</div>
                             </div>
                           </div>
                         </td>
@@ -1073,8 +1085,7 @@
 
                       <tr class="group-row">
                         <td>Authority</td>
-                        <td colspan="3">내부 지지자 파워 &amp; 의사결정권자
-                          접근성</td>
+                        <td colspan="3">내부 지지자 파워 &amp; 의사결정권자 접근성</td>
                       </tr>
                       <tr>
                         <td></td>
@@ -1089,18 +1100,15 @@
                             <option value="1">1</option>
                           </select>
                         </td>
-                        <td style="text-align:center;">
-                          <div class="info-icon"
-                            data-tooltip-id="tt-authority-champion">i
+                        <td>
+                          <div class="info-icon" data-tooltip-id="tt-authority-champion">i
                             <div class="tooltip" id="tt-authority-champion">
-                              <div class="tooltip-title">Authority · 내부 지지자
-                                파워</div>
-                              <div class="tooltip-line"><span>5점</span> · 파워
-                                챔피언 / 적극적 지지 / 내부 추진 강함</div>
-                              <div class="tooltip-line"><span>3점</span> · 실무
-                                리더급 챔피언 / 내부 논의 주도 가능</div>
-                              <div class="tooltip-line"><span>1점</span> · 챔피언
-                                없음 / 단순 관심자</div>
+                              <div class="tooltip-title">Authority · 내부 지지자 파워</div>
+                              <div class="tooltip-line"><span>5점</span> · 파워 챔피언 / 적극적 지지 / 내부 추진 강함</div>
+                              <div class="tooltip-line"><span>4점</span> · 중간 관리자급 챔피언 / 영향력 높음</div>
+                              <div class="tooltip-line"><span>3점</span> · 실무 리더급 챔피언 / 내부 논의 주도 가능</div>
+                              <div class="tooltip-line"><span>2점</span> · 챔피언 후보 있으나 영향력 약함</div>
+                              <div class="tooltip-line"><span>1점</span> · 챔피언 없음 / 단순 관심자</div>
                             </div>
                           </div>
                         </td>
@@ -1118,18 +1126,15 @@
                             <option value="1">1</option>
                           </select>
                         </td>
-                        <td style="text-align:center;">
-                          <div class="info-icon"
-                            data-tooltip-id="tt-authority-access">i
+                        <td>
+                          <div class="info-icon" data-tooltip-id="tt-authority-access">i
                             <div class="tooltip" id="tt-authority-access">
-                              <div class="tooltip-title">Authority · 의사결정권자
-                                접근성</div>
-                              <div class="tooltip-line"><span>5점</span> · EB와
-                                직접 대화 / 니즈·우선순위 확인됨</div>
-                              <div class="tooltip-line"><span>3점</span> · 의사결정
-                                구조 파악 / EB 접촉 가능성 존재</div>
-                              <div class="tooltip-line"><span>1점</span> · EB가
-                                누구인지 모름 / 접근 불가</div>
+                              <div class="tooltip-title">Authority · 의사결정권자 접근성</div>
+                              <div class="tooltip-line"><span>5점</span> · EB와 직접 대화 / 니즈·우선순위 확인됨</div>
+                              <div class="tooltip-line"><span>4점</span> · 영향력 있는 관리자 접촉 / EB 경로 확보</div>
+                              <div class="tooltip-line"><span>3점</span> · 의사결정 구조 파악 / EB 접촉 가능성 존재</div>
+                              <div class="tooltip-line"><span>2점</span> · EB는 알지만 접촉 불가 / 간접 정보만 있음</div>
+                              <div class="tooltip-line"><span>1점</span> · EB가 누구인지 모름 / 접근 불가</div>
                             </div>
                           </div>
                         </td>
@@ -1152,16 +1157,15 @@
                             <option value="1">1</option>
                           </select>
                         </td>
-                        <td style="text-align:center;">
+                        <td>
                           <div class="info-icon" data-tooltip-id="tt-need-fit">i
                             <div class="tooltip" id="tt-need-fit">
                               <div class="tooltip-title">Need · 문제 적합성</div>
-                              <div class="tooltip-line"><span>5점</span> · 핵심
-                                Pain / 우리 솔루션이 가장 적합</div>
-                              <div class="tooltip-line"><span>3점</span> · 문제
-                                명확 / 솔루션으로 해결 가능</div>
-                              <div class="tooltip-line"><span>1점</span> · 문제
-                                모호 / 솔루션과 연결 약함</div>
+                              <div class="tooltip-line"><span>5점</span> · 핵심 Pain / 우리 솔루션이 가장 적합</div>
+                              <div class="tooltip-line"><span>4점</span> · 주요 Pain에 적합 / 일부 보완 필요</div>
+                              <div class="tooltip-line"><span>3점</span> · 문제 명확 / 솔루션으로 해결 가능</div>
+                              <div class="tooltip-line"><span>2점</span> · 문제는 있으나 Fit 낮음 / 고객도 확신 없음</div>
+                              <div class="tooltip-line"><span>1점</span> · 문제 모호 / 솔루션과 연결 약함</div>
                             </div>
                           </div>
                         </td>
@@ -1179,17 +1183,15 @@
                             <option value="1">1</option>
                           </select>
                         </td>
-                        <td style="text-align:center;">
-                          <div class="info-icon"
-                            data-tooltip-id="tt-need-competition">i
+                        <td>
+                          <div class="info-icon" data-tooltip-id="tt-need-competition">i
                             <div class="tooltip" id="tt-need-competition">
                               <div class="tooltip-title">Need · 경쟁 구도</div>
-                              <div class="tooltip-line"><span>5점</span> · 사실상
-                                우리 선택 / PoC 시 확정 수준</div>
-                              <div class="tooltip-line"><span>3점</span> ·
-                                비슷비슷 / 비교 초기</div>
-                              <div class="tooltip-line"><span>1점</span> ·
-                                경쟁사 우위 / 고객 선호도 낮음</div>
+                              <div class="tooltip-line"><span>5점</span> · 사실상 우리 선택 / PoC 시 확정 수준</div>
+                              <div class="tooltip-line"><span>4점</span> · 여러 면에서 우리가 우위</div>
+                              <div class="tooltip-line"><span>3점</span> · 비슷비슷 / 비교 초기</div>
+                              <div class="tooltip-line"><span>2점</span> · 경쟁 우세 / 우리 쪽 약함</div>
+                              <div class="tooltip-line"><span>1점</span> · 경쟁사 우위 / 고객 선호도 낮음</div>
                             </div>
                           </div>
                         </td>
@@ -1212,18 +1214,15 @@
                             <option value="1">1</option>
                           </select>
                         </td>
-                        <td style="text-align:center;">
-                          <div class="info-icon"
-                            data-tooltip-id="tt-timeline-urgency">i
+                        <td>
+                          <div class="info-icon" data-tooltip-id="tt-timeline-urgency">i
                             <div class="tooltip" id="tt-timeline-urgency">
-                              <div class="tooltip-title">Timeline ·
-                                시급성/타이밍</div>
-                              <div class="tooltip-line"><span>5점</span> · 즉시
-                                필요 / 계약·규제 등 긴급 사유</div>
-                              <div class="tooltip-line"><span>3점</span> · 분기
-                                내 검토 필요 / 일정 일부 존재</div>
-                              <div class="tooltip-line"><span>1점</span> · 급하지
-                                않음 / 계획 없음</div>
+                              <div class="tooltip-title">Timeline · 시급성/타이밍</div>
+                              <div class="tooltip-line"><span>5점</span> · 즉시 필요 / 계약·규제 등 긴급 사유</div>
+                              <div class="tooltip-line"><span>4점</span> · 프로젝트 일정과 연결 / 조만간 결정 필요</div>
+                              <div class="tooltip-line"><span>3점</span> · 분기 내 검토 필요 / 일정 일부 존재</div>
+                              <div class="tooltip-line"><span>2점</span> · 관심은 있으나 일정 불확실</div>
+                              <div class="tooltip-line"><span>1점</span> · 급하지 않음 / 계획 없음</div>
                             </div>
                           </div>
                         </td>
@@ -1241,18 +1240,15 @@
                             <option value="1">1</option>
                           </select>
                         </td>
-                        <td style="text-align:center;">
-                          <div class="info-icon"
-                            data-tooltip-id="tt-timeline-ease">i
+                        <td>
+                          <div class="info-icon" data-tooltip-id="tt-timeline-ease">i
                             <div class="tooltip" id="tt-timeline-ease">
-                              <div class="tooltip-title">Timeline · 도입
-                                용이성</div>
-                              <div class="tooltip-line"><span>5점</span> · 즉시
-                                사용 가능 / 리스크 거의 없음</div>
-                              <div class="tooltip-line"><span>3점</span> ·
-                                일반적 난이도 / 보통 수준</div>
-                              <div class="tooltip-line"><span>1점</span> ·
-                                기술적 장애 큼 / 통합 어려움</div>
+                              <div class="tooltip-title">Timeline · 도입 용이성</div>
+                              <div class="tooltip-line"><span>5점</span> · 즉시 사용 가능 / 리스크 거의 없음</div>
+                              <div class="tooltip-line"><span>4점</span> · 도입 쉬움 / 통합 간단</div>
+                              <div class="tooltip-line"><span>3점</span> · 일반적 난이도 / 보통 수준</div>
+                              <div class="tooltip-line"><span>2점</span> · 장벽 있지만 가능 / 리스크 존재</div>
+                              <div class="tooltip-line"><span>1점</span> · 기술적 장애 큼 / 통합 어려움</div>
                             </div>
                           </div>
                         </td>
@@ -1266,31 +1262,60 @@
                       <div class="weight-card-title">가중치 설정</div>
                       <span class="pill-muted">합계 = 1.00</span>
                     </div>
+
                     <div class="weight-row">
                       <span>Budget</span>
-                      <input type="number" step="0.01" class="weight-input"
-                        id="dwWeightBudget" value="0.30" />
+                      <div class="weight-controls">
+                        <button type="button" class="weight-btn"
+                          data-target="dwWeightBudget" data-delta="-0.01">−</button>
+                        <input type="number" step="0.01" class="weight-input"
+                          id="dwWeightBudget" value="0.30" />
+                        <button type="button" class="weight-btn"
+                          data-target="dwWeightBudget" data-delta="0.01">+</button>
+                      </div>
                     </div>
+
                     <div class="weight-row">
                       <span>Need</span>
-                      <input type="number" step="0.01" class="weight-input"
-                        id="dwWeightNeed" value="0.30" />
+                      <div class="weight-controls">
+                        <button type="button" class="weight-btn"
+                          data-target="dwWeightNeed" data-delta="-0.01">−</button>
+                        <input type="number" step="0.01" class="weight-input"
+                          id="dwWeightNeed" value="0.30" />
+                        <button type="button" class="weight-btn"
+                          data-target="dwWeightNeed" data-delta="0.01">+</button>
+                      </div>
                     </div>
+
                     <div class="weight-row">
                       <span>Authority</span>
-                      <input type="number" step="0.01" class="weight-input"
-                        id="dwWeightAuthority" value="0.25" />
+                      <div class="weight-controls">
+                        <button type="button" class="weight-btn"
+                          data-target="dwWeightAuthority" data-delta="-0.01">−</button>
+                        <input type="number" step="0.01" class="weight-input"
+                          id="dwWeightAuthority" value="0.25" />
+                        <button type="button" class="weight-btn"
+                          data-target="dwWeightAuthority" data-delta="0.01">+</button>
+                      </div>
                     </div>
+
                     <div class="weight-row">
                       <span>Timeline</span>
-                      <input type="number" step="0.01" class="weight-input"
-                        id="dwWeightTimeline" value="0.15" />
+                      <div class="weight-controls">
+                        <button type="button" class="weight-btn"
+                          data-target="dwWeightTimeline" data-delta="-0.01">−</button>
+                        <input type="number" step="0.01" class="weight-input"
+                          id="dwWeightTimeline" value="0.15" />
+                        <button type="button" class="weight-btn"
+                          data-target="dwWeightTimeline" data-delta="0.01">+</button>
+                      </div>
                     </div>
+
                     <div id="dwWeightSumText" class="weight-sum">
                       합계: 1.00
                     </div>
                     <div class="helper-text">
-                      합계가 1이 아닐 경우 결과 계산이 비활성화됩니다.
+                      가중치의 합은 100%(1)입니다. 합계가 1을 넘거나 모자라면 결과 계산이 비활성화됩니다.
                     </div>
                   </div>
                 </div>
@@ -1298,8 +1323,7 @@
 
               <div class="section-footer">
                 <div class="helper-text">
-                  모든 항목의 점수와 가중치를 설정한 뒤, 결과 보기를 눌러
-                  Deal Score와 Win Probability를 확인하세요.
+                  모든 항목의 점수와 가중치를 설정한 뒤, 결과 보기를 눌러 Deal Score와 Win Probability를 확인하세요.
                 </div>
                 <div>
                   <button class="btn-secondary" id="dealWinResultButton">
@@ -1332,6 +1356,17 @@
             </div>
           </div>
 
+          <!-- Collapsed Technical summary -->
+          <div id="techFitSummaryBar" class="summary-bar">
+            <div>
+              <span class="label">Technical Fit Score</span>
+              <small id="techFitSummaryText">-</small>
+            </div>
+            <button class="summary-toggle-btn" data-target="techFitSection">
+              <span>펼치기/접기</span> ▼
+            </button>
+          </div>
+
           <!-- Technical Fit Score Section -->
           <div class="section-card" id="techFitSection" style="display:none;">
             <div class="section-header">
@@ -1341,29 +1376,23 @@
                   <span class="pill-muted">Technical Risk</span>
                 </div>
                 <div class="section-subtitle">
-                  기능, 인프라, 규제/보안, 실행 가능성 관점에서 기술적 리스크를
-                  평가합니다.
+                  기능, 인프라, 규제/보안, 실행 가능성 관점에서 기술적 리스크를 평가합니다.
                 </div>
               </div>
-              <button class="collapse-toggle"
-                data-target="techFitSectionBody">
-                <span>접기</span> ▲
-              </button>
             </div>
             <div class="section-body" id="techFitSectionBody">
               <div class="grid-two">
                 <div>
                   <table class="score-table">
                     <caption>
-                      각 적합성 항목에 1~5 점을 부여하세요. (5점이 가장
-                      적합)
+                      각 적합성 항목에 1~5 점을 부여하세요. (5점이 가장 적합)
                     </caption>
                     <thead>
                       <tr>
                         <th style="width:40%;">적합성 항목</th>
                         <th style="width:40%;">세부 항목</th>
                         <th style="width:10%;">점수</th>
-                        <th style="width:10%;text-align:center;">i</th>
+                        <th style="width:10%;">i</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1384,18 +1413,15 @@
                             <option value="1">1</option>
                           </select>
                         </td>
-                        <td style="text-align:center;">
-                          <div class="info-icon"
-                            data-tooltip-id="tt-tf-functional">i
+                        <td>
+                          <div class="info-icon" data-tooltip-id="tt-tf-functional">i
                             <div class="tooltip" id="tt-tf-functional">
-                              <div class="tooltip-title">Technical Fit · 기능
-                                적합성</div>
-                              <div class="tooltip-line"><span>5점</span> · 요구사항
-                                완전 일치 / 최적 Fit</div>
-                              <div class="tooltip-line"><span>3점</span> · 주요
-                                기능 대부분 충족 / 보통 수준</div>
-                              <div class="tooltip-line"><span>1점</span> · 요구
-                                기능 대부분 불일치 / 구현 어려움</div>
+                              <div class="tooltip-title">Technical Fit · 기능 적합성</div>
+                              <div class="tooltip-line"><span>5점</span> · 요구사항 완전 일치 / 최적 Fit</div>
+                              <div class="tooltip-line"><span>4점</span> · 필수 기능 충족 / 옵션만 조정 필요</div>
+                              <div class="tooltip-line"><span>3점</span> · 주요 기능 대부분 충족 / 보통 수준</div>
+                              <div class="tooltip-line"><span>2점</span> · 핵심 기능 일부 부족 / 커스터마이징 필수</div>
+                              <div class="tooltip-line"><span>1점</span> · 요구 기능 대부분 불일치 / 구현 어려움</div>
                             </div>
                           </div>
                         </td>
@@ -1413,18 +1439,15 @@
                             <option value="1">1</option>
                           </select>
                         </td>
-                        <td style="text-align:center;">
-                          <div class="info-icon"
-                            data-tooltip-id="tt-tf-customization">i
+                        <td>
+                          <div class="info-icon" data-tooltip-id="tt-tf-customization">i
                             <div class="tooltip" id="tt-tf-customization">
-                              <div class="tooltip-title">Technical Fit ·
-                                커스터마이징 필요도</div>
-                              <div class="tooltip-line"><span>5점</span> ·
-                                구성만으로 즉시 적용 가능</div>
-                              <div class="tooltip-line"><span>3점</span> · 일반적
-                                난이도 / 구현 가능</div>
-                              <div class="tooltip-line"><span>1점</span> ·
-                                커스터마이징 많음 / 높은 복잡도</div>
+                              <div class="tooltip-title">Technical Fit · 커스터마이징 필요도</div>
+                              <div class="tooltip-line"><span>5점</span> · 구성만으로 즉시 적용 가능</div>
+                              <div class="tooltip-line"><span>4점</span> · 소규모 구성 정도 / 부담 낮음</div>
+                              <div class="tooltip-line"><span>3점</span> · 일반적 난이도 / 구현 가능</div>
+                              <div class="tooltip-line"><span>2점</span> · 개발 필요하나 가능 / 리스크 존재</div>
+                              <div class="tooltip-line"><span>1점</span> · 커스터마이징 많음 / 높은 복잡도</div>
                             </div>
                           </div>
                         </td>
@@ -1442,18 +1465,15 @@
                             <option value="1">1</option>
                           </select>
                         </td>
-                        <td style="text-align:center;">
-                          <div class="info-icon"
-                            data-tooltip-id="tt-tf-legacy">i
+                        <td>
+                          <div class="info-icon" data-tooltip-id="tt-tf-legacy">i
                             <div class="tooltip" id="tt-tf-legacy">
-                              <div class="tooltip-title">Technical Fit · 레거시
-                                제약</div>
-                              <div class="tooltip-line"><span>5점</span> · 제약 거의
-                                없음 / 최적 환경</div>
-                              <div class="tooltip-line"><span>3점</span> · 일부
-                                제약 있으나 현실적 대안 존재</div>
-                              <div class="tooltip-line"><span>1점</span> · 레거시
-                                제약 심각 / 연동 불가</div>
+                              <div class="tooltip-title">Technical Fit · 레거시 제약</div>
+                              <div class="tooltip-line"><span>5점</span> · 제약 거의 없음 / 최적 환경</div>
+                              <div class="tooltip-line"><span>4점</span> · 제약 적음 / 대부분 호환</div>
+                              <div class="tooltip-line"><span>3점</span> · 일부 제약 있으나 현실적 대안 존재</div>
+                              <div class="tooltip-line"><span>2점</span> · 제약 존재 / 우회 가능하나 위험</div>
+                              <div class="tooltip-line"><span>1점</span> · 레거시 제약 심각 / 연동 불가</div>
                             </div>
                           </div>
                         </td>
@@ -1476,18 +1496,15 @@
                             <option value="1">1</option>
                           </select>
                         </td>
-                        <td style="text-align:center;">
-                          <div class="info-icon"
-                            data-tooltip-id="tt-env-infra">i
+                        <td>
+                          <div class="info-icon" data-tooltip-id="tt-env-infra">i
                             <div class="tooltip" id="tt-env-infra">
-                              <div class="tooltip-title">Environment · 인프라
-                                호환성</div>
-                              <div class="tooltip-line"><span>5점</span> · 완전
-                                호환 / 즉시 사용 가능</div>
-                              <div class="tooltip-line"><span>3점</span> · 보통
-                                수준 호환 / 일부 검증 필요</div>
-                              <div class="tooltip-line"><span>1점</span> · 호환
-                                거의 불가 / 제약 매우 큼</div>
+                              <div class="tooltip-title">Environment · 인프라 호환성</div>
+                              <div class="tooltip-line"><span>5점</span> · 완전 호환 / 즉시 사용 가능</div>
+                              <div class="tooltip-line"><span>4점</span> · 전반적 호환 양호</div>
+                              <div class="tooltip-line"><span>3점</span> · 보통 수준 호환 / 일부 검증 필요</div>
+                              <div class="tooltip-line"><span>2점</span> · 호환성 낮음 / 조정 필요</div>
+                              <div class="tooltip-line"><span>1점</span> · 호환 거의 불가 / 제약 매우 큼</div>
                             </div>
                           </div>
                         </td>
@@ -1505,18 +1522,15 @@
                             <option value="1">1</option>
                           </select>
                         </td>
-                        <td style="text-align:center;">
-                          <div class="info-icon"
-                            data-tooltip-id="tt-env-integration">i
+                        <td>
+                          <div class="info-icon" data-tooltip-id="tt-env-integration">i
                             <div class="tooltip" id="tt-env-integration">
-                              <div class="tooltip-title">Environment · 연동 지원
-                                여부</div>
-                              <div class="tooltip-line"><span>5점</span> · 즉시
-                                연동 가능 / 장애 요소 없음</div>
-                              <div class="tooltip-line"><span>3점</span> · 일반적
-                                난이도 / 표준 프로토콜 기반</div>
-                              <div class="tooltip-line"><span>1점</span> · 연동
-                                불가 혹은 매우 어려움</div>
+                              <div class="tooltip-title">Environment · 연동 지원 여부</div>
+                              <div class="tooltip-line"><span>5점</span> · 즉시 연동 가능 / 장애 요소 없음</div>
+                              <div class="tooltip-line"><span>4점</span> · 연동 수월함 / 기존 레퍼런스 존재</div>
+                              <div class="tooltip-line"><span>3점</span> · 일반적 난이도 / 표준 프로토콜 기반</div>
+                              <div class="tooltip-line"><span>2점</span> · 연동 가능하나 난이도 높음</div>
+                              <div class="tooltip-line"><span>1점</span> · 연동 불가 혹은 매우 어려움</div>
                             </div>
                           </div>
                         </td>
@@ -1534,18 +1548,15 @@
                             <option value="1">1</option>
                           </select>
                         </td>
-                        <td style="text-align:center;">
-                          <div class="info-icon"
-                            data-tooltip-id="tt-env-network">i
+                        <td>
+                          <div class="info-icon" data-tooltip-id="tt-env-network">i
                             <div class="tooltip" id="tt-env-network">
-                              <div class="tooltip-title">Environment · 환경 /
-                                네트워크 제약</div>
-                              <div class="tooltip-line"><span>5점</span> · 제약 거의
-                                없음 / 최적 환경</div>
-                              <div class="tooltip-line"><span>3점</span> · 일부
-                                제약 있으나 관리 가능</div>
-                              <div class="tooltip-line"><span>1점</span> ·
-                                제약 매우 심각</div>
+                              <div class="tooltip-title">Environment · 환경 / 네트워크 제약</div>
+                              <div class="tooltip-line"><span>5점</span> · 제약 거의 없음 / 최적 환경</div>
+                              <div class="tooltip-line"><span>4점</span> · 대부분 문제 없음</div>
+                              <div class="tooltip-line"><span>3점</span> · 일부 제약 있으나 관리 가능</div>
+                              <div class="tooltip-line"><span>2점</span> · 제약 존재 / 설정 조정 필요</div>
+                              <div class="tooltip-line"><span>1점</span> · 환경·네트워크 제약 매우 심각</div>
                             </div>
                           </div>
                         </td>
@@ -1568,18 +1579,15 @@
                             <option value="1">1</option>
                           </select>
                         </td>
-                        <td style="text-align:center;">
-                          <div class="info-icon"
-                            data-tooltip-id="tt-comp-security">i
+                        <td>
+                          <div class="info-icon" data-tooltip-id="tt-comp-security">i
                             <div class="tooltip" id="tt-comp-security">
-                              <div class="tooltip-title">Compliance · 보안 검토
-                                난이도</div>
-                              <div class="tooltip-line"><span>5점</span> · 문제
-                                없음 / 승인 확실</div>
-                              <div class="tooltip-line"><span>3점</span> · 보통
-                                난이도 / 일부 검토 필요</div>
-                              <div class="tooltip-line"><span>1점</span> · 보안
-                                충족 어려움 / 리스크 큼</div>
+                              <div class="tooltip-title">Compliance · 보안 검토 난이도</div>
+                              <div class="tooltip-line"><span>5점</span> · 문제 없음 / 승인 확실</div>
+                              <div class="tooltip-line"><span>4점</span> · 대부분 충족 / 승인 가능성 높음</div>
+                              <div class="tooltip-line"><span>3점</span> · 보통 난이도 / 일부 검토 필요</div>
+                              <div class="tooltip-line"><span>2점</span> · 충족 가능하나 불확실성 큼</div>
+                              <div class="tooltip-line"><span>1점</span> · 보안 충족 어려움 / 리스크 큼</div>
                             </div>
                           </div>
                         </td>
@@ -1597,18 +1605,15 @@
                             <option value="1">1</option>
                           </select>
                         </td>
-                        <td style="text-align:center;">
-                          <div class="info-icon"
-                            data-tooltip-id="tt-comp-reg">i
+                        <td>
+                          <div class="info-icon" data-tooltip-id="tt-comp-reg">i
                             <div class="tooltip" id="tt-comp-reg">
-                              <div class="tooltip-title">Compliance · 규제 준수
-                                가능성</div>
-                              <div class="tooltip-line"><span>5점</span> · 완전
-                                충족 / 검증 문제 없음</div>
-                              <div class="tooltip-line"><span>3점</span> ·
-                                대부분 충족 / 추가 조정 필요</div>
-                              <div class="tooltip-line"><span>1점</span> · 규제
-                                충족 불가</div>
+                              <div class="tooltip-title">Compliance · 규제 준수 가능성</div>
+                              <div class="tooltip-line"><span>5점</span> · 완전 충족 / 검증 문제 없음</div>
+                              <div class="tooltip-line"><span>4점</span> · 규제 충족 가능성이 높음</div>
+                              <div class="tooltip-line"><span>3점</span> · 대부분 충족 / 추가 조정 필요</div>
+                              <div class="tooltip-line"><span>2점</span> · 충족 가능하나 장애물 많음</div>
+                              <div class="tooltip-line"><span>1점</span> · 규제 충족 불가</div>
                             </div>
                           </div>
                         </td>
@@ -1626,18 +1631,15 @@
                             <option value="1">1</option>
                           </select>
                         </td>
-                        <td style="text-align:center;">
-                          <div class="info-icon"
-                            data-tooltip-id="tt-comp-data">i
+                        <td>
+                          <div class="info-icon" data-tooltip-id="tt-comp-data">i
                             <div class="tooltip" id="tt-comp-data">
-                              <div class="tooltip-title">Compliance · 데이터/보안
-                                적합성</div>
-                              <div class="tooltip-line"><span>5점</span> · 완전
-                                적합 / 요구 충족</div>
-                              <div class="tooltip-line"><span>3점</span> ·
-                                대부분 충족 / 조정 가능</div>
-                              <div class="tooltip-line"><span>1점</span> · 요구
-                                기준과 불일치</div>
+                              <div class="tooltip-title">Compliance · 데이터/보안 적합성</div>
+                              <div class="tooltip-line"><span>5점</span> · 완전 적합 / 요구 충족</div>
+                              <div class="tooltip-line"><span>4점</span> · 전반적 적합 / 리스크 낮음</div>
+                              <div class="tooltip-line"><span>3점</span> · 대부분 충족 / 조정 가능</div>
+                              <div class="tooltip-line"><span>2점</span> · 일부 불일치 / 수정 필요</div>
+                              <div class="tooltip-line"><span>1점</span> · 요구 기준과 불일치</div>
                             </div>
                           </div>
                         </td>
@@ -1660,18 +1662,15 @@
                             <option value="1">1</option>
                           </select>
                         </td>
-                        <td style="text-align:center;">
-                          <div class="info-icon"
-                            data-tooltip-id="tt-human-team">i
+                        <td>
+                          <div class="info-icon" data-tooltip-id="tt-human-team">i
                             <div class="tooltip" id="tt-human-team">
-                              <div class="tooltip-title">Human · 고객 기술팀
-                                준비도</div>
-                              <div class="tooltip-line"><span>5점</span> · 매우
-                                적극적 / 전문성 높음</div>
-                              <div class="tooltip-line"><span>3점</span> · 기본
-                                역량 충분 / 일반적 수행 가능</div>
-                              <div class="tooltip-line"><span>1점</span> · 리소스
-                                없음 / 진행 불가</div>
+                              <div class="tooltip-title">Human · 고객 기술팀 준비도</div>
+                              <div class="tooltip-line"><span>5점</span> · 매우 적극적 / 전문성 높음</div>
+                              <div class="tooltip-line"><span>4점</span> · 역량 충분 / 협업 적극적</div>
+                              <div class="tooltip-line"><span>3점</span> · 기본 역량 충분 / 일반적 수행 가능</div>
+                              <div class="tooltip-line"><span>2점</span> · 리소스 부족 / 일정 위험</div>
+                              <div class="tooltip-line"><span>1점</span> · 리소스 없음 / 진행 불가</div>
                             </div>
                           </div>
                         </td>
@@ -1689,18 +1688,15 @@
                             <option value="1">1</option>
                           </select>
                         </td>
-                        <td style="text-align:center;">
-                          <div class="info-icon"
-                            data-tooltip-id="tt-human-support">i
+                        <td>
+                          <div class="info-icon" data-tooltip-id="tt-human-support">i
                             <div class="tooltip" id="tt-human-support">
-                              <div class="tooltip-title">Human · 도입 지원
-                                리소스</div>
-                              <div class="tooltip-line"><span>5점</span> · 즉시
-                                투입 가능 / 여유 있음</div>
-                              <div class="tooltip-line"><span>3점</span> ·
-                                일반적 수준 / 일부 조율 필요</div>
-                              <div class="tooltip-line"><span>1점</span> · 지원
-                                리소스 거의 없음</div>
+                              <div class="tooltip-title">Human · 도입 지원 리소스</div>
+                              <div class="tooltip-line"><span>5점</span> · 즉시 투입 가능 / 여유 있음</div>
+                              <div class="tooltip-line"><span>4점</span> · 충분한 지원 가능</div>
+                              <div class="tooltip-line"><span>3점</span> · 일반적 수준 / 일부 조율 필요</div>
+                              <div class="tooltip-line"><span>2점</span> · 리소스 부족 / 일정 불확실</div>
+                              <div class="tooltip-line"><span>1점</span> · 지원 리소스 거의 없음</div>
                             </div>
                           </div>
                         </td>
@@ -1718,18 +1714,15 @@
                             <option value="1">1</option>
                           </select>
                         </td>
-                        <td style="text-align:center;">
-                          <div class="info-icon"
-                            data-tooltip-id="tt-human-timeline">i
+                        <td>
+                          <div class="info-icon" data-tooltip-id="tt-human-timeline">i
                             <div class="tooltip" id="tt-human-timeline">
-                              <div class="tooltip-title">Human · 일정/범위
-                                현실성</div>
-                              <div class="tooltip-line"><span>5점</span> · 즉시
-                                착수 가능 / 강한 추진력</div>
-                              <div class="tooltip-line"><span>3점</span> · 일정
-                                존재 / 변동 가능성 있음</div>
-                              <div class="tooltip-line"><span>1점</span> · 일정
-                                불명확 / 실현 어려움</div>
+                              <div class="tooltip-title">Human · 일정/범위 현실성</div>
+                              <div class="tooltip-line"><span>5점</span> · 즉시 착수 가능 / 강한 추진력</div>
+                              <div class="tooltip-line"><span>4점</span> · 일정 명확 / 실행력 있음</div>
+                              <div class="tooltip-line"><span>3점</span> · 일정 존재 / 변동 가능성 있음</div>
+                              <div class="tooltip-line"><span>2점</span> · 일정 모호 / 우선순위 낮음</div>
+                              <div class="tooltip-line"><span>1점</span> · 일정 불명확 / 실현 어려움</div>
                             </div>
                           </div>
                         </td>
@@ -1743,31 +1736,60 @@
                       <div class="weight-card-title">가중치 설정</div>
                       <span class="pill-muted">합계 = 1.00</span>
                     </div>
+
                     <div class="weight-row">
                       <span>Technical Fit</span>
-                      <input type="number" step="0.01" class="weight-input"
-                        id="tfWeightTechnicalFit" value="0.35" />
+                      <div class="weight-controls">
+                        <button type="button" class="weight-btn"
+                          data-target="tfWeightTechnicalFit" data-delta="-0.01">−</button>
+                        <input type="number" step="0.01" class="weight-input"
+                          id="tfWeightTechnicalFit" value="0.35" />
+                        <button type="button" class="weight-btn"
+                          data-target="tfWeightTechnicalFit" data-delta="0.01">+</button>
+                      </div>
                     </div>
+
                     <div class="weight-row">
                       <span>Environment &amp; Integration</span>
-                      <input type="number" step="0.01" class="weight-input"
-                        id="tfWeightEnvironment" value="0.25" />
+                      <div class="weight-controls">
+                        <button type="button" class="weight-btn"
+                          data-target="tfWeightEnvironment" data-delta="-0.01">−</button>
+                        <input type="number" step="0.01" class="weight-input"
+                          id="tfWeightEnvironment" value="0.25" />
+                        <button type="button" class="weight-btn"
+                          data-target="tfWeightEnvironment" data-delta="0.01">+</button>
+                      </div>
                     </div>
+
                     <div class="weight-row">
                       <span>Compliance &amp; Security</span>
-                      <input type="number" step="0.01" class="weight-input"
-                        id="tfWeightCompliance" value="0.20" />
+                      <div class="weight-controls">
+                        <button type="button" class="weight-btn"
+                          data-target="tfWeightCompliance" data-delta="-0.01">−</button>
+                        <input type="number" step="0.01" class="weight-input"
+                          id="tfWeightCompliance" value="0.20" />
+                        <button type="button" class="weight-btn"
+                          data-target="tfWeightCompliance" data-delta="0.01">+</button>
+                      </div>
                     </div>
+
                     <div class="weight-row">
                       <span>Human &amp; Execution</span>
-                      <input type="number" step="0.01" class="weight-input"
-                        id="tfWeightHuman" value="0.20" />
+                      <div class="weight-controls">
+                        <button type="button" class="weight-btn"
+                          data-target="tfWeightHuman" data-delta="-0.01">−</button>
+                        <input type="number" step="0.01" class="weight-input"
+                          id="tfWeightHuman" value="0.20" />
+                        <button type="button" class="weight-btn"
+                          data-target="tfWeightHuman" data-delta="0.01">+</button>
+                      </div>
                     </div>
+
                     <div id="tfWeightSumText" class="weight-sum">
                       합계: 1.00
                     </div>
                     <div class="helper-text">
-                      합계가 1이 아닐 경우 결과 계산이 비활성화됩니다.
+                      가중치의 합은 100%(1)입니다. 합계가 1을 넘거나 모자라면 결과 계산이 비활성화됩니다.
                     </div>
                   </div>
                 </div>
@@ -1775,8 +1797,7 @@
 
               <div class="section-footer">
                 <div class="helper-text">
-                  모든 적합성 항목과 가중치를 설정한 뒤, 결과 보기를 눌러 Technical Fit
-                  Score와 Risk Level을 확인하세요.
+                  모든 적합성 항목과 가중치를 설정한 뒤, 결과 보기를 눌러 Technical Fit Score와 Risk Level을 확인하세요.
                 </div>
                 <div>
                   <button class="btn-secondary" id="techFitResultButton">
@@ -1809,7 +1830,7 @@
             </div>
           </div>
 
-          <!-- Dashboard Section -->
+          <!-- Dashboard -->
           <div class="section-card" id="dashboardSection" style="display:none;">
             <div class="section-header">
               <div>
@@ -1818,7 +1839,7 @@
                   <span class="pill-muted">Quadrant View</span>
                 </div>
                 <div class="section-subtitle">
-                  Business Fit (Deal Win Score)와 Technical Fit을 한 눈에 비교합니다.
+                  Business Fit(Deal Win Score)와 Technical Fit Score를 기반으로 Deal 상태를 2×2 Quadrant로 표시합니다.
                 </div>
               </div>
             </div>
@@ -1827,37 +1848,35 @@
                 <div class="metric-card">
                   <div class="metric-label">Deal Name</div>
                   <div class="metric-value" id="dashDealName">-</div>
-                  <div class="metric-sub" id="dashDealDesc">-</div>
+                  <div class="metric-sub" id="dashDealDescription"></div>
                 </div>
                 <div class="metric-card">
-                  <div class="metric-label">Deal Score (Business)</div>
+                  <div class="metric-label">Deal Win Score (Business Fit)</div>
                   <div class="metric-value" id="dashDealScore">-</div>
-                  <div class="metric-sub" id="dashWinProb">Win Probability: -</div>
+                  <div class="metric-sub" id="dashWinProb"></div>
                 </div>
                 <div class="metric-card">
                   <div class="metric-label">Technical Fit Score</div>
                   <div class="metric-value" id="dashTechScore">-</div>
-                  <div class="metric-sub" id="dashTechRisk">Risk Level: -</div>
+                  <div class="metric-sub" id="dashTechRisk"></div>
                 </div>
               </div>
 
               <div class="dashboard-grid">
                 <div class="quadrant-card">
                   <div class="quadrant-header">
-                    <span>Business vs Technical Fit</span>
-                    <span style="font-size:11px;color:var(--text-muted);">
-                      X: Business Fit · Y: Technical Fit
-                    </span>
+                    <span>Quadrant View (Business Fit vs Technical Fit)</span>
+                    <span style="font-size:11px;color:#6b7280;">X축: Deal Win Score · Y축: Technical Fit Score</span>
                   </div>
                   <canvas id="quadrantCanvas"></canvas>
                 </div>
                 <div class="summary-card">
-                  <div class="summary-zone" id="dashZoneTitle">-</div>
-                  <div class="summary-body" id="dashZoneBody">
-                    Deal 및 Technical 점수를 계산하면, 여기에 위치와 해석이 표시됩니다.
+                  <div class="summary-zone" id="summaryZone">-</div>
+                  <div class="summary-body" id="summaryBody">
+                    Deal 결과를 계산하면 자동으로 총평이 생성됩니다.
                   </div>
-                  <div class="summary-actions" id="dashZoneActions">
-                    Recommended actions will appear here.
+                  <div class="summary-actions" id="summaryActions">
+                    권장 액션이 여기에 표시됩니다.
                   </div>
                 </div>
               </div>
@@ -1872,17 +1891,22 @@
               <div>
                 <div class="section-title">
                   <span>Admin</span>
-                  <span class="pill-muted">Saved Deals</span>
+                  <span class="pill-muted">Deal History</span>
                 </div>
                 <div class="section-subtitle">
-                  완성된 Deal의 Business / Technical Score를 로컬 스토리지에 저장하고 다시 조회할 수 있습니다.
+                  Dashboard까지 완료된 Deal을 로컬에 저장하고, 다시 조회하거나 삭제할 수 있습니다.
                 </div>
               </div>
             </div>
             <div class="section-body">
-              <div id="adminList" class="admin-list">
-                <div class="admin-empty" id="adminEmpty">
-                  아직 저장된 Deal이 없습니다. Deal 평가를 완료하면 자동으로 이곳에 나타납니다.
+              <div class="admin-list" id="adminList">
+                <div class="admin-header-row">
+                  <div>Deal</div>
+                  <div>작성 일시</div>
+                  <div style="text-align:right;">Actions</div>
+                </div>
+                <div id="adminListBody">
+                  <div class="admin-empty">아직 저장된 Deal이 없습니다. Deal 평가를 완료하면 이곳에 표시됩니다.</div>
                 </div>
               </div>
             </div>
@@ -1892,108 +1916,777 @@
     </main>
   </div>
 
+  <!-- Modal -->
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">알림</div>
+        <button class="btn-ghost" id="modalCloseButton">✕</button>
+      </div>
+      <div class="modal-body" id="modalBody">내용</div>
+      <div class="modal-sub">창 밖을 클릭해도 닫힙니다.</div>
+    </div>
+  </div>
+
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // Tabs
-      const tabButtons = document.querySelectorAll(".tab-button");
+    let currentDeal = null;
+    const STORAGE_KEY = "dqDeals_v1";
+
+    function showTab(tab) {
       const tabQualification = document.getElementById("tab-qualification");
       const tabAdmin = document.getElementById("tab-admin");
+      const buttons = document.querySelectorAll(".tab-button");
 
-      function showTab(name) {
-        if (name === "qualification") {
-          tabQualification.style.display = "";
-          tabAdmin.style.display = "none";
+      if (tab === "qualification") {
+        tabQualification.style.display = "";
+        tabAdmin.style.display = "none";
+      } else {
+        tabQualification.style.display = "none";
+        tabAdmin.style.display = "";
+      }
+
+      buttons.forEach((btn) => {
+        const t = btn.dataset.tab;
+        if (t === tab) {
+          btn.classList.add("active");
+          btn.setAttribute("aria-selected", "true");
         } else {
-          tabQualification.style.display = "none";
-          tabAdmin.style.display = "";
-          renderAdminList();
+          btn.classList.remove("active");
+          btn.setAttribute("aria-selected", "false");
         }
-        tabButtons.forEach(btn => {
-          const active = btn.dataset.tab === name;
-          btn.classList.toggle("active", active);
-          btn.setAttribute("aria-selected", active ? "true" : "false");
+      });
+    }
+
+    function showModal(title, body) {
+      const backdrop = document.getElementById("modalBackdrop");
+      document.getElementById("modalTitle").textContent = title;
+      document.getElementById("modalBody").textContent = body;
+      backdrop.classList.add("visible");
+    }
+
+    function hideModal() {
+      document.getElementById("modalBackdrop").classList.remove("visible");
+    }
+
+    function readWeight(id) {
+      const el = document.getElementById(id);
+      const v = parseFloat(el.value);
+      return isNaN(v) ? 0 : v;
+    }
+
+    function setupWeightButtons() {
+      const buttons = document.querySelectorAll(".weight-btn");
+      buttons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const targetId = btn.dataset.target;
+          const delta = parseFloat(btn.dataset.delta || "0");
+          const input = document.getElementById(targetId);
+          if (!input) return;
+          let val = parseFloat(input.value);
+          if (isNaN(val)) val = 0;
+          val += delta;
+          if (val < 0) val = 0;
+          if (val > 1) val = 1;
+          input.value = val.toFixed(2);
+          input.dispatchEvent(new Event("input", { bubbles: true }));
+        });
+      });
+    }
+
+    function setupWeightValidation(prefix, ids, sumTextId, buttonId) {
+      const inputs = ids.map((id) => document.getElementById(id));
+      const sumText = document.getElementById(sumTextId);
+      const button = document.getElementById(buttonId);
+
+      function update() {
+        let sum = 0;
+        inputs.forEach((el) => {
+          const v = parseFloat(el.value);
+          if (!isNaN(v)) sum += v;
+        });
+        sumText.textContent = "합계: " + sum.toFixed(2);
+        if (Math.abs(sum - 1) > 0.001) {
+          sumText.classList.add("error");
+          button.disabled = true;
+        } else {
+          sumText.classList.remove("error");
+          button.disabled = false;
+        }
+      }
+
+      inputs.forEach((el) => el.addEventListener("input", update));
+      update();
+    }
+
+    function getSelectValue(name, type) {
+      const selector = type === "dw"
+        ? `select[data-dw-score="${name}"]`
+        : `select[data-tf-score="${name}"]`;
+      const el = document.querySelector(selector);
+      if (!el) return null;
+      const v = parseInt(el.value, 10);
+      return isNaN(v) ? null : v;
+    }
+
+    function avg(values) {
+      const valid = values.filter((v) => v != null);
+      if (!valid.length) return null;
+      const s = valid.reduce((a, b) => a + b, 0);
+      return s / valid.length;
+    }
+
+    function computeDealWinScore() {
+      const budgetReadiness = getSelectValue("budgetReadiness", "dw");
+      const authorityChampion = getSelectValue("authorityChampion", "dw");
+      const authorityAccess = getSelectValue("authorityAccess", "dw");
+      const needFit = getSelectValue("needFit", "dw");
+      const needCompetition = getSelectValue("needCompetition", "dw");
+      const timelineUrgency = getSelectValue("timelineUrgency", "dw");
+      const timelineEase = getSelectValue("timelineEase", "dw");
+
+      const values = [
+        budgetReadiness, authorityChampion, authorityAccess,
+        needFit, needCompetition, timelineUrgency, timelineEase
+      ];
+
+      if (values.some((v) => v == null)) {
+        showModal("입력 오류", "모든 Deal 항목에 점수를 입력해 주세요.");
+        return;
+      }
+
+      const budgetSum = budgetReadiness;
+      const authoritySum = avg([authorityChampion, authorityAccess]);
+      const needSum = avg([needFit, needCompetition]);
+      const timelineSum = avg([timelineUrgency, timelineEase]);
+
+      const wB = readWeight("dwWeightBudget");
+      const wN = readWeight("dwWeightNeed");
+      const wA = readWeight("dwWeightAuthority");
+      const wT = readWeight("dwWeightTimeline");
+      const wSum = wB + wN + wA + wT;
+      if (Math.abs(wSum - 1) > 0.001) {
+        showModal("가중치 오류", "Deal Win Score 가중치 합계가 1이 아닙니다. 합계를 1로 맞춘 뒤 다시 시도해 주세요.");
+        return;
+      }
+
+      const raw =
+        (wB * budgetSum) +
+        (wA * authoritySum) +
+        (wN * needSum) +
+        (wT * timelineSum);
+
+      const dealScore = (raw / 5) * 100;
+      const dealScoreRounded = Math.max(0, Math.min(100, dealScore));
+
+      let winProb = 10;
+      let winLabel = "매우 낮음";
+      if (dealScoreRounded >= 81) {
+        winProb = 90; winLabel = "매우 높음";
+      } else if (dealScoreRounded >= 61) {
+        winProb = 70; winLabel = "높음";
+      } else if (dealScoreRounded >= 41) {
+        winProb = 50; winLabel = "중간";
+      } else if (dealScoreRounded >= 21) {
+        winProb = 30; winLabel = "낮음";
+      }
+
+      document.getElementById("dealScoreValue").textContent =
+        dealScoreRounded.toFixed(1) + "%";
+      document.getElementById("winProbValue").textContent =
+        winProb + "% (" + winLabel + ")";
+
+      const summaryText = `${dealScoreRounded.toFixed(1)}% · Win Prob ${winProb}% (${winLabel})`;
+      document.getElementById("dealWinSummaryText").textContent = summaryText;
+
+      const riskList = document.getElementById("dealWinRiskList");
+      riskList.innerHTML = "";
+      const risks = [];
+
+      if (budgetSum <= 2) {
+        risks.push("예산 리스크: 구매 가능성 낮음 (Budget 합산 ≤ 2)");
+      }
+      if (authoritySum <= 2) {
+        risks.push("Authority 리스크: 챔피언/EB 영향력 및 접근성이 부족합니다.");
+      }
+      if (needSum <= 2) {
+        risks.push("Need 리스크: 문제 적합성이 낮거나 경쟁 우위가 부족합니다.");
+      }
+      if (timelineSum <= 2) {
+        risks.push("Timeline 리스크: 시급성이 낮거나 도입이 어렵습니다.");
+      }
+
+      if (!risks.length) {
+        const li = document.createElement("li");
+        li.textContent = "특별히 눈에 띄는 리스크는 없습니다. 다만 세부 항목을 정성적으로 점검해 보세요.";
+        riskList.appendChild(li);
+      } else {
+        risks.forEach((r) => {
+          const li = document.createElement("li");
+          li.textContent = r;
+          riskList.appendChild(li);
         });
       }
 
-      tabButtons.forEach(btn => {
+      document.getElementById("dealWinResultArea").style.display = "";
+
+      // 섹션은 접고 한 줄 요약만 노출
+      document.getElementById("dealWinSection").style.display = "none";
+      document.getElementById("dealWinSummaryBar").style.display = "flex";
+
+      // Technical Fit 섹션 오픈
+      document.getElementById("techFitSection").style.display = "";
+
+      showModal(
+        "Win Probability",
+        `Deal Score ${dealScoreRounded.toFixed(1)}% → Win Probability ${winProb}% (${winLabel})`
+      );
+
+      if (!currentDeal) currentDeal = {};
+      currentDeal.dealScore = dealScoreRounded;
+      currentDeal.winProb = winProb;
+      currentDeal.winProbLabel = winLabel;
+      currentDeal.dealWinWeights = { wB, wN, wA, wT };
+      currentDeal.dealWinGroups = {
+        budget: budgetSum,
+        authority: authoritySum,
+        need: needSum,
+        timeline: timelineSum,
+      };
+      currentDeal.dealWinRiskSummary = risks;
+    }
+
+    function computeTechFitScore() {
+      const tfFunctional = getSelectValue("tfFunctional", "tf");
+      const tfCustomization = getSelectValue("tfCustomization", "tf");
+      const tfLegacy = getSelectValue("tfLegacy", "tf");
+
+      const envInfra = getSelectValue("envInfra", "tf");
+      const envIntegration = getSelectValue("envIntegration", "tf");
+      const envNetwork = getSelectValue("envNetwork", "tf");
+
+      const compSecurity = getSelectValue("compSecurity", "tf");
+      const compRegulatory = getSelectValue("compRegulatory", "tf");
+      const compData = getSelectValue("compData", "tf");
+
+      const humanTeam = getSelectValue("humanTeam", "tf");
+      const humanSupport = getSelectValue("humanSupport", "tf");
+      const humanTimeline = getSelectValue("humanTimeline", "tf");
+
+      const values = [
+        tfFunctional, tfCustomization, tfLegacy,
+        envInfra, envIntegration, envNetwork,
+        compSecurity, compRegulatory, compData,
+        humanTeam, humanSupport, humanTimeline
+      ];
+
+      if (values.some((v) => v == null)) {
+        showModal("입력 오류", "모든 적합성 항목에 점수를 입력해 주세요.");
+        return;
+      }
+
+      const technicalFit = avg([tfFunctional, tfCustomization, tfLegacy]);
+      const envIntegrationSum = avg([envInfra, envIntegration, envNetwork]);
+      const complianceSum = avg([compSecurity, compRegulatory, compData]);
+      const humanSum = avg([humanTeam, humanSupport, humanTimeline]);
+
+      const wTF = readWeight("tfWeightTechnicalFit");
+      const wEnv = readWeight("tfWeightEnvironment");
+      const wComp = readWeight("tfWeightCompliance");
+      const wHuman = readWeight("tfWeightHuman");
+      const wSum = wTF + wEnv + wComp + wHuman;
+      if (Math.abs(wSum - 1) > 0.001) {
+        showModal("가중치 오류", "Technical Fit 가중치 합계가 1이 아닙니다. 합계를 1로 맞춘 뒤 다시 시도해 주세요.");
+        return;
+      }
+
+      const raw =
+        (wTF * technicalFit) +
+        (wEnv * envIntegrationSum) +
+        (wComp * complianceSum) +
+        (wHuman * humanSum);
+
+      const techScore = (raw / 5) * 100;
+      const techScoreRounded = Math.max(0, Math.min(100, techScore));
+
+      let riskLevel = "매우 높음";
+      let riskLabel = "기술적 불가";
+      if (techScoreRounded >= 81) {
+        riskLevel = "매우 낮음";
+        riskLabel = "매우 적합";
+      } else if (techScoreRounded >= 61) {
+        riskLevel = "낮음";
+        riskLabel = "적합함";
+      } else if (techScoreRounded >= 41) {
+        riskLevel = "중간";
+        riskLabel = "주의 필요";
+      } else if (techScoreRounded >= 21) {
+        riskLevel = "높음";
+        riskLabel = "중단 고려";
+      }
+
+      document.getElementById("techScoreValue").textContent =
+        techScoreRounded.toFixed(1) + "%";
+      document.getElementById("techRiskValue").textContent =
+        riskLevel + " (" + riskLabel + ")";
+
+      const summaryText = `${techScoreRounded.toFixed(1)}% · Risk ${riskLevel} (${riskLabel})`;
+      document.getElementById("techFitSummaryText").textContent = summaryText;
+
+      const riskList = document.getElementById("techFitRiskList");
+      riskList.innerHTML = "";
+      const risks = [];
+
+      if (technicalFit <= 2) {
+        risks.push("Technical Fit 리스크: 기능 적합성/커스터마이징/레거시 제약이 큽니다.");
+      }
+      if (envIntegrationSum <= 2) {
+        risks.push("Environment & Integration 리스크: 인프라/연동/환경 제약이 큽니다.");
+      }
+      if (complianceSum <= 2) {
+        risks.push("Compliance & Security 리스크: 보안·규제·데이터 적합성 리스크가 높습니다.");
+      }
+      if (humanSum <= 2) {
+        risks.push("Human & Execution 리스크: 고객 기술팀·지원 리소스·일정 현실성이 부족합니다.");
+      }
+
+      if (!risks.length) {
+        const li = document.createElement("li");
+        li.textContent = "특별히 눈에 띄는 기술 리스크는 없습니다. 보안·규제·환경은 별도로 다시 점검해 보세요.";
+        riskList.appendChild(li);
+      } else {
+        risks.forEach((r) => {
+          const li = document.createElement("li");
+          li.textContent = r;
+          riskList.appendChild(li);
+        });
+      }
+
+      document.getElementById("techFitResultArea").style.display = "";
+
+      // 섹션 접고 한 줄 요약만
+      document.getElementById("techFitSection").style.display = "none";
+      document.getElementById("techFitSummaryBar").style.display = "flex";
+
+      // Dashboard 먼저 보이게
+      const dashboardSection = document.getElementById("dashboardSection");
+      dashboardSection.style.display = "";
+
+      if (!currentDeal) currentDeal = {};
+      currentDeal.techScore = techScoreRounded;
+      currentDeal.techRisk = riskLevel;
+      currentDeal.techRiskLabel = riskLabel;
+      currentDeal.techWeights = { wTF, wEnv, wComp, wHuman };
+      currentDeal.techGroups = {
+        technicalFit,
+        envIntegration: envIntegrationSum,
+        compliance: complianceSum,
+        human: humanSum,
+      };
+      currentDeal.techRiskSummary = risks;
+
+      // Dashboard 업데이트 및 Quadrant 그리기
+      updateDashboard();
+      dashboardSection.scrollIntoView({ behavior: "smooth", block: "start" });
+
+      showModal(
+        "Technical Risk Level",
+        `Technical Fit Score ${techScoreRounded.toFixed(1)}% → Risk Level ${riskLevel} (${riskLabel})`
+      );
+
+      // 저장
+      saveCurrentDeal();
+      refreshAdminList();
+    }
+
+    function drawQuadrant(bizScore, techScore) {
+      const canvas = document.getElementById("quadrantCanvas");
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const width = rect.width;
+      const height = rect.height;
+      const margin = 28;
+      const plotWidth = width - margin * 2;
+      const plotHeight = height - margin * 2;
+
+      ctx.clearRect(0, 0, width, height);
+
+      // 배경
+      ctx.fillStyle = "#f9fafb";
+      ctx.fillRect(0, 0, width, height);
+
+      // Quadrant 배경 색 (연한 톤)
+      const midX = margin + plotWidth / 2;
+      const midY = margin + plotHeight / 2;
+
+      // 좌상 (Tech OK but Biz Weak)
+      ctx.fillStyle = "#E3F2FD"; // 연한 파랑
+      ctx.fillRect(margin, margin, plotWidth / 2, plotHeight / 2);
+
+      // 우상 (Go)
+      ctx.fillStyle = "#E8F5E9"; // 연한 초록
+      ctx.fillRect(midX, margin, plotWidth / 2, plotHeight / 2);
+
+      // 좌하 (No-Go)
+      ctx.fillStyle = "#FDECEA"; // 연한 빨강
+      ctx.fillRect(margin, midY, plotWidth / 2, plotHeight / 2);
+
+      // 우하 (Biz OK but Tech Risk)
+      ctx.fillStyle = "#FFF8E1"; // 연한 노랑
+      ctx.fillRect(midX, midY, plotWidth / 2, plotHeight / 2);
+
+      // 축
+      ctx.strokeStyle = "#9ca3af";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      // X축
+      ctx.moveTo(margin, midY);
+      ctx.lineTo(margin + plotWidth, midY);
+      // Y축
+      ctx.moveTo(midX, margin);
+      ctx.lineTo(midX, margin + plotHeight);
+      ctx.stroke();
+
+      // 테두리
+      ctx.strokeStyle = "#d1d5db";
+      ctx.strokeRect(margin, margin, plotWidth, plotHeight);
+
+      // 축 라벨
+      ctx.fillStyle = "#4b5563";
+      ctx.font = "11px system-ui";
+      ctx.fillText("Business Fit (Deal Win Score)", margin, height - 6);
+      ctx.save();
+      ctx.translate(6, margin + plotHeight);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText("Technical Fit Score", 0, 0);
+      ctx.restore();
+
+      // Quadrant 라벨
+      ctx.font = "11px system-ui";
+
+      // 좌상
+      ctx.fillStyle = "#5DADE2";
+      ctx.fillText("Tech OK but Biz Weak", margin + 6, margin + 14);
+      // 우상
+      ctx.fillStyle = "#4CAF50";
+      ctx.fillText("Go", midX + 6, margin + 14);
+      // 좌하
+      ctx.fillStyle = "#C0392B";
+      ctx.fillText("No-Go", margin + 6, midY + 14);
+      // 우하
+      ctx.fillStyle = "#F4C542";
+      ctx.fillText("Biz OK but Tech Risk", midX + 6, midY + 14);
+
+      // Deal 위치 점
+      const clampedBiz = Math.max(0, Math.min(100, bizScore || 0));
+      const clampedTech = Math.max(0, Math.min(100, techScore || 0));
+
+      const x = margin + (clampedBiz / 100) * plotWidth;
+      const y = margin + plotHeight - (clampedTech / 100) * plotHeight;
+
+      ctx.fillStyle = "#111827";
+      ctx.beginPath();
+      ctx.arc(x, y, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = "#111827";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(x, y, 8, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    function updateDashboard() {
+      if (!currentDeal) return;
+      const { name, description, dealScore, winProb, winProbLabel, techScore, techRisk, techRiskLabel } = currentDeal;
+      if (dealScore == null || techScore == null) return;
+
+      document.getElementById("dashDealName").textContent = name || "-";
+      document.getElementById("dashDealDescription").textContent = description || "";
+
+      document.getElementById("dashDealScore").textContent =
+        dealScore.toFixed(1) + "%";
+      document.getElementById("dashWinProb").textContent =
+        `Win Prob ${winProb}% (${winProbLabel})`;
+
+      document.getElementById("dashTechScore").textContent =
+        techScore.toFixed(1) + "%";
+      document.getElementById("dashTechRisk").textContent =
+        `Risk ${techRisk} (${techRiskLabel})`;
+
+      // Quadrant zone 분석
+      let zone = "No-Go Zone";
+      let zoneColor = "#C0392B";
+      if (dealScore >= 50 && techScore >= 50) {
+        zone = "Strong Opportunity";
+        zoneColor = "#4CAF50";
+      } else if (dealScore >= 50 && techScore < 50) {
+        zone = "Biz OK but Tech Risk";
+        zoneColor = "#F4C542";
+      } else if (dealScore < 50 && techScore >= 50) {
+        zone = "Tech OK but Biz Weak";
+        zoneColor = "#5DADE2";
+      }
+
+      const summaryZoneEl = document.getElementById("summaryZone");
+      summaryZoneEl.textContent = zone;
+      summaryZoneEl.style.color = zoneColor;
+
+      let summaryBody = "";
+      let actions = "";
+
+      if (zone === "Strong Opportunity") {
+        summaryBody =
+          `이 딜은 Business Fit과 Technical Fit 모두 양호합니다. Deal Win Score ${dealScore.toFixed(1)}%, `
+          + `Technical Fit ${techScore.toFixed(1)}% 수준으로, 수주 가능성이 높습니다.`;
+        actions =
+          "권장 액션: EB 정렬 조기 확보, 단계 빠르게 진행, PoC 최소화 또는 생략, 경쟁사 차단을 위한 계약·보안 절차를 신속히 진행하세요.";
+      } else if (zone === "Biz OK but Tech Risk") {
+        summaryBody =
+          `이 딜은 Business Fit은 괜찮지만 Technical Fit이 상대적으로 낮습니다. `
+          + `기술 리스크를 명확히 관리하지 않으면 PoC 실패나 일정 지연으로 이어질 수 있습니다.`;
+        actions =
+          "권장 액션: 기술 리스크를 솔직하게 공유하고, 대안 아키텍처·로드맵을 제시하세요. PoC 범위와 성공 기준을 명확히 정의하고 IT/Sec를 조기에 참여시켜 리스크를 줄이세요.";
+      } else if (zone === "Tech OK but Biz Weak") {
+        summaryBody =
+          `이 딜은 기술적으로는 충분히 적합하지만 Business Fit(예산·권한·Need·타이밍)이 약한 상태입니다. `
+          + `기술 설득만으로는 수주까지 가기 어렵습니다.`;
+        actions =
+          "권장 액션: 챔피언 및 EB 관여도를 높이고, 구매 동기와 비즈니스 임팩트를 재정의하세요. 상위 과제와 연결된 Value Narrative를 강화하고, 경쟁 구도와 타이밍 리스크를 다시 진단하세요.";
+      } else {
+        summaryBody =
+          `Business Fit과 Technical Fit 모두 낮은 편입니다. 현재 상태로는 수주 가능성이 낮으며, `
+          + `무리한 추적은 팀 리소스 대비 효율이 떨어질 수 있습니다.`;
+        actions =
+          "권장 액션: 이 딜을 계속 추적할 가치가 있는지 재평가하세요. 필수 기준(예산, 스폰서, 기술 제약 등)을 명확히 점검하고, 조건부로 유지하거나 과감히 No-Go를 선택하는 것도 고려해 보세요.";
+      }
+
+      document.getElementById("summaryBody").textContent = summaryBody;
+      document.getElementById("summaryActions").textContent = actions;
+
+      if (!currentDeal.dashboardSummary) {
+        currentDeal.dashboardSummary = { zone, summaryBody, actions };
+      }
+
+      drawQuadrant(dealScore, techScore);
+    }
+
+    function loadDeals() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return [];
+        const arr = JSON.parse(raw);
+        return Array.isArray(arr) ? arr : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveDeals(arr) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+    }
+
+    function saveCurrentDeal() {
+      if (!currentDeal || currentDeal.dealScore == null || currentDeal.techScore == null) return;
+
+      if (!currentDeal.id) {
+        currentDeal.id = Date.now();
+      }
+      if (!currentDeal.createdAt) {
+        currentDeal.createdAt = new Date().toISOString();
+      }
+
+      const deals = loadDeals();
+      const idx = deals.findIndex((d) => d.id === currentDeal.id);
+      if (idx >= 0) {
+        deals[idx] = currentDeal;
+      } else {
+        deals.push(currentDeal);
+      }
+      saveDeals(deals);
+    }
+
+    function formatDate(iso) {
+      if (!iso) return "-";
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return iso;
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      const dd = String(d.getDate()).padStart(2, "0");
+      const hh = String(d.getHours()).padStart(2, "0");
+      const mi = String(d.getMinutes()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
+    }
+
+    function refreshAdminList() {
+      const listBody = document.getElementById("adminListBody");
+      const deals = loadDeals();
+      listBody.innerHTML = "";
+
+      if (!deals.length) {
+        const empty = document.createElement("div");
+        empty.className = "admin-empty";
+        empty.textContent = "아직 저장된 Deal이 없습니다. Deal 평가를 완료하면 이곳에 표시됩니다.";
+        listBody.appendChild(empty);
+        return;
+      }
+
+      deals
+        .slice()
+        .sort((a, b) => (b.createdAt || 0).localeCompare(a.createdAt || 0))
+        .forEach((deal) => {
+          const row = document.createElement("div");
+          row.className = "admin-row";
+
+          const main = document.createElement("div");
+          main.className = "admin-main";
+          const name = document.createElement("div");
+          name.className = "admin-name";
+          name.textContent = deal.name || "(제목 없음)";
+          const desc = document.createElement("div");
+          desc.className = "admin-desc";
+          desc.textContent = deal.description || "";
+          main.appendChild(name);
+          main.appendChild(desc);
+
+          const date = document.createElement("div");
+          date.className = "admin-date";
+          date.textContent = formatDate(deal.createdAt);
+
+          const actions = document.createElement("div");
+          actions.className = "admin-actions";
+
+          const viewBtn = document.createElement("button");
+          viewBtn.className = "btn-secondary";
+          viewBtn.textContent = "View";
+          viewBtn.addEventListener("click", () => {
+            currentDeal = { ...deal };
+            showTab("qualification");
+            document.getElementById("dashboardSection").style.display = "";
+            updateDashboard();
+            document.getElementById("dashboardSection").scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          });
+
+          const delBtn = document.createElement("button");
+          delBtn.className = "btn-danger";
+          delBtn.textContent = "Delete";
+          delBtn.addEventListener("click", () => {
+            if (!confirm("이 Deal을 삭제하시겠습니까? (LocalStorage에서 완전히 삭제됩니다)")) return;
+            const all = loadDeals().filter((d) => d.id !== deal.id);
+            saveDeals(all);
+            refreshAdminList();
+          });
+
+          actions.appendChild(viewBtn);
+          actions.appendChild(delBtn);
+
+          row.appendChild(main);
+          row.appendChild(date);
+          row.appendChild(actions);
+
+          listBody.appendChild(row);
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // 탭 전환
+      document.querySelectorAll(".tab-button").forEach((btn) => {
         btn.addEventListener("click", () => {
-          showTab(btn.dataset.tab);
+          const tab = btn.dataset.tab;
+          showTab(tab);
         });
       });
 
-      // Elements
-      const startDealButton = document.getElementById("startDealButton");
-      const dealInfoSection = document.getElementById("dealInfoSection");
-      const dealWinSection = document.getElementById("dealWinSection");
-      const techFitSection = document.getElementById("techFitSection");
-      const dashboardSection = document.getElementById("dashboardSection");
+      // Start 버튼 (상단)
+      document.getElementById("startDealButton").addEventListener("click", () => {
+        document.getElementById("dealInfoSection").style.display = "";
+        document.getElementById("dealNameError").style.display = "none";
 
-      const dealNameInput = document.getElementById("dealNameInput");
-      const dealDescriptionInput = document.getElementById("dealDescriptionInput");
-      const dealNameError = document.getElementById("dealNameError");
+        // 새 Deal 시작 시 이전 상태 일부 초기화
+        currentDeal = null;
+        document.getElementById("dealWinSection").style.display = "none";
+        document.getElementById("dealWinSummaryBar").style.display = "none";
+        document.getElementById("dealWinResultArea").style.display = "none";
 
-      const dealInfoCompleteButton = document.getElementById("dealInfoCompleteButton");
-      const dealWinResultButton = document.getElementById("dealWinResultButton");
-      const techFitResultButton = document.getElementById("techFitResultButton");
+        document.getElementById("techFitSection").style.display = "none";
+        document.getElementById("techFitSummaryBar").style.display = "none";
+        document.getElementById("techFitResultArea").style.display = "none";
 
-      const dwWeightInputs = [
-        { id: "dwWeightBudget", key: "budget" },
-        { id: "dwWeightNeed", key: "need" },
-        { id: "dwWeightAuthority", key: "authority" },
-        { id: "dwWeightTimeline", key: "timeline" },
-      ];
-      const dwWeightSumText = document.getElementById("dwWeightSumText");
+        document.getElementById("dashboardSection").style.display = "none";
+      });
 
-      const tfWeightInputs = [
-        { id: "tfWeightTechnicalFit", key: "tech" },
-        { id: "tfWeightEnvironment", key: "env" },
-        { id: "tfWeightCompliance", key: "comp" },
-        { id: "tfWeightHuman", key: "human" },
-      ];
-      const tfWeightSumText = document.getElementById("tfWeightSumText");
+      // Deal Info → Start
+      document.getElementById("dealInfoCompleteButton").addEventListener("click", () => {
+        const nameInput = document.getElementById("dealNameInput");
+        const descInput = document.getElementById("dealDescriptionInput");
+        const name = nameInput.value.trim();
+        if (!name) {
+          document.getElementById("dealNameError").style.display = "";
+          return;
+        }
+        document.getElementById("dealNameError").style.display = "none";
 
-      const dealWinResultArea = document.getElementById("dealWinResultArea");
-      const techFitResultArea = document.getElementById("techFitResultArea");
+        currentDeal = {
+          name,
+          description: descInput.value.trim(),
+        };
 
-      const dealScoreValue = document.getElementById("dealScoreValue");
-      const winProbValue = document.getElementById("winProbValue");
-      const techScoreValue = document.getElementById("techScoreValue");
-      const techRiskValue = document.getElementById("techRiskValue");
+        document.getElementById("dealWinSection").style.display = "";
+        document.getElementById("dealWinResultArea").style.display = "none";
+        document.getElementById("dealWinSummaryBar").style.display = "none";
 
-      const dealWinRiskList = document.getElementById("dealWinRiskList");
-      const techFitRiskList = document.getElementById("techFitRiskList");
+        document.getElementById("techFitSection").style.display = "none";
+        document.getElementById("techFitSummaryBar").style.display = "none";
+        document.getElementById("techFitResultArea").style.display = "none";
 
-      // Dashboard elements
-      const dashDealName = document.getElementById("dashDealName");
-      const dashDealDesc = document.getElementById("dashDealDesc");
-      const dashDealScore = document.getElementById("dashDealScore");
-      const dashWinProb = document.getElementById("dashWinProb");
-      const dashTechScore = document.getElementById("dashTechScore");
-      const dashTechRisk = document.getElementById("dashTechRisk");
-      const dashZoneTitle = document.getElementById("dashZoneTitle");
-      const dashZoneBody = document.getElementById("dashZoneBody");
-      const dashZoneActions = document.getElementById("dashZoneActions");
+        document.getElementById("dashboardSection").style.display = "none";
 
-      const quadrantCanvas = document.getElementById("quadrantCanvas");
+        document.getElementById("dealWinSection").scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      });
 
-      // Admin
-      const adminListEl = document.getElementById("adminList");
-      const adminEmptyEl = document.getElementById("adminEmpty");
+      // Deal Win 결과 버튼
+      document.getElementById("dealWinResultButton").addEventListener("click", () => {
+        computeDealWinScore();
+      });
 
-      let currentDeal = {
-        name: "",
-        description: "",
-        dealScore: null,
-        winProb: "",
-        techScore: null,
-        techRisk: "",
-        createdAt: null,
-      };
+      // Tech Fit 결과 버튼
+      document.getElementById("techFitResultButton").addEventListener("click", () => {
+        if (!currentDeal || currentDeal.dealScore == null) {
+          showModal("순서 안내", "먼저 Deal Win Score를 계산한 뒤 Technical Fit Score를 계산해 주세요.");
+          return;
+        }
+        computeTechFitScore();
+      });
 
-      // Tooltip hover
-      document.querySelectorAll(".info-icon").forEach(icon => {
-        const tooltipId = icon.dataset.tooltipId;
-        const tooltip = tooltipId ? document.getElementById(tooltipId) : null;
+      // 요약 바 토글
+      document.querySelectorAll(".summary-toggle-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const targetId = btn.dataset.target;
+          const section = document.getElementById(targetId);
+          if (!section) return;
+          const visible = section.style.display !== "none";
+          section.style.display = visible ? "none" : "";
+          btn.innerHTML = `<span>펼치기/접기</span> ${visible ? "▼" : "▲"}`;
+        });
+      });
+
+      // Tooltip
+      document.querySelectorAll(".info-icon").forEach((icon) => {
+        const ttId = icon.dataset.tooltipId;
+        const tooltip = document.getElementById(ttId);
         if (!tooltip) return;
         icon.addEventListener("mouseenter", () => {
           tooltip.classList.add("visible");
@@ -2003,549 +2696,31 @@
         });
       });
 
-      // Collapse toggles
-      document.querySelectorAll(".collapse-toggle").forEach(btn => {
-        const targetId = btn.dataset.target;
-        const target = document.getElementById(targetId);
-        if (!target) return;
-        btn.addEventListener("click", () => {
-          const collapsed = target.classList.toggle("collapsed");
-          btn.innerHTML = collapsed ? "<span>펼치기</span> ▼" : "<span>접기</span> ▲";
-        });
+      // Modal 닫기
+      document.getElementById("modalCloseButton").addEventListener("click", hideModal);
+      document.getElementById("modalBackdrop").addEventListener("click", (e) => {
+        if (e.target.id === "modalBackdrop") {
+          hideModal();
+        }
       });
 
-      // Weight sum helpers
-      function updateWeightSum(weightDefs, sumEl) {
-        let sum = 0;
-        weightDefs.forEach(w => {
-          const input = document.getElementById(w.id);
-          const val = parseFloat(input.value);
-          if (!isNaN(val)) sum += val;
-        });
-        const rounded = Math.round(sum * 100) / 100;
-        sumEl.textContent = "합계: " + rounded.toFixed(2);
-        const ok = Math.abs(sum - 1) < 0.001;
-        sumEl.classList.toggle("error", !ok);
-        return ok;
-      }
-
-      dwWeightInputs.forEach(w => {
-        const input = document.getElementById(w.id);
-        input.addEventListener("input", () => updateWeightSum(dwWeightInputs, dwWeightSumText));
-      });
-      tfWeightInputs.forEach(w => {
-        const input = document.getElementById(w.id);
-        input.addEventListener("input", () => updateWeightSum(tfWeightInputs, tfWeightSumText));
-      });
-
-      updateWeightSum(dwWeightInputs, dwWeightSumText);
-      updateWeightSum(tfWeightInputs, tfWeightSumText);
-
-      // Start new deal (header Start 버튼)
-      startDealButton.addEventListener("click", () => {
-        resetForNewDeal();
-        showTab("qualification");
-        dealInfoSection.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-
-      // Deal info -> BANT
-      dealInfoCompleteButton.addEventListener("click", () => {
-        const name = dealNameInput.value.trim();
-        if (!name) {
-          dealNameError.style.display = "block";
-          return;
-        }
-        dealNameError.style.display = "none";
-
-        currentDeal.name = name;
-        currentDeal.description = dealDescriptionInput.value.trim();
-
-        dealWinSection.style.display = "";
-        techFitSection.style.display = "none";
-        dashboardSection.style.display = "none";
-
-        dealWinSection.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-
-      function parseScore(select) {
-        const v = parseInt(select.value, 10);
-        return isNaN(v) ? null : v;
-      }
-
-      function avg(arr) {
-        const nums = arr.filter(v => v !== null);
-        if (!nums.length) return null;
-        const s = nums.reduce((a, b) => a + b, 0);
-        return s / nums.length;
-      }
-
-      function computeDealWinScore() {
-        if (!updateWeightSum(dwWeightInputs, dwWeightSumText)) {
-          alert("Deal Win Score 가중치 합계가 1이 아닙니다.");
-          return null;
-        }
-
-        const selects = document.querySelectorAll("[data-dw-score]");
-        const scores = {};
-        selects.forEach(sel => {
-          scores[sel.dataset.dwScore] = parseScore(sel);
-        });
-
-        // 그룹 평균
-        const budgetAvg = scores.budgetReadiness ?? null;
-        const authorityAvg = avg([scores.authorityChampion, scores.authorityAccess]);
-        const needAvg = avg([scores.needFit, scores.needCompetition]);
-        const timelineAvg = avg([scores.timelineUrgency, scores.timelineEase]);
-
-        const groups = [
-          { key: "Budget", avg: budgetAvg, weightId: "dwWeightBudget" },
-          { key: "Authority", avg: authorityAvg, weightId: "dwWeightAuthority" },
-          { key: "Need", avg: needAvg, weightId: "dwWeightNeed" },
-          { key: "Timeline", avg: timelineAvg, weightId: "dwWeightTimeline" },
-        ];
-
-        if (groups.some(g => g.avg === null)) {
-          alert("모든 Deal 항목에 점수를 입력하세요.");
-          return null;
-        }
-
-        let score01 = 0;
-        groups.forEach(g => {
-          const w = parseFloat(document.getElementById(g.weightId).value) || 0;
-          score01 += (g.avg / 5) * w;
-        });
-        const dealScore = Math.round(score01 * 100);
-
-        let winProbText = "";
-        if (dealScore >= 80) winProbText = "High";
-        else if (dealScore >= 60) winProbText = "Medium";
-        else if (dealScore >= 40) winProbText = "Low";
-        else winProbText = "Very Low";
-
-        // Risk list: 평균 2 이하인 세부 항목
-        dealWinRiskList.innerHTML = "";
-        const riskConfig = [
-          { key: "budgetReadiness", label: "Budget · 예산 및 구매 준비도" },
-          { key: "authorityChampion", label: "Authority · 내부 지지자 파워" },
-          { key: "authorityAccess", label: "Authority · 의사결정권자 접근성" },
-          { key: "needFit", label: "Need · 문제 적합성" },
-          { key: "needCompetition", label: "Need · 경쟁 구도" },
-          { key: "timelineUrgency", label: "Timeline · 시급성/타이밍" },
-          { key: "timelineEase", label: "Timeline · 도입 용이성" },
-        ];
-        riskConfig.forEach(r => {
-          const v = scores[r.key];
-          if (v !== null && v <= 2) {
-            const li = document.createElement("li");
-            li.textContent = r.label + " (점수 " + v + ")";
-            dealWinRiskList.appendChild(li);
-          }
-        });
-        if (!dealWinRiskList.children.length) {
-          const li = document.createElement("li");
-          li.textContent = "2점 이하 Risk 항목 없음.";
-          dealWinRiskList.appendChild(li);
-        }
-
-        dealScoreValue.textContent = dealScore + " / 100";
-        winProbValue.textContent = winProbText;
-        dealWinResultArea.style.display = "";
-
-        currentDeal.dealScore = dealScore;
-        currentDeal.winProb = winProbText;
-
-        // Technical Fit 섹션 표시
-        techFitSection.style.display = "";
-        techFitSection.scrollIntoView({ behavior: "smooth", block: "start" });
-
-        return dealScore;
-      }
-
-      function computeTechFitScore() {
-        if (!updateWeightSum(tfWeightInputs, tfWeightSumText)) {
-          alert("Technical Fit 가중치 합계가 1이 아닙니다.");
-          return null;
-        }
-
-        const selects = document.querySelectorAll("[data-tf-score]");
-        const scores = {};
-        selects.forEach(sel => {
-          scores[sel.dataset.tfScore] = parseScore(sel);
-        });
-
-        const techAvg = avg([scores.tfFunctional, scores.tfCustomization, scores.tfLegacy]);
-        const envAvg = avg([scores.envInfra, scores.envIntegration, scores.envNetwork]);
-        const compAvg = avg([scores.compSecurity, scores.compRegulatory, scores.compData]);
-        const humanAvg = avg([scores.humanTeam, scores.humanSupport, scores.humanTimeline]);
-
-        const groups = [
-          { key: "Technical Fit", avg: techAvg, weightId: "tfWeightTechnicalFit" },
-          { key: "Environment", avg: envAvg, weightId: "tfWeightEnvironment" },
-          { key: "Compliance", avg: compAvg, weightId: "tfWeightCompliance" },
-          { key: "Human", avg: humanAvg, weightId: "tfWeightHuman" },
-        ];
-
-        if (groups.some(g => g.avg === null)) {
-          alert("모든 Technical Fit 항목에 점수를 입력하세요.");
-          return null;
-        }
-
-        let score01 = 0;
-        groups.forEach(g => {
-          const w = parseFloat(document.getElementById(g.weightId).value) || 0;
-          score01 += (g.avg / 5) * w;
-        });
-        const techScore = Math.round(score01 * 100);
-
-        let riskLevel = "";
-        if (techScore >= 80) riskLevel = "Low Risk";
-        else if (techScore >= 60) riskLevel = "Moderate Risk";
-        else if (techScore >= 40) riskLevel = "High Risk";
-        else riskLevel = "Critical Risk";
-
-        techFitRiskList.innerHTML = "";
-        const riskConfig = [
-          { key: "tfFunctional", label: "Technical Fit · 기능 적합성" },
-          { key: "tfCustomization", label: "Technical Fit · 커스터마이징 필요도" },
-          { key: "tfLegacy", label: "Technical Fit · 레거시 제약" },
-          { key: "envInfra", label: "Environment · 인프라 호환성" },
-          { key: "envIntegration", label: "Environment · 연동 지원 여부" },
-          { key: "envNetwork", label: "Environment · 환경/네트워크 제약" },
-          { key: "compSecurity", label: "Compliance · 보안 검토 난이도" },
-          { key: "compRegulatory", label: "Compliance · 규제 준수 가능성" },
-          { key: "compData", label: "Compliance · 데이터/보안 적합성" },
-          { key: "humanTeam", label: "Human · 고객 기술팀 준비도" },
-          { key: "humanSupport", label: "Human · 도입 지원 리소스" },
-          { key: "humanTimeline", label: "Human · 일정/범위 현실성" },
-        ];
-        riskConfig.forEach(r => {
-          const v = scores[r.key];
-          if (v !== null && v <= 2) {
-            const li = document.createElement("li");
-            li.textContent = r.label + " (점수 " + v + ")";
-            techFitRiskList.appendChild(li);
-          }
-        });
-        if (!techFitRiskList.children.length) {
-          const li = document.createElement("li");
-          li.textContent = "2점 이하 Risk 항목 없음.";
-          techFitRiskList.appendChild(li);
-        }
-
-        techScoreValue.textContent = techScore + " / 100";
-        techRiskValue.textContent = riskLevel;
-        techFitResultArea.style.display = "";
-
-        currentDeal.techScore = techScore;
-        currentDeal.techRisk = riskLevel;
-
-        // Dashboard 업데이트 및 표시
-        updateDashboard();
-        dashboardSection.style.display = "";
-        dashboardSection.scrollIntoView({ behavior: "smooth", block: "start" });
-
-        // 저장
-        saveCurrentDeal();
-
-        return techScore;
-      }
-
-      dealWinResultButton.addEventListener("click", computeDealWinScore);
-      techFitResultButton.addEventListener("click", computeTechFitScore);
-
-      // Quadrant drawing
-      function drawQuadrant(bizScore, techScore) {
-        if (!quadrantCanvas || !quadrantCanvas.getContext) return;
-        const rect = quadrantCanvas.getBoundingClientRect();
-        const dpr = window.devicePixelRatio || 1;
-        quadrantCanvas.width = rect.width * dpr;
-        quadrantCanvas.height = rect.height * dpr;
-
-        const ctx = quadrantCanvas.getContext("2d");
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.scale(dpr, dpr);
-
-        const width = rect.width;
-        const height = rect.height;
-        const margin = 32;
-
-        // 배경
-        ctx.fillStyle = "#f9fafb";
-        ctx.fillRect(0, 0, width, height);
-
-        // 축
-        const x0 = margin;
-        const y0 = height - margin;
-        const xMax = width - margin;
-        const yMax = margin;
-
-        ctx.strokeStyle = "#d1d5db";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(x0, y0);
-        ctx.lineTo(xMax, y0); // X축
-        ctx.moveTo(x0, y0);
-        ctx.lineTo(x0, yMax); // Y축
-        ctx.stroke();
-
-        // 축 라벨
-        ctx.fillStyle = "#6b7280";
-        ctx.font = "11px system-ui";
-
-        ctx.fillText("Business Fit (Deal Score)", x0 + 4, y0 + 20);
-        ctx.save();
-        ctx.translate(x0 - 20, y0 - 4);
-        ctx.rotate(-Math.PI / 2);
-        ctx.fillText("Technical Fit Score", 0, 0);
-        ctx.restore();
-
-        // 격자 (25, 50, 75)
-        ctx.strokeStyle = "#e5e7eb";
-        ctx.setLineDash([4, 4]);
-
-        [25, 50, 75].forEach(v => {
-          const x = x0 + (v / 100) * (xMax - x0);
-          const y = y0 - (v / 100) * (y0 - yMax);
-          // 수직
-          ctx.beginPath();
-          ctx.moveTo(x, y0);
-          ctx.lineTo(x, yMax);
-          ctx.stroke();
-          // 수평
-          ctx.beginPath();
-          ctx.moveTo(x0, y);
-          ctx.lineTo(xMax, y);
-          ctx.stroke();
-        });
-
-        ctx.setLineDash([]);
-
-        // 점 없으면 종료
-        if (bizScore == null || techScore == null) return;
-
-        const x = x0 + (bizScore / 100) * (xMax - x0);
-        const y = y0 - (techScore / 100) * (y0 - yMax);
-
-        ctx.fillStyle = "#4f46e5";
-        ctx.strokeStyle = "rgba(79,70,229,0.4)";
-        ctx.lineWidth = 6;
-        ctx.beginPath();
-        ctx.arc(x, y, 5, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.fill();
-      }
-
-      function updateDashboard() {
-        const biz = currentDeal.dealScore;
-        const tech = currentDeal.techScore;
-        if (biz == null || tech == null) return;
-
-        dashDealName.textContent = currentDeal.name || "-";
-        dashDealDesc.textContent = currentDeal.description || "-";
-        dashDealScore.textContent = biz + " / 100";
-        dashWinProb.textContent = "Win Probability: " + (currentDeal.winProb || "-");
-        dashTechScore.textContent = tech + " / 100";
-        dashTechRisk.textContent = "Risk Level: " + (currentDeal.techRisk || "-");
-
-        // Zone 해석
-        let zoneTitle = "";
-        let zoneBody = "";
-        let zoneActions = "";
-
-        if (biz >= 70 && tech >= 70) {
-          zoneTitle = "우상단 · Strong Opportunity";
-          zoneBody = "비즈니스·기술 Fit 모두 우수한 딜입니다. 빠르게 진행하면서 경쟁사 차단이 중요합니다.";
-          zoneActions = "EB 정렬 조기 확보, 단계 빠르게 진행, PoC 최소화 또는 생략, 경쟁 메시지 강화, 계약·보안 절차 신속 처리.";
-        } else if (biz >= 70 && tech < 70) {
-          zoneTitle = "우하단 · Biz OK but Tech Risk";
-          zoneBody = "구매 의지는 높지만 기술 리스크가 존재합니다. PoC 실패 위험을 줄이기 위한 설계가 필요합니다.";
-          zoneActions = "기술 리스크를 솔직하게 공유하고, 대안/로드맵 제시, PoC 범위·성공 기준을 명확히 정의하세요.";
-        } else if (biz < 70 && tech >= 70) {
-          zoneTitle = "좌상단 · Tech OK but Biz Weak";
-          zoneBody = "기술 Fit은 좋지만 비즈니스 동력이 약합니다. 사용 사례와 비즈니스 가치를 재정의해야 합니다.";
-          zoneActions = "비즈니스 챔피언 발굴, 사례/ROI 스토리 강화, 상위 의사결정자와의 대화 기회를 확보하세요.";
-        } else {
-          zoneTitle = "좌하단 · Weak Opportunity";
-          zoneBody = "비즈니스·기술 측면 모두에서 리스크가 큰 딜입니다. 전략적 철수 또는 재정의가 필요할 수 있습니다.";
-          zoneActions = "투입 리소스를 최소화하고, 재정의 가능한 요인이 있는지 점검한 뒤 계속/중단 여부를 판단하세요.";
-        }
-
-        dashZoneTitle.textContent = zoneTitle;
-        dashZoneBody.textContent = zoneBody;
-        dashZoneActions.textContent = zoneActions;
-
-        drawQuadrant(biz, tech);
-      }
-
-      // Admin (localStorage)
-      function loadDeals() {
-        try {
-          const raw = localStorage.getItem("dqDeals");
-          if (!raw) return [];
-          const arr = JSON.parse(raw);
-          if (!Array.isArray(arr)) return [];
-          return arr;
-        } catch (e) {
-          return [];
-        }
-      }
-
-      function saveDeals(list) {
-        localStorage.setItem("dqDeals", JSON.stringify(list));
-      }
-
-      function saveCurrentDeal() {
-        if (!currentDeal.name || currentDeal.dealScore == null || currentDeal.techScore == null) return;
-        const list = loadDeals();
-        const now = new Date();
-        const dealObj = {
-          id: Date.now(),
-          name: currentDeal.name,
-          description: currentDeal.description,
-          dealScore: currentDeal.dealScore,
-          winProb: currentDeal.winProb,
-          techScore: currentDeal.techScore,
-          techRisk: currentDeal.techRisk,
-          createdAt: now.toISOString(),
-        };
-        list.unshift(dealObj);
-        saveDeals(list);
-        renderAdminList();
-      }
-
-      function formatDate(iso) {
-        if (!iso) return "-";
-        const d = new Date(iso);
-        if (isNaN(d.getTime())) return "-";
-        const y = d.getFullYear();
-        const m = String(d.getMonth() + 1).padStart(2, "0");
-        const day = String(d.getDate()).padStart(2, "0");
-        const hh = String(d.getHours()).padStart(2, "0");
-        const mm = String(d.getMinutes()).padStart(2, "0");
-        return `${y}-${m}-${day} ${hh}:${mm}`;
-      }
-
-      function renderAdminList() {
-        const deals = loadDeals();
-
-        adminListEl.innerHTML = "";
-        if (!deals.length) {
-          adminListEl.appendChild(adminEmptyEl);
-          adminEmptyEl.style.display = "";
-          return;
-        }
-
-        adminEmptyEl.style.display = "none";
-
-        deals.forEach(deal => {
-          const row = document.createElement("div");
-          row.className = "admin-row";
-
-          const main = document.createElement("div");
-          main.className = "admin-main";
-          const nameEl = document.createElement("div");
-          nameEl.className = "admin-name";
-          nameEl.textContent = deal.name;
-          const descEl = document.createElement("div");
-          descEl.className = "admin-desc";
-          descEl.textContent = deal.description || "-";
-          main.appendChild(nameEl);
-          main.appendChild(descEl);
-
-          const meta = document.createElement("div");
-          meta.className = "admin-date";
-          meta.innerHTML =
-            "Biz: " + (deal.dealScore ?? "-") + " / 100 · Tech: " +
-            (deal.techScore ?? "-") + " / 100<br>" +
-            "Win: " + (deal.winProb || "-") + " · Risk: " + (deal.techRisk || "-") + "<br>" +
-            formatDate(deal.createdAt);
-
-          const actions = document.createElement("div");
-          actions.className = "admin-actions";
-
-          const viewBtn = document.createElement("button");
-          viewBtn.className = "btn-ghost";
-          viewBtn.textContent = "View";
-          viewBtn.addEventListener("click", () => {
-            // Load into dashboard for quick review
-            currentDeal = {
-              name: deal.name,
-              description: deal.description,
-              dealScore: deal.dealScore,
-              winProb: deal.winProb,
-              techScore: deal.techScore,
-              techRisk: deal.techRisk,
-              createdAt: deal.createdAt,
-            };
-            updateDashboard();
-            showTab("qualification");
-            dashboardSection.style.display = "";
-            dashboardSection.scrollIntoView({ behavior: "smooth", block: "start" });
-          });
-
-          const delBtn = document.createElement("button");
-          delBtn.className = "btn-danger";
-          delBtn.textContent = "삭제";
-          delBtn.addEventListener("click", () => {
-            const filtered = deals.filter(d => d.id !== deal.id);
-            saveDeals(filtered);
-            renderAdminList();
-          });
-
-          actions.appendChild(viewBtn);
-          actions.appendChild(delBtn);
-
-          row.appendChild(main);
-          row.appendChild(meta);
-          row.appendChild(actions);
-          adminListEl.appendChild(row);
-        });
-      }
-
-      // Reset for new deal
-      function resetForNewDeal() {
-        currentDeal = {
-          name: "",
-          description: "",
-          dealScore: null,
-          winProb: "",
-          techScore: null,
-          techRisk: "",
-          createdAt: null,
-        };
-
-        dealNameInput.value = "";
-        dealDescriptionInput.value = "";
-        dealNameError.style.display = "none";
-
-        document.querySelectorAll("select[data-dw-score], select[data-tf-score]").forEach(sel => {
-          sel.value = "";
-        });
-
-        // weights는 그대로 유지 (사용자 커스텀 살려두기)
-        dealWinResultArea.style.display = "none";
-        techFitResultArea.style.display = "none";
-
-        techFitSection.style.display = "none";
-        dashboardSection.style.display = "none";
-
-        dashDealName.textContent = "-";
-        dashDealDesc.textContent = "-";
-        dashDealScore.textContent = "-";
-        dashWinProb.textContent = "Win Probability: -";
-        dashTechScore.textContent = "-";
-        dashTechRisk.textContent = "Risk Level: -";
-        dashZoneTitle.textContent = "-";
-        dashZoneBody.textContent = "Deal 및 Technical 점수를 계산하면, 여기에 위치와 해석이 표시됩니다.";
-        dashZoneActions.textContent = "Recommended actions will appear here.";
-
-        drawQuadrant(null, null);
-      }
-
-      // 초기 렌더
-      showTab("qualification");
-      renderAdminList();
-      drawQuadrant(null, null);
+      // 가중치 버튼/검증
+      setupWeightButtons();
+      setupWeightValidation(
+        "dw",
+        ["dwWeightBudget", "dwWeightNeed", "dwWeightAuthority", "dwWeightTimeline"],
+        "dwWeightSumText",
+        "dealWinResultButton"
+      );
+      setupWeightValidation(
+        "tf",
+        ["tfWeightTechnicalFit", "tfWeightEnvironment", "tfWeightCompliance", "tfWeightHuman"],
+        "tfWeightSumText",
+        "techFitResultButton"
+      );
+
+      // Admin 리스트 초기화
+      refreshAdminList();
     });
   </script>
 </body>
